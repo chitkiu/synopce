@@ -1,4 +1,3 @@
-import 'package:dsm_sdk/request/models/response_status.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -45,8 +44,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
           if (_file.isNotEmpty) Text('Selected file: $_file'),
           ElevatedButton(
             onPressed: () async {
-              FilePickerResult? result =
-              await FilePicker.platform.pickFiles();
+              FilePickerResult? result = await FilePicker.platform.pickFiles();
               if (result != null) {
                 var singlePath = result.files.single.path;
                 if (singlePath != null) {
@@ -82,17 +80,17 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       return;
     }
     var result = await Constants.sdk.api.addDownload(
-      destination: _destination,
-      filePath: (_file.isNotEmpty ? _file : null),
-      url: (_url.isNotEmpty ? _url : null)
-    );
-    if (result is ResponseDownloadStationTaskCreateSuccess) {
+        destination: _destination,
+        filePath: (_file.isNotEmpty ? _file : null),
+        url: (_url.isNotEmpty ? _url : null));
+
+    result.ifSuccess((p0) {
       //TODO It's wrong way
       Navigator.pop(context);
-    } else if (result is ResponseError) {
+    }).ifError((p0) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error: ${result.type.name}'),
+        content: Text('Error: ${p0.name}'),
       ));
-    }
+    });
   }
 }

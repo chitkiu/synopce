@@ -1,6 +1,6 @@
-import 'package:dsm_sdk/request/models/download_station/additional_info.dart';
-import 'package:dsm_sdk/request/models/download_station/download_station_task_info_model.dart';
-import 'package:dsm_sdk/request/models/response_status.dart';
+import 'package:dsm_sdk/core/models/result_response.dart';
+import 'package:dsm_sdk/download_station/models/additional_info.dart';
+import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 
@@ -114,10 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               onTap: (CompletionHandler handler) async {
                                 var result = await Constants.sdk.api
                                     .deleteTask(ids: [taskInfoDetailModel.id]);
-                                if (result is ResponseDownloadStationTasksDeleteSuccess) {
+                                result.ifSuccess((p0) {
                                   _taskList.removeAt(index);
                                   setState(() {});
-                                }
+                                });
                               },
                               color: Colors.red),
                         ],
@@ -146,27 +146,21 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _pullRefresh() async {
-    List<TaskInfoDetailModel> models = await _getData();
-    setState(() {
-      _taskList = models;
-    });
+    var result = await _getData();
+    result.ifSuccess((p0) => setState(() {
+          _taskList = p0.tasks;
+        }));
   }
 
   Future<void> _initData() async {
-    _taskList = await _getData();
+    var result = await _getData();
+    result.ifSuccess((p0) => _taskList = p0.tasks);
   }
 
-  Future<List<TaskInfoDetailModel>> _getData() {
+  Future<ResultResponse<TasksInfoModel>> _getData() {
     return Constants.sdk.api.auth().then((value) {
       return Constants.sdk.api.getDownloadList(
           additionalInfo: [AdditionalInfo.DETAIL, AdditionalInfo.TRANSFER]);
-    }).then((responseStatus) {
-      if (responseStatus is ResponseDownloadStationTasksInfoSuccess) {
-        return responseStatus.model.tasks;
-      } else if (responseStatus is ResponseError) {
-        throw Exception("ResponseError ${responseStatus.type}");
-      }
-      return List.empty();
     });
   }
 }

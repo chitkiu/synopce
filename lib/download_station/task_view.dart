@@ -1,4 +1,4 @@
-import 'package:dsm_sdk/request/models/download_station/download_station_task_info_model.dart';
+import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
 import 'package:flutter/material.dart';
 
 class TaskView extends StatelessWidget {
