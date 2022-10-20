@@ -40,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   file_picker: ^5.2.1
   flutter_swipe_action_cell: ^3.0.4
+  flutter_secure_storage: ^6.0.0
 
 dev_dependencies:
   flutter_test:

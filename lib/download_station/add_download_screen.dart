@@ -1,7 +1,6 @@
+import 'package:dsm_app/sdk.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-
-import '../constants.dart' as Constants;
 
 class AddDownloadTaskWidget extends StatefulWidget {
   const AddDownloadTaskWidget({super.key});
@@ -79,7 +78,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       ));
       return;
     }
-    var result = await Constants.sdk.api.addDownload(
+    var result = await SDK().sdk.api.addDownload(
         destination: _destination,
         filePath: (_file.isNotEmpty ? _file : null),
         url: (_url.isNotEmpty ? _url : null));

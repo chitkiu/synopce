@@ -23,7 +23,7 @@ class TaskView extends StatelessWidget {
         if (downloaded != null && downloaded != 0 && model.size != 0)
           Text(
               "Percent: ${double.parse((downloaded / model.size * 100).toStringAsFixed(2))}"),
-        Divider(height: 1, color: Colors.black),
+        const Divider(height: 1, color: Colors.black),
       ],
     );
   }
