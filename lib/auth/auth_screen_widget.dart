@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import 'login_widget.dart';
+import 'auth_widget.dart';
 
-class AuthWidget extends StatefulWidget {
-  const AuthWidget({Key? key}) : super(key: key);
+class AuthScreenWidget extends StatefulWidget {
+  const AuthScreenWidget({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AuthState();
 }
 
-class _AuthState extends State<AuthWidget> {
+class _AuthState extends State<AuthScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
@@ -24,7 +24,7 @@ class _AuthState extends State<AuthWidget> {
     return const Scaffold(
       body: Align(
         alignment: AlignmentDirectional.center,
-        child: LoginWidget(),
+        child: AuthWidget(),
       ),
     );
   }
@@ -37,7 +37,7 @@ class _AuthState extends State<AuthWidget> {
         child: Container(
             color: Colors.white,
             padding: const EdgeInsets.only(bottom: 10),
-            child: const SizedBox(width: 350, child: LoginWidget())),
+            child: const SizedBox(width: 350, child: AuthWidget())),
       ),
     );
   }

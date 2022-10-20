@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'auth/auth_screen.dart';
+import 'auth/auth_screen_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AuthWidget(),
+      home: const AuthScreenWidget(),
     );
   }
 }

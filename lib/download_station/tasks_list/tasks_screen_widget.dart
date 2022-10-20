@@ -4,18 +4,18 @@ import 'package:dsm_sdk/download_station/models/download_station_task_info_model
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 
-import '../sdk.dart';
-import 'add_download_screen.dart';
-import 'task_view.dart';
+import '../../sdk.dart';
+import '../create_task/add_download_screen.dart';
+import 'task_item_widget.dart';
 
-class TasksListWidget extends StatefulWidget {
-  const TasksListWidget({super.key});
+class TasksScreenWidget extends StatefulWidget {
+  const TasksScreenWidget({super.key});
 
   @override
-  State<TasksListWidget> createState() => _TasksListWidgetState();
+  State<TasksScreenWidget> createState() => _TasksScreenWidgetState();
 }
 
-class _TasksListWidgetState extends State<TasksListWidget> {
+class _TasksScreenWidgetState extends State<TasksScreenWidget> {
   void _incrementCounter() async {
     Navigator.push(
       context,
@@ -37,7 +37,6 @@ class _TasksListWidgetState extends State<TasksListWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Tasks list"),
-        automaticallyImplyLeading: false,
       ),
       body: RefreshIndicator(
         onRefresh: _pullRefresh,
@@ -84,7 +83,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
                               },
                               color: Colors.red),
                         ],
-                        child: TaskView(model: taskInfoDetailModel),
+                        child: TaskItemWidget(model: taskInfoDetailModel),
                       );
                     },
                   ))

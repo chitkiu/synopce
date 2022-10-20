@@ -1,17 +1,17 @@
-import 'package:dsm_app/download_station/tasks_list.dart';
 import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/core/models/connection_info.dart';
 import 'package:flutter/material.dart';
 
-//TODO Rename
-class LoginWidget extends StatefulWidget {
-  const LoginWidget({Key? key}) : super(key: key);
+import '../download_station/tasks_list/tasks_list.dart';
+
+class AuthWidget extends StatefulWidget {
+  const AuthWidget({Key? key}) : super(key: key);
 
   @override
-  State<LoginWidget> createState() => _LoginWidgetState();
+  State<AuthWidget> createState() => _AuthWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class _AuthWidgetState extends State<AuthWidget> {
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -67,6 +67,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           width: _EditTextWidth,
           padding: const EdgeInsets.all(10),
           child: TextField(
+            keyboardType: TextInputType.url,
             controller: _urlController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -78,6 +79,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           width: _EditTextWidth,
           padding: const EdgeInsets.all(10),
           child: TextField(
+            keyboardType: TextInputType.text,
             controller: _nameController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -203,12 +205,10 @@ class _LoginWidgetState extends State<LoginWidget> {
     SDK().init(ConnectionInfo(server, name, password));
     var authResult = await SDK().sdk.api.auth();
     authResult.ifSuccess((_) {
-      Navigator.pushAndRemoveUntil<void>(
-        context,
-        MaterialPageRoute<void>(
-            builder: (BuildContext context) => const TasksListWidget()),
-        ModalRoute.withName('/'),
-      );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const TasksScreenWidget()),
+          (route) => false);
     });
   }
 }
