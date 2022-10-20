@@ -1,20 +1,26 @@
 PODS:
   - dsm_sdk (0.0.1):
     - FlutterMacOS
+  - flutter_secure_storage_macos (3.3.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
 
 DEPENDENCIES:
   - dsm_sdk (from `Flutter/ephemeral/.symlinks/plugins/dsm_sdk/macos`)
+  - flutter_secure_storage_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
 
 EXTERNAL SOURCES:
   dsm_sdk:
     :path: Flutter/ephemeral/.symlinks/plugins/dsm_sdk/macos
+  flutter_secure_storage_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
 
 SPEC CHECKSUMS:
   dsm_sdk: d03001c86071019f5c12ae9eec8a29a21666c71c
+  flutter_secure_storage_macos: 6ceee8fbc7f484553ad17f79361b556259df89aa
   FlutterMacOS: ae6af50a8ea7d6103d888583d46bd8328a7e9811
 
 PODFILE CHECKSUM: 6eac6b3292e5142cfc23bdeb71848a40ec51c14c
