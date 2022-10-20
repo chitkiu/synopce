@@ -35,8 +35,6 @@ class _AuthWidgetState extends State<AuthWidget> {
     _needToAutologin =
         await SDK().storage.read(key: "needToAutologin") == 'true';
 
-    print('url: ${_urlController.text}');
-
     if (_needToAutologin) {
       _logIn();
     }
