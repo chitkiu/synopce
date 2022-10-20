@@ -2,7 +2,7 @@ import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/core/models/connection_info.dart';
 import 'package:flutter/material.dart';
 
-import '../download_station/tasks_list/tasks_list.dart';
+import '../download_station/tasks_list/tasks_screen_widget.dart';
 
 class AuthWidget extends StatefulWidget {
   const AuthWidget({Key? key}) : super(key: key);
@@ -34,6 +34,8 @@ class _AuthWidgetState extends State<AuthWidget> {
     _isHttps = await SDK().storage.read(key: "isHttps") == 'true';
     _needToAutologin =
         await SDK().storage.read(key: "needToAutologin") == 'true';
+
+    print('url: ${_urlController.text}');
 
     if (_needToAutologin) {
       _logIn();
@@ -194,11 +196,11 @@ class _AuthWidgetState extends State<AuthWidget> {
     print(password);
     print(_isHttps);
     print(_needToAutologin);
-    SDK().storage.write(key: 'url', value: url);
-    SDK().storage.write(key: 'name', value: name);
-    SDK().storage.write(key: 'password', value: password);
-    SDK().storage.write(key: 'isHttps', value: _isHttps.toString());
-    SDK()
+    await SDK().storage.write(key: 'url', value: url);
+    await SDK().storage.write(key: 'name', value: name);
+    await SDK().storage.write(key: 'password', value: password);
+    await SDK().storage.write(key: 'isHttps', value: _isHttps.toString());
+    await SDK()
         .storage
         .write(key: 'needToAutologin', value: _needToAutologin.toString());
     var server = Uri.parse("${(_isHttps ? 'https' : 'http')}://$url");

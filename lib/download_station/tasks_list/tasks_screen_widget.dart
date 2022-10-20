@@ -3,9 +3,11 @@ import 'package:dsm_sdk/download_station/models/additional_info.dart';
 import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../sdk.dart';
 import '../create_task/add_download_screen.dart';
+import '../task_info/task_info_screen_widget.dart';
 import 'task_item_widget.dart';
 
 class TasksScreenWidget extends StatefulWidget {
@@ -25,6 +27,8 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
 
   late List<TaskInfoDetailModel> _taskList = List.empty();
   late Future<void> _taskListData;
+
+  TaskInfoDetailModel? _selectedModel;
 
   @override
   void initState() {
@@ -48,54 +52,25 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
               case ConnectionState.none:
               case ConnectionState.waiting:
               case ConnectionState.active:
-                children = [
-                  const SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      color: Colors.black,
+                return const Center(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
                     ),
-                  )
-                ];
-                break;
+                  ),
+                );
               case ConnectionState.done:
-                children = [
-                  Expanded(
-                      child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: _taskList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var taskInfoDetailModel = _taskList[index];
-                      return SwipeActionCell(
-                        key: ObjectKey(taskInfoDetailModel),
-                        trailingActions: [
-                          SwipeAction(
-                              title: "delete",
-                              onTap: (CompletionHandler handler) async {
-                                var result = await SDK()
-                                    .sdk
-                                    .api
-                                    .deleteTask(ids: [taskInfoDetailModel.id]);
-                                result.ifSuccess((p0) {
-                                  _taskList.removeAt(index);
-                                  setState(() {});
-                                });
-                              },
-                              color: Colors.red),
-                        ],
-                        child: TaskItemWidget(model: taskInfoDetailModel),
-                      );
-                    },
-                  ))
-                ];
-                break;
+                return ScreenTypeLayout(
+                  mobile: _mobileWidget(),
+                  tablet: _desktopWidget(),
+                  desktop: _desktopWidget(),
+                );
             }
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: children,
-              ),
-            );
           },
         ),
       ),
@@ -122,5 +97,96 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
   Future<ResultResponse<TasksInfoModel>> _getData() {
     return SDK().sdk.api.getDownloadList(
         additionalInfo: [AdditionalInfo.DETAIL, AdditionalInfo.TRANSFER]);
+  }
+
+  Widget _mobileWidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+              child: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: _taskList.length,
+            itemBuilder: (BuildContext context, int index) {
+              var taskInfoDetailModel = _taskList[index];
+              return SwipeActionCell(
+                key: ObjectKey(taskInfoDetailModel),
+                trailingActions: [
+                  SwipeAction(
+                      title: "delete",
+                      onTap: (CompletionHandler handler) async {
+                        var result = await SDK()
+                            .sdk
+                            .api
+                            .deleteTask(ids: [taskInfoDetailModel.id]);
+                        result.ifSuccess((p0) {
+                          _taskList.removeAt(index);
+                          setState(() {});
+                        });
+                      },
+                      color: Colors.red),
+                ],
+                child: TaskItemWidget(taskInfoDetailModel, (model) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TaskInfoScreenWidget(model)),
+                  );
+                }),
+              );
+            },
+          ))
+        ],
+      ),
+    );
+  }
+
+  Widget _desktopWidget() {
+    return Row(
+      children: [
+        SizedBox(
+          width: 300,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: _taskList.length,
+            itemBuilder: (BuildContext context, int index) {
+              var taskInfoDetailModel = _taskList[index];
+              return SwipeActionCell(
+                key: ObjectKey(taskInfoDetailModel),
+                trailingActions: [
+                  SwipeAction(
+                      title: "delete",
+                      onTap: (CompletionHandler handler) async {
+                        var result = await SDK()
+                            .sdk
+                            .api
+                            .deleteTask(ids: [taskInfoDetailModel.id]);
+                        result.ifSuccess((p0) {
+                          _taskList.removeAt(index);
+                          setState(() {});
+                        });
+                      },
+                      color: Colors.red),
+                ],
+                child: TaskItemWidget(taskInfoDetailModel, (model) {
+                  setState(() {
+                    _selectedModel = model;
+                  });
+                }),
+              );
+            },
+          ),
+        ),
+        Container(width: 0.5, color: Colors.black),
+        Expanded(
+            child: (_selectedModel != null
+                ? TaskInfoScreenWidget(_selectedModel!)
+                : const Align(
+                    alignment: AlignmentDirectional.center,
+                    child: Text("Select item"),
+                  ))),
+      ],
+    );
   }
 }

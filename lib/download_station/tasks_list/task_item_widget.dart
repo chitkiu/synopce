@@ -1,22 +1,18 @@
 import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
 import 'package:flutter/material.dart';
 
-import '../task_info/task_info_widget.dart';
-
 class TaskItemWidget extends StatelessWidget {
   final TaskInfoDetailModel model;
+  final Function(TaskInfoDetailModel) onClick;
 
-  const TaskItemWidget({required this.model, super.key});
+  const TaskItemWidget(this.model, this.onClick, {super.key});
 
   @override
   Widget build(BuildContext context) {
     var downloaded = model.additional?.transfer?.sizeDownloaded;
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TaskInfoWidget(model)),
-        );
+        onClick(model);
       },
       child: Column(
         children: [

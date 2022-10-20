@@ -13,10 +13,8 @@ class TaskInfoScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
       mobile: _mobileWidget(),
-      tablet: _mobileWidget(),
-      desktop: _mobileWidget(),
-      // tablet: _desktopWidget(),
-      // desktop: _desktopWidget(),
+      tablet: _desktopWidget(),
+      desktop: _desktopWidget(),
     );
   }
 
@@ -29,12 +27,7 @@ class TaskInfoScreenWidget extends StatelessWidget {
     );
   }
 
-/*  Widget _desktopWidget() {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Info about task'),
-      ),
-      body: TaskInfoWidget(model),
-    );
-  }*/
+  Widget _desktopWidget() {
+    return TaskInfoWidget(model);
+  }
 }
