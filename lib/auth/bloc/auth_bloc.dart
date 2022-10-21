@@ -56,20 +56,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _loadSavedData() async {
     emit(UpdateDataAuthState(
-        url: await _storage.read(key: "url") ?? "",
-        username: await _storage.read(key: "name") ?? "",
-        password: await _storage.read(key: "password") ?? "",
-        isHttps: await _storage.read(key: "isHttps") == 'true',
+        url: await _storage.read(key: URL_KEY_NAME) ?? "",
+        username: await _storage.read(key: USERNAME_KEY_NAME) ?? "",
+        password: await _storage.read(key: PASSWORD_KEY_NAME) ?? "",
+        isHttps: await _storage.read(key: IS_HTTPS_KEY_NAME) == 'true',
         needToAutologin:
-            await _storage.read(key: "needToAutologin") == 'true'));
+            await _storage.read(key: NEED_TO_AUTOLOGIN_KEY_NAME) == 'true'));
   }
 
   void _saveData(LogInPressedAuthEvent event) async {
-    _storage.write(key: 'url', value: event.url);
-    _storage.write(key: 'name', value: event.username);
-    _storage.write(key: 'password', value: event.password);
-    _storage.write(key: 'isHttps', value: event.isHttps.toString());
+    _storage.write(key: URL_KEY_NAME, value: event.url);
+    _storage.write(key: USERNAME_KEY_NAME, value: event.username);
+    _storage.write(key: PASSWORD_KEY_NAME, value: event.password);
+    _storage.write(key: IS_HTTPS_KEY_NAME, value: event.isHttps.toString());
     _storage.write(
-        key: 'needToAutologin', value: event.needToAutologin.toString());
+        key: NEED_TO_AUTOLOGIN_KEY_NAME, value: event.needToAutologin.toString());
   }
+
+  static const String URL_KEY_NAME = 'url';
+  static const String USERNAME_KEY_NAME = 'name';
+  static const String PASSWORD_KEY_NAME = 'password';
+  static const String IS_HTTPS_KEY_NAME = 'isHttps';
+  static const String NEED_TO_AUTOLOGIN_KEY_NAME = 'needToAutologin';
 }

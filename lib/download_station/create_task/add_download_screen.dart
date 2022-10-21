@@ -10,7 +10,7 @@ class AddDownloadTaskWidget extends StatefulWidget {
 }
 
 class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
-  String _file = "";
+  PlatformFile? _file;
   String _url = "";
   String _destination = "";
 
@@ -40,17 +40,14 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
               });
             },
           ),
-          if (_file.isNotEmpty) Text('Selected file: $_file'),
+          if (_file != null) Text('Selected file: ${_file!.name}'),
           ElevatedButton(
             onPressed: () async {
               FilePickerResult? result = await FilePicker.platform.pickFiles();
               if (result != null) {
-                var singlePath = result.files.single.path;
-                if (singlePath != null) {
-                  setState(() {
-                    _file = singlePath;
-                  });
-                }
+                setState(() {
+                  _file = result.files.single;
+                });
               }
             },
             child: const Text('Pick file!'),
@@ -72,7 +69,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       ));
       return;
     }
-    if (_url.isEmpty && _file.isEmpty) {
+    if (_url.isEmpty && _file == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Select file or enter url'),
       ));
@@ -80,7 +77,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
     }
     var result = await SDK().sdk.api.addDownload(
         destination: _destination,
-        filePath: (_file.isNotEmpty ? _file : null),
+        filePath: (_file != null ? _file!.path : null),
         url: (_url.isNotEmpty ? _url : null));
 
     result.ifSuccess((p0) {
