@@ -11,6 +11,7 @@ import '../task_info/task_info_screen_widget.dart';
 import 'data/tasks_info_provider.dart';
 import 'data/tasks_repository.dart';
 import 'domain/models/tasks_events.dart';
+import 'domain/task_info_bloc.dart';
 import 'domain/tasks_bloc.dart';
 
 class TasksScreenWidget extends StatelessWidget {
@@ -18,8 +19,14 @@ class TasksScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TasksBLoC>(
-      create: (context) => TasksBLoC(TasksRepository(TasksInfoProvider()))..add(LoadEvents()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TasksBLoC>(
+          create: (context) => TasksBLoC(TasksRepository(TasksInfoProvider()))
+            ..add(LoadEvents()),
+        ),
+        BlocProvider(create: (context) => TaskInfoBloc())
+      ],
       child: Scaffold(
           appBar: AppBar(
             title: const Text("Tasks list"),
@@ -30,11 +37,11 @@ class TasksScreenWidget extends StatelessWidget {
                 var list = state.models.toList();
                 return ScreenTypeLayout(
                   mobile: _mobileWidget(list),
-                  tablet: _desktopWidget(list, state.selectedTaskId),
-                  desktop: _desktopWidget(list, state.selectedTaskId),
+                  tablet: _desktopWidget(list),
+                  desktop: _desktopWidget(list),
                 );
               }
-              //TODO Add other state
+              //TODO Add other state handling
               return const Center(
                 child: Align(
                   alignment: Alignment.center,
@@ -64,87 +71,73 @@ class TasksScreenWidget extends StatelessWidget {
   }
 
   Widget _mobileWidget(List<TaskInfoDetailModel> items) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-              child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {
-              var taskInfoDetailModel = items[index];
-              return SwipeActionCell(
-                key: ObjectKey(taskInfoDetailModel),
-                trailingActions: [
-                  SwipeAction(
-                      title: "delete",
-                      onTap: (CompletionHandler handler) async {
-                        BlocProvider.of<TasksBLoC>(context)
-                            .add(DeleteEvent(taskInfoDetailModel.id));
-                      },
-                      color: Colors.red),
-                ],
-                child: TaskItemWidget(taskInfoDetailModel, (model) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TaskInfoScreenWidget(model)),
-                  );
-                }),
-              );
-            },
-          ))
-        ],
+    return BlocListener<TaskInfoBloc, TaskInfoState>(
+      listener: (context, state) {
+        if (state is ShowTaskInfoState) {
+          if (state.task != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TaskInfoScreenWidget(state.task!)),
+            );
+          }
+        }
+      },
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(child: _getItemsList(items)),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _desktopWidget(List<TaskInfoDetailModel> items, String? selectedId) {
-    TaskInfoDetailModel? selectedModel;
-    for (var element in items) {
-      if (element.id == selectedId) {
-        selectedModel = element;
-        break;
-      }
-    }
+  Widget _desktopWidget(List<TaskInfoDetailModel> items) {
     return Row(
       children: [
         SizedBox(
           width: 300,
-          child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {
-              var taskInfoDetailModel = items[index];
-              return SwipeActionCell(
-                key: ObjectKey(taskInfoDetailModel),
-                trailingActions: [
-                  SwipeAction(
-                      title: "delete",
-                      onTap: (CompletionHandler handler) async {
-                        BlocProvider.of<TasksBLoC>(context)
-                            .add(DeleteEvent(taskInfoDetailModel.id));
-                      },
-                      color: Colors.red),
-                ],
-                child: TaskItemWidget(taskInfoDetailModel, (model) {
-                  BlocProvider.of<TasksBLoC>(context)
-                      .add(SelectEvent(taskInfoDetailModel.id));
-                }),
-              );
-            },
-          ),
+          child: _getItemsList(items),
         ),
         Container(width: 0.5, color: Colors.black),
-        Expanded(
-            child: (selectedModel != null
-                ? TaskInfoScreenWidget(selectedModel)
-                : const Align(
-                    alignment: AlignmentDirectional.center,
-                    child: Text("Select item"),
-                  ))),
+        BlocBuilder<TaskInfoBloc, TaskInfoState>(builder: (context, state) {
+          return Expanded(
+              child: (state is ShowTaskInfoState && state.task != null
+                  ? TaskInfoScreenWidget(state.task!)
+                  : const Align(
+                      alignment: AlignmentDirectional.center,
+                      child: Text("Select item"),
+                    )));
+        }),
       ],
+    );
+  }
+
+  Widget _getItemsList(List<TaskInfoDetailModel> items) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        var taskInfoDetailModel = items[index];
+        return SwipeActionCell(
+          key: ObjectKey(taskInfoDetailModel),
+          trailingActions: [
+            SwipeAction(
+                title: "delete",
+                onTap: (CompletionHandler handler) {
+                  BlocProvider.of<TasksBLoC>(context)
+                      .add(DeleteEvent(taskInfoDetailModel.id));
+                },
+                color: Colors.red),
+          ],
+          child: TaskItemWidget(taskInfoDetailModel, (model) {
+            BlocProvider.of<TaskInfoBloc>(context)
+                .add(ShowTaskInfoEvent(taskInfoDetailModel));
+          }),
+        );
+      },
     );
   }
 }

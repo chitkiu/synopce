@@ -9,9 +9,8 @@ abstract class Data {
 
 class Success extends Data {
   final Iterable<TaskInfoDetailModel> models;
-  final String? selectedTaskId;
 
-  Success(this.models, {this.selectedTaskId}) : super._();
+  Success(this.models) : super._();
 }
 
 class Error extends Data {

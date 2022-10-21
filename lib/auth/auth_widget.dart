@@ -165,6 +165,18 @@ class _AuthWidgetState extends State<AuthWidget> {
   }
 
   void _logIn() async {
+    var url = _urlController.text;
+    var name = _nameController.text;
+    var password = _passwordController.text;
+    if (url.isEmpty) {
+      return;
+    }
+    if (name.isEmpty) {
+      return;
+    }
+    if (password.isEmpty) {
+      return;
+    }
     showDialog<String>(
       barrierDismissible: false,
       context: context,
@@ -179,18 +191,6 @@ class _AuthWidgetState extends State<AuthWidget> {
         ),
       ),
     );
-    var url = _urlController.text;
-    var name = _nameController.text;
-    var password = _passwordController.text;
-    if (url.isEmpty) {
-      return;
-    }
-    if (name.isEmpty) {
-      return;
-    }
-    if (password.isEmpty) {
-      return;
-    }
     print(url);
     print(name);
     print(password);

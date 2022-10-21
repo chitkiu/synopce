@@ -3,7 +3,6 @@ import 'tasks_info_provider.dart';
 
 class TasksRepository {
   final TasksInfoProvider tasksInfoProvider;
-  String? _selectedId;
 
   TasksRepository(this.tasksInfoProvider);
 
@@ -11,8 +10,7 @@ class TasksRepository {
     var result = await tasksInfoProvider.getData();
     Data response;
     if (result.isSuccess) {
-      response =
-          Success(result.successValue.tasks, selectedTaskId: _selectedId);
+      response = Success(result.successValue.tasks);
     } else {
       response = Error(result.errorValue);
     }
@@ -20,26 +18,13 @@ class TasksRepository {
     return Future.value(response);
   }
 
-  Data selectItem(String? id, Data state) {
-    _selectedId = id;
-    if (state.isSuccess) {
-      var successState = (state as Success);
-      return Success(successState.models, selectedTaskId: id);
-    } else {
-      return state;
-    }
-  }
-
   Future<Data> removeItem(String id, Data state) async {
     var result = await tasksInfoProvider.removeItem(id);
     if (result.isSuccess && state.isSuccess) {
       var successState = (state as Success);
-      var models = state.models.toList();
+      var models = successState.models.toList();
       models.removeWhere((element) => element.id == id);
-      return Future.value(Success(models,
-          selectedTaskId: (successState.selectedTaskId == id
-              ? null
-              : successState.selectedTaskId)));
+      return Future.value(Success(models));
     } else {
       return Future.value(state);
     }

@@ -10,8 +10,3 @@ class DeleteEvent extends TasksEvent {
   final String eventId;
   DeleteEvent(this.eventId) : super._();
 }
-
-class SelectEvent extends TasksEvent {
-  final String eventId;
-  SelectEvent(this.eventId) : super._();
-}
