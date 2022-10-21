@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dsm_sdk/core/models/result_response.dart';
 import 'package:dsm_sdk/download_station/models/additional_info.dart';
 import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
@@ -25,15 +27,21 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
     );
   }
 
-  late List<TaskInfoDetailModel> _taskList = List.empty();
+  final storage = SDK().tasksValueListener;
+
   late Future<void> _taskListData;
 
-  TaskInfoDetailModel? _selectedModel;
+  String? _selectedModelId;
+
+  late final Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    _taskListData = _initData();
+    _taskListData = _loadData();
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+      await _loadData();
+    });
   }
 
   @override
@@ -43,7 +51,7 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
         title: const Text("Tasks list"),
       ),
       body: RefreshIndicator(
-        onRefresh: _pullRefresh,
+        onRefresh: _loadData,
         child: FutureBuilder<void>(
           future: _taskListData,
           builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
@@ -82,16 +90,11 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
     );
   }
 
-  Future<void> _pullRefresh() async {
+  Future<void> _loadData() async {
     var result = await _getData();
     result.ifSuccess((p0) => setState(() {
-          _taskList = p0.tasks;
+          storage.value = p0.tasks;
         }));
-  }
-
-  Future<void> _initData() async {
-    var result = await _getData();
-    result.ifSuccess((p0) => _taskList = p0.tasks);
   }
 
   Future<ResultResponse<TasksInfoModel>> _getData() {
@@ -107,9 +110,9 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
           Expanded(
               child: ListView.builder(
             padding: const EdgeInsets.all(8),
-            itemCount: _taskList.length,
+            itemCount: storage.value.length,
             itemBuilder: (BuildContext context, int index) {
-              var taskInfoDetailModel = _taskList[index];
+              var taskInfoDetailModel = storage.value[index];
               return SwipeActionCell(
                 key: ObjectKey(taskInfoDetailModel),
                 trailingActions: [
@@ -121,7 +124,7 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
                             .api
                             .deleteTask(ids: [taskInfoDetailModel.id]);
                         result.ifSuccess((p0) {
-                          _taskList.removeAt(index);
+                          storage.value.removeAt(index);
                           setState(() {});
                         });
                       },
@@ -131,7 +134,7 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => TaskInfoScreenWidget(model)),
+                        builder: (context) => TaskInfoScreenWidget(model.id)),
                   );
                 }),
               );
@@ -149,9 +152,9 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
           width: 300,
           child: ListView.builder(
             padding: const EdgeInsets.all(8),
-            itemCount: _taskList.length,
+            itemCount: storage.value.length,
             itemBuilder: (BuildContext context, int index) {
-              var taskInfoDetailModel = _taskList[index];
+              var taskInfoDetailModel = storage.value[index];
               return SwipeActionCell(
                 key: ObjectKey(taskInfoDetailModel),
                 trailingActions: [
@@ -163,7 +166,7 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
                             .api
                             .deleteTask(ids: [taskInfoDetailModel.id]);
                         result.ifSuccess((p0) {
-                          _taskList.removeAt(index);
+                          storage.value.removeAt(index);
                           setState(() {});
                         });
                       },
@@ -171,7 +174,7 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
                 ],
                 child: TaskItemWidget(taskInfoDetailModel, (model) {
                   setState(() {
-                    _selectedModel = model;
+                    _selectedModelId = model.id;
                   });
                 }),
               );
@@ -180,8 +183,8 @@ class _TasksScreenWidgetState extends State<TasksScreenWidget> {
         ),
         Container(width: 0.5, color: Colors.black),
         Expanded(
-            child: (_selectedModel != null
-                ? TaskInfoScreenWidget(_selectedModel!)
+            child: (_selectedModelId != null
+                ? TaskInfoScreenWidget(_selectedModelId!)
                 : const Align(
                     alignment: AlignmentDirectional.center,
                     child: Text("Select item"),

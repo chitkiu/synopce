@@ -5,9 +5,9 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'task_info_widget.dart';
 
 class TaskInfoScreenWidget extends StatelessWidget {
-  final TaskInfoDetailModel model;
+  final String modelId;
 
-  const TaskInfoScreenWidget(this.model, {Key? key}) : super(key: key);
+  const TaskInfoScreenWidget(this.modelId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class TaskInfoScreenWidget extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Info about task'),
       ),
-      body: TaskInfoWidget(model),
+      body: TaskInfoWidget(modelId),
     );
   }
 
   Widget _desktopWidget() {
-    return TaskInfoWidget(model);
+    return TaskInfoWidget(modelId);
   }
 }

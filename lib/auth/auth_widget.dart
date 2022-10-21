@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/core/models/connection_info.dart';
 import 'package:flutter/material.dart';
@@ -203,12 +205,17 @@ class _AuthWidgetState extends State<AuthWidget> {
         .write(key: 'needToAutologin', value: _needToAutologin.toString());
     var server = Uri.parse("${(_isHttps ? 'https' : 'http')}://$url");
     SDK().init(ConnectionInfo(server, name, password));
-    var authResult = await SDK().sdk.api.auth();
-    authResult.ifSuccess((_) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const TasksScreenWidget()),
-          (route) => false);
-    });
+    try {
+      var authResult = await SDK().sdk.api.auth();
+      authResult.ifSuccess((_) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const TasksScreenWidget()),
+            (route) => false);
+      });
+    } on Exception catch (e) {
+      log(e.toString());
+      Navigator.of(context).pop();
+    }
   }
 }
