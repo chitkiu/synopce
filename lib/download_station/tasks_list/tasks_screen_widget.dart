@@ -1,4 +1,3 @@
-import 'package:dsm_app/download_station/tasks_list/data/models/data_result.dart';
 import 'package:dsm_app/download_station/tasks_list/task_item_widget.dart';
 import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +7,12 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 import '../create_task/add_download_screen.dart';
 import '../task_info/task_info_screen_widget.dart';
+import 'bloc/open_task_info/task_info_bloc.dart';
+import 'bloc/tasks/tasks_bloc.dart';
+import 'bloc/tasks/tasks_events.dart';
+import 'bloc/tasks/tasks_state.dart';
 import 'data/tasks_info_provider.dart';
 import 'data/tasks_repository.dart';
-import 'domain/models/tasks_events.dart';
-import 'domain/task_info_bloc.dart';
-import 'domain/tasks_bloc.dart';
 
 class TasksScreenWidget extends StatelessWidget {
   const TasksScreenWidget({Key? key}) : super(key: key);
@@ -21,9 +21,9 @@ class TasksScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<TasksBLoC>(
-          create: (context) => TasksBLoC(TasksRepository(TasksInfoProvider()))
-            ..add(LoadEvents()),
+        BlocProvider<TasksBloc>(
+          create: (context) => TasksBloc(TasksRepository(TasksInfoProvider()))
+            ..add(LoadTasksEvent()),
         ),
         BlocProvider(create: (context) => TaskInfoBloc())
       ],
@@ -31,29 +31,43 @@ class TasksScreenWidget extends StatelessWidget {
           appBar: AppBar(
             title: const Text("Tasks list"),
           ),
-          body: BlocBuilder<TasksBLoC, Data>(
+          body: BlocBuilder<TasksBloc, TasksState>(
             builder: (context, state) {
-              if (state is Success) {
-                var list = state.models.toList();
-                return ScreenTypeLayout(
-                  mobile: _mobileWidget(list),
-                  tablet: _desktopWidget(list),
-                  desktop: _desktopWidget(list),
-                );
-              }
-              //TODO Add other state handling
-              return const Center(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      color: Colors.black,
+              switch (state.runtimeType) {
+                case SuccessTasksState:
+                  var list = (state as SuccessTasksState).models.toList();
+                  return ScreenTypeLayout(
+                    mobile: _mobileWidget(list),
+                    tablet: _desktopWidget(list),
+                    desktop: _desktopWidget(list),
+                  );
+                case ErrorTasksState:
+                  var errorText = (state as ErrorTasksState).errorType.name;
+                  return Center(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: Text("Error code: $errorText"),
+                      ),
                     ),
-                  ),
-                ),
-              );
+                  );
+                case LoadingTasksState:
+                default:
+                  return const Center(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  );
+              }
             },
           ),
           floatingActionButton: FloatingActionButton(
@@ -64,7 +78,7 @@ class TasksScreenWidget extends StatelessWidget {
                     builder: (context) => const AddDownloadTaskWidget()),
               );
             },
-            tooltip: 'Increment',
+            tooltip: 'Add download',
             child: const Icon(Icons.add),
           )),
     );
@@ -127,8 +141,8 @@ class TasksScreenWidget extends StatelessWidget {
             SwipeAction(
                 title: "delete",
                 onTap: (CompletionHandler handler) {
-                  BlocProvider.of<TasksBLoC>(context)
-                      .add(DeleteEvent(taskInfoDetailModel.id));
+                  BlocProvider.of<TasksBloc>(context)
+                      .add(DeleteTasksEvent(taskInfoDetailModel.id));
                 },
                 color: Colors.red),
           ],

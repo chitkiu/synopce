@@ -1,4 +1,4 @@
-import 'models/data_result.dart';
+import '../bloc/tasks/tasks_state.dart';
 import 'tasks_info_provider.dart';
 
 class TasksRepository {
@@ -6,25 +6,25 @@ class TasksRepository {
 
   TasksRepository(this.tasksInfoProvider);
 
-  Future<Data> getData() async {
+  Future<TasksState> getData() async {
     var result = await tasksInfoProvider.getData();
-    Data response;
+    TasksState response;
     if (result.isSuccess) {
-      response = Success(result.successValue.tasks);
+      response = SuccessTasksState(result.successValue.tasks);
     } else {
-      response = Error(result.errorValue);
+      response = ErrorTasksState(result.errorValue);
     }
 
     return Future.value(response);
   }
 
-  Future<Data> removeItem(String id, Data state) async {
+  Future<TasksState> removeItem(String id, TasksState state) async {
     var result = await tasksInfoProvider.removeItem(id);
     if (result.isSuccess && state.isSuccess) {
-      var successState = (state as Success);
+      var successState = (state as SuccessTasksState);
       var models = successState.models.toList();
       models.removeWhere((element) => element.id == id);
-      return Future.value(Success(models));
+      return Future.value(SuccessTasksState(models));
     } else {
       return Future.value(state);
     }
