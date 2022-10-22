@@ -1,3 +1,4 @@
+import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,7 @@ class TaskInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var downloaded = _model.additional?.transfer?.sizeDownloaded;
+    var actionButton = _getButtonByState();
     return ListView(
       shrinkWrap: true,
       children: [
@@ -22,7 +24,41 @@ class TaskInfoWidget extends StatelessWidget {
         if (downloaded != null && downloaded != 0 && _model.size != 0)
           Text(
               "Percent: ${double.parse((downloaded / _model.size * 100).toStringAsFixed(2))}"),
+        Row(
+          children: [
+            if (actionButton != null)
+              actionButton,
+            ElevatedButton(
+              onPressed: () {
+                SDK.instance.sdk.dsSDK.deleteTask(ids: [_model.id]);
+              },
+              child: const Text('Delete'),
+            )
+          ],
+        )
       ],
+    );
+  }
+
+  Widget? _getButtonByState() {
+    var text;
+    VoidCallback onPressed;
+    if (_model.status == TaskInfoDetailStatus.PAUSED) {
+      text = "Resume";
+      onPressed = () async {
+        await SDK.instance.sdk.dsSDK.resumeTask(ids: [_model.id]);
+      };
+    } else if (_model.status == TaskInfoDetailStatus.DOWNLOADING || _model.status == TaskInfoDetailStatus.WAITING) {
+      text = "Pause";
+      onPressed = () async {
+        await SDK.instance.sdk.dsSDK.pauseTask(ids: [_model.id]);
+      };
+    } else {
+      return null;
+    }
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
     );
   }
 }
