@@ -1,5 +1,5 @@
 import 'package:dsm_app/download_station/tasks_list/task_item_widget.dart';
-import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
+import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
@@ -8,6 +8,8 @@ import 'package:responsive_builder/responsive_builder.dart';
 import '../create_task/add_download_screen.dart';
 import '../task_info/task_info_screen_widget.dart';
 import 'bloc/open_task_info/task_info_bloc.dart';
+import 'bloc/open_task_info/task_info_event.dart';
+import 'bloc/open_task_info/task_info_state.dart';
 import 'bloc/tasks/tasks_bloc.dart';
 import 'bloc/tasks/tasks_events.dart';
 import 'bloc/tasks/tasks_state.dart';

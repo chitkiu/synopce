@@ -19,11 +19,9 @@ class SDK {
     _sdk = DsmSdk(connectionInfo);
   }
 
-  static final SDK _singleton = SDK._internal();
+  static final SDK _singleton = SDK._();
 
-  factory SDK() {
-    return _singleton;
-  }
+  static SDK get instance => _singleton;
 
-  SDK._internal();
+  SDK._();
 }

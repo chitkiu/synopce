@@ -1,5 +1,5 @@
 import 'package:dsm_sdk/core/models/error_type.dart';
-import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
+import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 
 abstract class TasksState {
   const TasksState._();

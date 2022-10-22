@@ -1,4 +1,4 @@
-import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
+import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../extensions/format_byte.dart';

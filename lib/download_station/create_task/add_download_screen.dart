@@ -75,7 +75,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       ));
       return;
     }
-    var result = await SDK().sdk.api.addDownload(
+    var result = await SDK.instance.sdk.dsSDK.addDownload(
         destination: _destination,
         filePath: (_file != null ? _file!.path : null),
         url: (_url.isNotEmpty ? _url : null));

@@ -27,7 +27,7 @@ class _AuthWidgetState extends State<AuthWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var bloc = AuthBloc(SDK().storage);
+    var bloc = AuthBloc(SDK.instance.storage);
     return BlocProvider<AuthBloc>(
       create: (context) => bloc,
       child: BlocListener<AuthBloc, AuthState>(

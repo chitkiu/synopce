@@ -21,7 +21,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         //TODO Add validation for synology quickaccess id
         var splitted = event.url.split(":");
-        if (splitted.length != 2 || splitted[0].isEmpty || splitted[1].isEmpty) {
+        if (splitted.length != 2 ||
+            splitted[0].isEmpty ||
+            splitted[1].isEmpty) {
           emit(ErrorAuthState("Enter valid URL in format ip/host:port"));
           return;
         }
@@ -41,9 +43,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       var server =
           Uri.parse("${(event.isHttps ? 'https' : 'http')}://${event.url}");
-      SDK().init(ConnectionInfo(server, event.username, event.password));
+      SDK.instance.init(ConnectionInfo(server, event.username, event.password));
       try {
-        var authResult = await SDK().sdk.api.auth();
+        var authResult = await SDK.instance.sdk.authSDK.auth();
         authResult.ifSuccess((_) {
           emit(SuccessLogInAuthState());
         }).ifError((p0) => emit(ErrorAuthState(p0.name)));
@@ -70,7 +72,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _storage.write(key: PASSWORD_KEY_NAME, value: event.password);
     _storage.write(key: IS_HTTPS_KEY_NAME, value: event.isHttps.toString());
     _storage.write(
-        key: NEED_TO_AUTOLOGIN_KEY_NAME, value: event.needToAutologin.toString());
+        key: NEED_TO_AUTOLOGIN_KEY_NAME,
+        value: event.needToAutologin.toString());
   }
 
   static const String URL_KEY_NAME = 'url';

@@ -1,18 +1,19 @@
 import 'package:dsm_sdk/core/models/result_response.dart';
-import 'package:dsm_sdk/download_station/models/additional_info.dart';
-import 'package:dsm_sdk/download_station/models/download_station_task_info_model.dart';
+import 'package:dsm_sdk/download_station/tasks/common/models/ds_task_method_result_model.dart';
+import 'package:dsm_sdk/download_station/tasks/info/ds_task_additional_info.dart';
+import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 
 import '../../../sdk.dart';
 
 class TasksInfoProvider {
-  final sdk = SDK().sdk;
+  final sdk = SDK.instance.sdk;
 
   Future<ResultResponse<TasksInfoModel>> getData() {
-    return sdk.api.getDownloadList(
+    return sdk.dsSDK.getDownloadList(
         additionalInfo: [AdditionalInfo.DETAIL, AdditionalInfo.TRANSFER]);
   }
 
-  Future<ResultResponse<List<TaskDeleteModel>>> removeItem(String id) {
-    return sdk.api.deleteTask(ids: [id]);
+  Future<ResultResponse<List<DSTaskMethodResultModel>>> removeItem(String id) {
+    return sdk.dsSDK.deleteTask(ids: [id]);
   }
 }
