@@ -3,14 +3,9 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 import 'auth_widget.dart';
 
-class AuthScreenWidget extends StatefulWidget {
+class AuthScreenWidget extends StatelessWidget {
   const AuthScreenWidget({Key? key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _AuthState();
-}
-
-class _AuthState extends State<AuthScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
@@ -21,7 +16,7 @@ class _AuthState extends State<AuthScreenWidget> {
   }
 
   Widget _mobileWidget() {
-    return const Scaffold(
+    return Scaffold(
       body: Align(
         alignment: AlignmentDirectional.center,
         child: AuthWidget(),
@@ -37,7 +32,7 @@ class _AuthState extends State<AuthScreenWidget> {
         child: Container(
             color: Colors.white,
             padding: const EdgeInsets.only(bottom: 10),
-            child: const SizedBox(width: 350, child: AuthWidget())),
+            child: SizedBox(width: 350, child: AuthWidget())),
       ),
     );
   }
