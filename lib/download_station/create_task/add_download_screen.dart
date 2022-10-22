@@ -1,6 +1,9 @@
 import 'package:dsm_app/sdk.dart';
+import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+
+import 'select_destination_screen.dart';
 
 class AddDownloadTaskWidget extends StatefulWidget {
   const AddDownloadTaskWidget({super.key});
@@ -12,7 +15,7 @@ class AddDownloadTaskWidget extends StatefulWidget {
 class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
   PlatformFile? _file;
   String _url = "";
-  String _destination = "";
+  String? _destination;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +35,24 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
               });
             },
           ),
-          const Text("Destination"),
-          TextField(
-            onChanged: (text) {
-              setState(() {
-                _destination = text;
-              });
+          Text((_destination != null
+              ? "Destination: ${_destination!}"
+              : "Destination")),
+          ElevatedButton(
+            onPressed: () async {
+              var result = await SDK.instance.sdk.fsSDK.getSharedFolderList();
+              if (result.isSuccess) {
+                List<FSFileInfoModel> data = result.successValue;
+                var model = await showDialog<FSFileInfoModel>(
+                  context: context,
+                  builder: (context) => SelectDestinationWidget(data),
+                );
+                setState(() {
+                  _destination = model?.path ?? "";
+                });
+              }
             },
+            child: const Text('Select destination'),
           ),
           if (_file != null) Text('Selected file: ${_file!.name}'),
           ElevatedButton(
@@ -63,7 +77,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
   }
 
   void _sendRequest(BuildContext context) async {
-    if (_destination.isEmpty) {
+    if (_destination == null || _destination?.isEmpty == true) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Enter destination'),
       ));
@@ -76,7 +90,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       return;
     }
     var result = await SDK.instance.sdk.dsSDK.addDownload(
-        destination: _destination,
+        destination: _destination ?? "",
         filePath: (_file != null ? _file!.path : null),
         url: (_url.isNotEmpty ? _url : null));
 

@@ -43,6 +43,7 @@ dependencies:
   flutter_secure_storage: ^6.0.0
   responsive_builder: ^0.4.3
   flutter_bloc: ^8.1.1
+  flutter_tree: ^2.0.3
 
 dev_dependencies:
   flutter_test:
