@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:collection/collection.dart'; // You have to add this manually, for some reason it cannot be added automatically
 import 'package:dsm_app/download_station/tasks_list/task_item_widget.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +24,15 @@ class TasksScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var bloc = TasksBloc(TasksRepository(TasksInfoProvider()))..add(LoadTasksEvent());
+
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      bloc.add(LoadTasksEvent());
+    });
     return MultiBlocProvider(
       providers: [
         BlocProvider<TasksBloc>(
-          create: (context) => TasksBloc(TasksRepository(TasksInfoProvider()))
-            ..add(LoadTasksEvent()),
+          create: (context) => bloc,
         ),
         BlocProvider(create: (context) => TaskInfoBloc())
       ],
@@ -34,6 +41,7 @@ class TasksScreenWidget extends StatelessWidget {
             title: const Text("Tasks list"),
           ),
           body: BlocBuilder<TasksBloc, TasksState>(
+            bloc: bloc,
             builder: (context, state) {
               switch (state.runtimeType) {
                 case SuccessTasksState:
@@ -90,11 +98,13 @@ class TasksScreenWidget extends StatelessWidget {
     return BlocListener<TaskInfoBloc, TaskInfoState>(
       listener: (context, state) {
         if (state is ShowTaskInfoState) {
-          if (state.task != null) {
+          var task =
+              items.firstWhereOrNull((element) => element.id == state.taskId);
+          if (task != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => TaskInfoScreenWidget(state.task!)),
+                  builder: (context) => TaskInfoScreenWidget(task)),
             );
           }
         }
@@ -119,9 +129,14 @@ class TasksScreenWidget extends StatelessWidget {
         ),
         Container(width: 0.5, color: Colors.black),
         BlocBuilder<TaskInfoBloc, TaskInfoState>(builder: (context, state) {
+          var task;
+          if (state is ShowTaskInfoState) {
+            task =
+                items.firstWhereOrNull((element) => element.id == state.taskId);
+          }
           return Expanded(
-              child: (state is ShowTaskInfoState && state.task != null
-                  ? TaskInfoScreenWidget(state.task!)
+              child: (task != null
+                  ? TaskInfoScreenWidget(task)
                   : const Align(
                       alignment: AlignmentDirectional.center,
                       child: Text("Select item"),

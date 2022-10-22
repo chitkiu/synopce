@@ -6,7 +6,7 @@ import 'task_info_state.dart';
 class TaskInfoBloc extends Bloc<TaskInfoEvent, TaskInfoState> {
   TaskInfoBloc() : super(TaskInfoInitialState()) {
     on<ShowTaskInfoEvent>((event, emit) {
-      emit(ShowTaskInfoState(event.task));
+      emit(ShowTaskInfoState(event.task?.id));
     });
   }
 }
