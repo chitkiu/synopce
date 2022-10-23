@@ -76,6 +76,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                   }
                 },
               ),
+              const Padding(padding: EdgeInsets.only(top: 15)),
               const Text("Destination"),
               InkWell(
                 child: Container(
