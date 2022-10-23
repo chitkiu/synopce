@@ -109,7 +109,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                       builder: (context) => SelectDestinationWidget(data),
                     );
                     setState(() {
-                      _destination = model?.path ?? "";
+                      _destination = model?.path.substring(1) ?? "";
                     });
                   }
                 },

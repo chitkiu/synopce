@@ -68,12 +68,12 @@ class TaskItemWidget extends StatelessWidget {
         return Colors.lightBlue;
       case TaskInfoDetailStatus.ERROR:
         return Colors.red;
-      case TaskInfoDetailStatus.PAUSED:
-        return Colors.orange;
-      case TaskInfoDetailStatus.WAITING:
-        return Colors.orange;
       case TaskInfoDetailStatus.FINISHED:
         return Colors.green;
+      case TaskInfoDetailStatus.HASH_CHEKING:
+      case TaskInfoDetailStatus.PAUSED:
+      case TaskInfoDetailStatus.WAITING:
+        return Colors.orange;
     }
   }
 
