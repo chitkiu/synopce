@@ -14,6 +14,8 @@ import 'bloc/open_task_info/task_info_state.dart';
 import 'bloc/tasks/tasks_bloc.dart';
 import 'bloc/tasks/tasks_events.dart';
 import 'bloc/tasks/tasks_state.dart';
+import 'bloc/update_tasks/update_tasks_cubit.dart';
+import 'bloc/update_tasks/update_tasks_state.dart';
 import 'data/tasks_info_provider.dart';
 import 'data/tasks_repository.dart';
 
@@ -22,21 +24,23 @@ class TasksScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bloc = TasksBloc(TasksRepository(TasksInfoProvider()))
-      ..add(LoadTasksEvent());
     return MultiBlocProvider(
       providers: [
         BlocProvider<TasksBloc>(
-          create: (context) => bloc,
+          create: (context) => TasksBloc(TasksRepository(TasksInfoProvider()))
+            ..add(LoadTasksEvent()),
         ),
-        BlocProvider(create: (context) => TaskInfoBloc())
+        BlocProvider(create: (context) => TaskInfoBloc()),
+        BlocProvider(create: (context) => UpdateTasksCubit()),
       ],
       child: Scaffold(
           appBar: AppBar(
             title: const Text("Tasks list"),
           ),
-          body: BlocBuilder<TasksBloc, TasksState>(
-            bloc: bloc,
+          body: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
+              listener: (context, state) {
+            BlocProvider.of<TasksBloc>(context).add(LoadTasksEvent());
+          }, child: BlocBuilder<TasksBloc, TasksState>(
             builder: (context, state) {
               switch (state.runtimeType) {
                 case SuccessTasksState:
@@ -74,7 +78,7 @@ class TasksScreenWidget extends StatelessWidget {
                   );
               }
             },
-          ),
+          )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.push(
