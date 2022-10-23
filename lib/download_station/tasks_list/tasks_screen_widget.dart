@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:collection/collection.dart'; // You have to add this manually, for some reason it cannot be added automatically
 import 'package:dsm_app/download_station/tasks_list/task_item_widget.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
@@ -24,11 +22,8 @@ class TasksScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bloc = TasksBloc(TasksRepository(TasksInfoProvider()))..add(LoadTasksEvent());
-
-    Timer.periodic(const Duration(seconds: 3), (timer) {
-      bloc.add(LoadTasksEvent());
-    });
+    var bloc = TasksBloc(TasksRepository(TasksInfoProvider()))
+      ..add(LoadTasksEvent());
     return MultiBlocProvider(
       providers: [
         BlocProvider<TasksBloc>(

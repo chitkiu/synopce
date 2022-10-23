@@ -23,50 +23,99 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       appBar: AppBar(
         title: const Text('Add download'),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text("URL"),
-          TextField(
-            onChanged: (text) {
-              setState(() {
-                _url = text;
-              });
-            },
+      body: Align(
+        alignment: AlignmentDirectional.center,
+        child: SizedBox(
+          width: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Enter URL"),
+              TextField(
+                keyboardType: TextInputType.url,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  ),
+                  labelText: 'URL',
+                ),
+                onChanged: (newValue) {
+                  setState(() {
+                    _url = newValue;
+                  });
+                },
+              ),
+              const Text("Or select file"),
+              InkWell(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1.0),
+                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          child: Text(
+                            (_file != null ? _file?.name ?? "" : "Select file"),
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                      const Icon(Icons.arrow_right),
+                    ],
+                  ),
+                ),
+                onTap: () async {
+                  FilePickerResult? result =
+                  await FilePicker.platform.pickFiles();
+                  if (result != null) {
+                    setState(() {
+                      _file = result.files.single;
+                    });
+                  }
+                },
+              ),
+              const Text("Destination"),
+              InkWell(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1.0),
+                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          child: Text(
+                        (_destination != null && _destination!.isNotEmpty
+                            ? _destination ?? ""
+                            : "Select destination"),
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                      const Icon(Icons.arrow_right),
+                    ],
+                  ),
+                ),
+                onTap: () async {
+                  var result =
+                      await SDK.instance.sdk.fsSDK.getSharedFolderList();
+                  if (result.isSuccess) {
+                    List<FSFileInfoModel> data = result.successValue;
+                    var model = await showDialog<FSFileInfoModel>(
+                      context: context,
+                      builder: (context) => SelectDestinationWidget(data),
+                    );
+                    setState(() {
+                      _destination = model?.path ?? "";
+                    });
+                  }
+                },
+              ),
+            ],
           ),
-          Text((_destination != null
-              ? "Destination: ${_destination!}"
-              : "Destination")),
-          ElevatedButton(
-            onPressed: () async {
-              var result = await SDK.instance.sdk.fsSDK.getSharedFolderList();
-              if (result.isSuccess) {
-                List<FSFileInfoModel> data = result.successValue;
-                var model = await showDialog<FSFileInfoModel>(
-                  context: context,
-                  builder: (context) => SelectDestinationWidget(data),
-                );
-                setState(() {
-                  _destination = model?.path ?? "";
-                });
-              }
-            },
-            child: const Text('Select destination'),
-          ),
-          if (_file != null) Text('Selected file: ${_file!.name}'),
-          ElevatedButton(
-            onPressed: () async {
-              FilePickerResult? result = await FilePicker.platform.pickFiles();
-              if (result != null) {
-                setState(() {
-                  _file = result.files.single;
-                });
-              }
-            },
-            child: const Text('Pick file!'),
-          )
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _sendRequest(context),
@@ -95,7 +144,6 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
         url: (_url.isNotEmpty ? _url : null));
 
     result.ifSuccess((p0) {
-      //TODO It's wrong way
       Navigator.pop(context);
     }).ifError((p0) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
