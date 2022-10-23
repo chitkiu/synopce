@@ -2,7 +2,8 @@ import 'package:dsm_sdk/core/models/error_type.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 
 abstract class TasksState {
-  const TasksState._();
+  final bool isLoading;
+  const TasksState._(this.isLoading);
 
   bool get isSuccess => this is SuccessTasksState;
 }
@@ -10,15 +11,30 @@ abstract class TasksState {
 class SuccessTasksState extends TasksState {
   final Iterable<TaskInfoDetailModel> models;
 
-  SuccessTasksState(this.models) : super._();
+  SuccessTasksState(this.models, bool isLoading) : super._(isLoading);
+
+  SuccessTasksState copyWith({bool? isLoading}) {
+    return SuccessTasksState(
+      models,
+      isLoading ?? this.isLoading
+    );
+  }
+
 }
 
 class ErrorTasksState extends TasksState {
   final ErrorType errorType;
 
-  ErrorTasksState(this.errorType) : super._();
+  ErrorTasksState(this.errorType, bool isLoading) : super._(isLoading);
+
+  ErrorTasksState copyWith({bool? isLoading}) {
+    return ErrorTasksState(
+        errorType,
+        isLoading ?? this.isLoading
+    );
+  }
 }
 
 class LoadingTasksState extends TasksState {
-  LoadingTasksState() : super._();
+  LoadingTasksState() : super._(false);
 }

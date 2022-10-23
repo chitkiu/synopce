@@ -8,17 +8,20 @@ import '../../data/tasks_repository.dart';
 import 'tasks_events.dart';
 
 class TasksBloc extends Bloc<TasksEvent, TasksState> {
+  final TasksRepository repository;
+
   TasksBloc(this.repository) : super(LoadingTasksState()) {
     on<LoadTasksEvent>(_onLoadEvent);
     on<DeleteTasksEvent>(_onDeleteEvent);
   }
 
   _onLoadEvent(LoadTasksEvent event, Emitter<TasksState> emit) async {
+    _reemitWithNewLoadingState(state, true);
     try {
       emit(await repository.getData());
     } catch (error) {
       log(error.toString());
-      emit(ErrorTasksState(ErrorType.UNKNOWN));
+      emit(ErrorTasksState(ErrorType.UNKNOWN, false));
     }
   }
 
@@ -26,5 +29,12 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     emit(await repository.removeItem(event.eventId, state));
   }
 
-  final TasksRepository repository;
+  void _reemitWithNewLoadingState(TasksState state, bool isLoading) {
+    if (state is SuccessTasksState) {
+      emit(state.copyWith(isLoading: isLoading));
+    } else if (state is ErrorTasksState) {
+      emit(state.copyWith(isLoading: isLoading));
+    }
+  }
+
 }

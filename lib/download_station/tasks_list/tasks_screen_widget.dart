@@ -35,7 +35,25 @@ class TasksScreenWidget extends StatelessWidget {
       ],
       child: Scaffold(
           appBar: AppBar(
-            title: const Text("Tasks list"),
+            title: BlocBuilder<TasksBloc, TasksState>(
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Tasks list"),
+                    const Padding(padding: EdgeInsets.only(left: 10)),
+                    if (state.isLoading)
+                      const SizedBox(
+                        width: 15,
+                        height: 15,
+                        child: CircularProgressIndicator( //TODO Replace with SpinKitFadingCircle
+                          color: Colors.white,
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
           ),
           body: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
               listener: (context, state) {

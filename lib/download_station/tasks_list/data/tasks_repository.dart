@@ -10,9 +10,9 @@ class TasksRepository {
     var result = await tasksInfoProvider.getData();
     TasksState response;
     if (result.isSuccess) {
-      response = SuccessTasksState(result.successValue.tasks);
+      response = SuccessTasksState(result.successValue.tasks, false);
     } else {
-      response = ErrorTasksState(result.errorValue);
+      response = ErrorTasksState(result.errorValue, false);
     }
 
     return Future.value(response);
@@ -24,7 +24,7 @@ class TasksRepository {
       var successState = (state as SuccessTasksState);
       var models = successState.models.toList();
       models.removeWhere((element) => element.id == id);
-      return Future.value(SuccessTasksState(models));
+      return Future.value(SuccessTasksState(models, false));
     } else {
       return Future.value(state);
     }

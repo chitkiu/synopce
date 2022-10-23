@@ -1,4 +1,3 @@
-// import 'package:animated_tree_view/animated_tree_view.dart';
 import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
@@ -43,6 +42,12 @@ class NodeTreeView extends StatelessWidget {
     var scope = TreeNodeScope.of(context);
     var data = scope.node.data;
     if (data is FSFileInfoModel) {
+      var icon;
+      if (scope.isExpanded) {
+        icon = Icons.expand_less;
+      } else {
+        icon = Icons.expand_more;
+      }
       return InkWell(
           onTap: () async {
             if (scope.isExpanded) {
@@ -63,32 +68,26 @@ class NodeTreeView extends StatelessWidget {
               }
             }
           },
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: scope.indentation,
-                    height: double.infinity,
-                  ),
-                  const ExpandNodeIcon(
-                    padding: EdgeInsets.zero,
-                    size: 20,
-                  ),
-                  Expanded(
-                      child: Text(
-                    data.name,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-                  TextButton(
-                    child: const Text("Select"),
-                    onPressed: () {
-                      Navigator.pop(context, data);
-                    },
-                  ),
-                ]),
-          ));
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            SizedBox(
+              width: scope.indentation,
+              height: double.infinity,
+            ),
+            Padding(
+                padding: const EdgeInsets.all(2), child: Icon(icon, size: 20)),
+            Expanded(
+                child: Text(
+              data.name,
+              overflow: TextOverflow.ellipsis,
+            )),
+            TextButton(
+              child: const Text("Select"),
+              onPressed: () {
+                Navigator.pop(context, data);
+              },
+            ),
+          ]));
     } else {
       return Container();
     }
