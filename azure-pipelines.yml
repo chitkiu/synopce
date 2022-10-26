@@ -1,0 +1,24 @@
+# Flutter build
+variables:
+  projectDirectory: 'covid_19_tracker'
+trigger:
+- master
+jobs:
+  - job: Android
+    pool:
+      vmImage: 'macOS-latest'
+    steps:
+    - task: FlutterInstall@0
+      inputs:
+        channel: 'stable'
+        version: 'latest'
+    
+    - task: FlutterBuild@0
+      inputs:
+        target: apk
+        projectDirectory: $(projectDirectory)
+    - task: CopyFiles@2
+      inputs:
+        contents: '**/*.apk'
+        targetFolder: '$(build.artifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
