@@ -21,7 +21,7 @@ class SelectDestinationWidget extends StatelessWidget {
     return AlertDialog(
       title: const Text("Select directory on server"),
       content: SizedBox(
-        height: 500,
+        height: 300,
         width: 400,
         child: TreeView(
           controller: controller,
@@ -48,7 +48,7 @@ class NodeTreeView extends StatelessWidget {
       } else {
         icon = Icons.expand_more;
       }
-      return InkWell(
+      return GestureDetector(
           onTap: () async {
             if (scope.isExpanded) {
               scope.collapse(context);

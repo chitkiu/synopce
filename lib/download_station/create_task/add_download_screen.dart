@@ -3,6 +3,7 @@ import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/base_text_field.dart';
 import 'select_destination_screen.dart';
 
 class AddDownloadTaskWidget extends StatefulWidget {
@@ -31,15 +32,9 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text("Enter URL"),
-              TextField(
+              BaseTextField(
                 keyboardType: TextInputType.url,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                  ),
-                  labelText: 'URL',
-                ),
+                placeholder: 'URL',
                 onChanged: (newValue) {
                   setState(() {
                     _url = newValue;
@@ -59,16 +54,16 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                     children: [
                       Expanded(
                           child: Text(
-                            (_file != null ? _file?.name ?? "" : "Select file"),
-                            overflow: TextOverflow.ellipsis,
-                          )),
+                        (_file != null ? _file?.name ?? "" : "Select file"),
+                        overflow: TextOverflow.ellipsis,
+                      )),
                       const Icon(Icons.arrow_right),
                     ],
                   ),
                 ),
                 onTap: () async {
                   FilePickerResult? result =
-                  await FilePicker.platform.pickFiles();
+                      await FilePicker.platform.pickFiles();
                   if (result != null) {
                     setState(() {
                       _file = result.files.single;
