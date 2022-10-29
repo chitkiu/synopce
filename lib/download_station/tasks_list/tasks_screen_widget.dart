@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
+import '../../common/base_page_router.dart';
+import '../../common/base_scaffold.dart';
+import '../../common/icons_constants.dart';
 import '../create_task/add_download_screen.dart';
 import '../task_info/task_info_screen_widget.dart';
 import 'bloc/open_task_info/task_info_bloc.dart';
@@ -25,90 +28,83 @@ class TasksScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<TasksBloc>(
-          create: (context) => TasksBloc(TasksRepository(TasksInfoProvider()))
-            ..add(LoadTasksEvent()),
-        ),
-        BlocProvider(create: (context) => TaskInfoBloc()),
-        BlocProvider(create: (context) => UpdateTasksCubit()),
-      ],
-      child: Scaffold(
-          appBar: AppBar(
-            title: BlocBuilder<TasksBloc, TasksState>(
-              builder: (context, state) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Tasks list"),
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    if (state.isLoading)
-                      const SizedBox(
-                        width: 15,
-                        height: 15,
-                        child: CircularProgressIndicator( //TODO Replace with SpinKitFadingCircle
-                          color: Colors.white,
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ),
+        providers: [
+          BlocProvider<TasksBloc>(
+            create: (context) => TasksBloc(TasksRepository(TasksInfoProvider()))
+              ..add(LoadTasksEvent()),
           ),
-          body: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
-              listener: (context, state) {
-            BlocProvider.of<TasksBloc>(context).add(LoadTasksEvent());
-          }, child: BlocBuilder<TasksBloc, TasksState>(
-            builder: (context, state) {
-              switch (state.runtimeType) {
-                case SuccessTasksState:
-                  var list = (state as SuccessTasksState).models.toList();
-                  return ScreenTypeLayout(
-                    mobile: _mobileWidget(list),
-                    tablet: _desktopWidget(list),
-                    desktop: _desktopWidget(list),
-                  );
-                case ErrorTasksState:
-                  var errorText = (state as ErrorTasksState).errorType.name;
-                  return Center(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: Text("Error code: $errorText"),
-                      ),
+          BlocProvider(create: (context) => TaskInfoBloc()),
+          BlocProvider(create: (context) => UpdateTasksCubit()),
+        ],
+        child: BlocBuilder<TasksBloc, TasksState>(builder: (context, state) {
+          return BaseScaffold(
+            barWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Tasks list"),
+                if (state.isLoading)
+                  const Padding(padding: EdgeInsets.only(left: 10)),
+                if (state.isLoading)
+                  const SizedBox(
+                    width: 15,
+                    height: 15,
+                    child: CircularProgressIndicator(
+                      //TODO Replace with SpinKitFadingCircle
+                      color: Colors.white,
                     ),
-                  );
-                case LoadingTasksState:
-                default:
-                  return const Center(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
+                  ),
+              ],
+            ),
+            onPressed: () {
+              Navigator.of(context).push(pageRoute(
+                  builder: (context) => const AddDownloadTaskWidget()));
+            },
+            actionButtonIcon: addIcon(context),
+            child: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
+                listener: (localContext, state) {
+              BlocProvider.of<TasksBloc>(context).add(LoadTasksEvent());
+            }, child: BlocBuilder<TasksBloc, TasksState>(
+              builder: (context, state) {
+                switch (state.runtimeType) {
+                  case SuccessTasksState:
+                    var list = (state as SuccessTasksState).models.toList();
+                    return SafeArea(
+                        child: ScreenTypeLayout(
+                      mobile: _mobileWidget(list),
+                      tablet: _desktopWidget(list),
+                      desktop: _desktopWidget(list),
+                    ));
+                  case ErrorTasksState:
+                    var errorText = (state as ErrorTasksState).errorType.name;
+                    return Center(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Text("Error code: $errorText"),
                         ),
                       ),
-                    ),
-                  );
-              }
-            },
-          )),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AddDownloadTaskWidget()),
-              );
-            },
-            tooltip: 'Add download',
-            child: const Icon(Icons.add),
-          )),
-    );
+                    );
+                  case LoadingTasksState:
+                  default:
+                    return const Center(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    );
+                }
+              },
+            )),
+          );
+        }));
   }
 
   Widget _mobileWidget(List<TaskInfoDetailModel> items) {
@@ -120,8 +116,7 @@ class TasksScreenWidget extends StatelessWidget {
           if (task != null) {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => TaskInfoScreenWidget(task)),
+              pageRoute(builder: (context) => TaskInfoScreenWidget(task)),
             );
           }
         }

@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'auth/auth_screen_widget.dart';
@@ -11,12 +14,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const AuthScreenWidget(),
-    );
+    if (Platform.isIOS) {
+      return const CupertinoApp(
+        title: 'Flutter Demo',
+        theme: CupertinoThemeData(brightness: Brightness.light),
+        home: AuthScreenWidget(),
+      );
+    } else {
+      return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const AuthScreenWidget(),
+      );
+    }
   }
 }

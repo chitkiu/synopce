@@ -3,7 +3,9 @@ import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/base_scaffold.dart';
 import '../../common/base_text_field.dart';
+import '../../common/icons_constants.dart';
 import 'select_destination_screen.dart';
 
 class AddDownloadTaskWidget extends StatefulWidget {
@@ -20,11 +22,11 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add download'),
-      ),
-      body: Align(
+    return BaseScaffold(
+      barWidget: const Text('Add download'),
+      onPressed: () => _sendRequest(context),
+      actionButtonIcon: doneIcon(context),
+      child: Align(
         alignment: AlignmentDirectional.center,
         child: SizedBox(
           width: 300,
@@ -112,11 +114,6 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _sendRequest(context),
-        tooltip: 'Create task',
-        child: const Icon(Icons.done),
       ),
     );
   }

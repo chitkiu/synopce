@@ -1,3 +1,4 @@
+import 'package:dsm_app/common/base_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -16,8 +17,8 @@ class AuthScreenWidget extends StatelessWidget {
   }
 
   Widget _mobileWidget() {
-    return Scaffold(
-      body: Align(
+    return BaseScaffold(
+      child: Align(
         alignment: AlignmentDirectional.center,
         child: AuthWidget(),
       ),
@@ -25,9 +26,9 @@ class AuthScreenWidget extends StatelessWidget {
   }
 
   Widget _desktopWidget() {
-    return Scaffold(
+    return BaseScaffold(
       backgroundColor: Colors.lightBlue,
-      body: Align(
+      child: Align(
         alignment: AlignmentDirectional.center,
         child: Container(
             color: Colors.white,

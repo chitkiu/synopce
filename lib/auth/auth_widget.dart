@@ -5,6 +5,7 @@ import 'package:dsm_app/sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../common/base_page_router.dart';
 import '../common/base_text_field.dart';
 import '../common/text_constants.dart';
 import '../common/wrapped_switch.dart';
@@ -40,6 +41,7 @@ class AuthWidget extends StatelessWidget {
             if (state.state == InternalAuthState.LOADING) {
               if (!_isAlertDialogVisible) {
                 _isAlertDialogVisible = true;
+                //TODO Replace by other loader
                 showDialog<String>(
                   barrierDismissible: false,
                   context: context,
@@ -57,9 +59,8 @@ class AuthWidget extends StatelessWidget {
                 ).then((value) => _isAlertDialogVisible = false);
               }
             } else if (state.state == InternalAuthState.SUCCESS) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const TasksScreenWidget()),
+              Navigator.of(context).pushAndRemoveUntil(
+                  pageRoute(builder: (_) => const TasksScreenWidget()),
                   (route) => false);
             }
           }
@@ -137,19 +138,21 @@ class AuthWidget extends StatelessWidget {
                       controller: _passwordController,
                       obscureText: state.hidePassword,
                       placeholder: 'Password',
-                      suffix: IconButton(
-                        icon: Icon(
-                          // Based on passwordVisible state choose the icon
-                          state.hidePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Theme.of(context).primaryColorDark,
+                      suffix: Material(
+                        child: IconButton(
+                          icon: Icon(
+                            // Based on passwordVisible state choose the icon
+                            state.hidePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                          onPressed: () {
+                            // Update the state i.e. toogle the state of passwordVisible variable
+                            BlocProvider.of<AuthCubit>(context)
+                                .hidePassword(!state.hidePassword);
+                          },
                         ),
-                        onPressed: () {
-                          // Update the state i.e. toogle the state of passwordVisible variable
-                          BlocProvider.of<AuthCubit>(context)
-                              .hidePassword(!state.hidePassword);
-                        },
                       ),
                       onChanged: (newValue) {
                         BlocProvider.of<AuthCubit>(context)

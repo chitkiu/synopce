@@ -12,7 +12,7 @@ class TaskItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var additionalInfo = _buildInfoString(model);
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         onClick(model);
       },
