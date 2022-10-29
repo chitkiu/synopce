@@ -24,15 +24,7 @@ class BaseScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
-        navigationBar: ((barWidget != null)
-            ? CupertinoNavigationBar(
-                middle: barWidget,
-                trailing: GestureDetector(
-                  onTap: onPressed,
-                  child: actionButtonIcon,
-                ),
-              )
-            : null),
+        navigationBar: _getCupertinoNavigationBar(),
         backgroundColor: backgroundColor,
         child: child,
       );
@@ -46,6 +38,19 @@ class BaseScaffold extends StatelessWidget {
         floatingActionButton:
             FloatingActionButton(onPressed: onPressed, child: actionButtonIcon),
       );
+    }
+  }
+
+  CupertinoNavigationBar? _getCupertinoNavigationBar() {
+    if (barWidget != null) {
+      GestureDetector? trailing;
+      if (onPressed != null || actionButtonIcon != null) {
+        trailing = GestureDetector(
+          onTap: onPressed,
+          child: actionButtonIcon,
+        );
+      }
+      return CupertinoNavigationBar(middle: barWidget, trailing: trailing);
     }
   }
 }

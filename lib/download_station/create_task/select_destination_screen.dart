@@ -1,4 +1,6 @@
+import 'package:dsm_app/common/base_scaffold.dart';
 import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 
@@ -18,17 +20,13 @@ class SelectDestinationWidget extends StatelessWidget {
               data: e,
             )));
     var controller = TreeViewController(rootNode: root);
-    return AlertDialog(
-      title: const Text("Select directory on server"),
-      content: SizedBox(
-        height: 300,
-        width: 400,
-        child: TreeView(
-          controller: controller,
-          nodeBuilder: (context, node) {
-            return const NodeTreeView();
-          },
-        ),
+    return BaseScaffold(
+      barWidget: const Text("Select destination directory"),
+      child: TreeView(
+        controller: controller,
+        nodeBuilder: (context, node) {
+          return const NodeTreeView();
+        },
       ),
     );
   }

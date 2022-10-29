@@ -18,7 +18,7 @@ class TaskInfoWidget extends StatelessWidget {
       children: [
         Text("Name: ${_model.title}"),
         Text("Status: ${_model.status}"),
-        Text("Size: ${formatBytes(_model.size ?? 0, 2)}"),
+        Text("Size: ${formatBytes(_model.size, 2)}"),
         if (_model.additional?.detail?.destination != null)
           Text("Destination: ${_model.additional?.detail?.destination}"),
         if (downloaded != null && downloaded != 0 && _model.size != 0)

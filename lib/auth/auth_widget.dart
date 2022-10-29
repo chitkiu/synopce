@@ -5,6 +5,7 @@ import 'package:dsm_app/sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../common/base_loading_dialog.dart';
 import '../common/base_page_router.dart';
 import '../common/base_text_field.dart';
 import '../common/text_constants.dart';
@@ -18,7 +19,7 @@ class AuthWidget extends StatelessWidget {
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isAlertDialogVisible = false;
+  bool _isLoadingDialogVisible = false;
 
   final double _EditTextWidth = 300;
 
@@ -34,29 +35,15 @@ class AuthWidget extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Error: ${state.error}'),
               ));
-              if (_isAlertDialogVisible) {
+              if (_isLoadingDialogVisible) {
                 Navigator.of(context).pop();
               }
             }
             if (state.state == InternalAuthState.LOADING) {
-              if (!_isAlertDialogVisible) {
-                _isAlertDialogVisible = true;
-                //TODO Replace by other loader
-                showDialog<String>(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (BuildContext context) => const AlertDialog(
-                    content: SingleChildScrollView(
-                      child: SizedBox(
-                        width: 10,
-                        height: 10,
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ).then((value) => _isAlertDialogVisible = false);
+              if (!_isLoadingDialogVisible) {
+                _isLoadingDialogVisible = true;
+                showLoadingDialog(context)
+                    .then((value) => _isLoadingDialogVisible = false);
               }
             } else if (state.state == InternalAuthState.SUCCESS) {
               Navigator.of(context).pushAndRemoveUntil(

@@ -30,3 +30,20 @@ Widget addIcon(BuildContext context, {Color? color}) {
     );
   }
 }
+
+Widget loadingIcon({Color? color, double size = 15}) {
+  if (Platform.isIOS) {
+    return CupertinoActivityIndicator(
+      radius: size,
+      color: color,
+    );
+  } else {
+    return SizedBox(
+      height: size,
+      width: size,
+      child: CircularProgressIndicator(
+        color: color,
+      ),
+    );
+  }
+}

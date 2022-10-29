@@ -2,7 +2,9 @@ import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
+import '../../common/base_page_router.dart';
 import '../../common/base_scaffold.dart';
 import '../../common/base_text_field.dart';
 import '../../common/icons_constants.dart';
@@ -44,7 +46,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                 },
               ),
               const Text("Or select file"),
-              InkWell(
+              GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey, width: 1.0),
@@ -75,7 +77,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
               ),
               const Padding(padding: EdgeInsets.only(top: 15)),
               const Text("Destination"),
-              InkWell(
+              GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey, width: 1.0),
@@ -101,10 +103,8 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                       await SDK.instance.sdk.fsSDK.getSharedFolderList();
                   if (result.isSuccess) {
                     List<FSFileInfoModel> data = result.successValue;
-                    var model = await showDialog<FSFileInfoModel>(
-                      context: context,
-                      builder: (context) => SelectDestinationWidget(data),
-                    );
+                    var model = await Navigator.of(context).push(pageRoute(
+                        builder: (context) => SelectDestinationWidget(data)));
                     setState(() {
                       _destination = model?.path.substring(1) ?? "";
                     });
