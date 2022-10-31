@@ -9,6 +9,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import '../../common/base_page_router.dart';
 import '../../common/base_scaffold.dart';
 import '../../common/icons_constants.dart';
+import '../../sdk.dart';
 import '../create_task/add_download_screen.dart';
 import '../task_info/task_info_screen_widget.dart';
 import 'bloc/open_task_info/task_info_bloc.dart';
@@ -19,8 +20,6 @@ import 'bloc/tasks/tasks_events.dart';
 import 'bloc/tasks/tasks_state.dart';
 import 'bloc/update_tasks/update_tasks_cubit.dart';
 import 'bloc/update_tasks/update_tasks_state.dart';
-import 'data/tasks_info_provider.dart';
-import 'data/tasks_repository.dart';
 
 class TasksScreenWidget extends StatelessWidget {
   const TasksScreenWidget({Key? key}) : super(key: key);
@@ -30,8 +29,8 @@ class TasksScreenWidget extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<TasksBloc>(
-            create: (context) => TasksBloc(TasksRepository(TasksInfoProvider()))
-              ..add(LoadTasksEvent()),
+            create: (context) =>
+                TasksBloc(SDK.instance.repository)..add(LoadTasksEvent()),
           ),
           BlocProvider(create: (context) => TaskInfoBloc()),
           BlocProvider(create: (context) => UpdateTasksCubit()),
@@ -110,14 +109,20 @@ class TasksScreenWidget extends StatelessWidget {
     return BlocListener<TaskInfoBloc, TaskInfoState>(
       listener: (context, state) {
         if (state is ShowTaskInfoState) {
-          var task =
-              items.firstWhereOrNull((element) => element.id == state.taskId);
-          if (task != null) {
-            Navigator.push(
-              context,
-              pageRoute(builder: (context) => TaskInfoScreenWidget(task)),
-            );
-          }
+          Navigator.push(
+            context,
+            pageRoute(
+                builder: (context) => StreamBuilder(
+                      //TODO Try to find better way
+                      stream: SDK.instance.repository.successDataStream,
+                      initialData: items,
+                      builder: (context, snapshot) {
+                        var task = snapshot.data?.firstWhereOrNull(
+                            (element) => element.id == state.taskId);
+                        return TaskInfoScreenWidget(task);
+                      },
+                    )),
+          );
         }
       },
       child: Center(
@@ -145,13 +150,7 @@ class TasksScreenWidget extends StatelessWidget {
             task =
                 items.firstWhereOrNull((element) => element.id == state.taskId);
           }
-          return Expanded(
-              child: (task != null
-                  ? TaskInfoScreenWidget(task)
-                  : const Align(
-                      alignment: AlignmentDirectional.center,
-                      child: Text("Select item"),
-                    )));
+          return Expanded(child: TaskInfoScreenWidget(task));
         }),
       ],
     );

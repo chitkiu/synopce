@@ -6,7 +6,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'task_info_widget.dart';
 
 class TaskInfoScreenWidget extends StatelessWidget {
-  final TaskInfoDetailModel _model;
+  final TaskInfoDetailModel? _model;
 
   const TaskInfoScreenWidget(this._model, {Key? key}) : super(key: key);
 
@@ -22,11 +22,21 @@ class TaskInfoScreenWidget extends StatelessWidget {
   Widget _mobileWidget() {
     return BaseScaffold(
       barWidget: const Text('Info about task'),
-      child: TaskInfoWidget(_model),
+      child: _wrappedDataWidget(_model),
     );
   }
 
   Widget _desktopWidget() {
-    return TaskInfoWidget(_model);
+    return _wrappedDataWidget(_model);
+  }
+
+  Widget _wrappedDataWidget(TaskInfoDetailModel? model) {
+    if (model == null) {
+      return const Align(
+        alignment: AlignmentDirectional.center,
+        child: Text("Select item"),
+      );
+    }
+    return TaskInfoWidget(model);
   }
 }
