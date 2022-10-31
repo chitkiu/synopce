@@ -73,6 +73,7 @@ class TaskItemWidget extends StatelessWidget {
       case TaskInfoDetailStatus.HASH_CHEKING:
       case TaskInfoDetailStatus.PAUSED:
       case TaskInfoDetailStatus.WAITING:
+      case TaskInfoDetailStatus.SEEDING:
         return Colors.orange;
     }
   }

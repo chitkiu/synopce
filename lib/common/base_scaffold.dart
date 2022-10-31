@@ -35,8 +35,15 @@ class BaseScaffold extends StatelessWidget {
         ),
         backgroundColor: backgroundColor,
         body: child,
-        floatingActionButton:
-            FloatingActionButton(onPressed: onPressed, child: actionButtonIcon),
+        floatingActionButton: _getFloatingActionButton(),
+      );
+    }
+  }
+
+  FloatingActionButton? _getFloatingActionButton() {
+    if (onPressed != null || actionButtonIcon != null) {
+      return FloatingActionButton(
+          onPressed: onPressed, child: actionButtonIcon
       );
     }
   }

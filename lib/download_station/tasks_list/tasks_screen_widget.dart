@@ -49,7 +49,6 @@ class TasksScreenWidget extends StatelessWidget {
                     width: 15,
                     height: 15,
                     child: CircularProgressIndicator(
-                      //TODO Replace with SpinKitFadingCircle
                       color: Colors.white,
                     ),
                   ),
