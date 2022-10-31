@@ -15,12 +15,19 @@ class TaskInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var downloaded = _model.additional?.transfer?.sizeDownloaded;
     var actionButton = _getButtonByState();
+    var needToShowDownloadSpeed = _model.status == TaskInfoDetailStatus.DOWNLOADING;
+    var speedDownload = _model.additional?.transfer?.speedDownload;
+    var speedUpload = _model.additional?.transfer?.speedUpload;
+    var downloadedSize = _model.additional?.transfer?.sizeDownloaded;
     return ListView(
       shrinkWrap: true,
       children: [
         Text("Name: ${_model.title}", style: AppDefaultTextStyle,),
         Text("Status: ${_model.status}", style: AppDefaultTextStyle,),
-        Text("Size: ${formatBytes(_model.size, 2)}", style: AppDefaultTextStyle,),
+        Text("Total size: ${formatBytes(_model.size, 2)}", style: AppDefaultTextStyle,),
+        if (downloadedSize != null) Text("Downloaded size: ${formatBytes(downloadedSize, 2)}", style: AppDefaultTextStyle,),
+        if (needToShowDownloadSpeed && speedDownload != null) Text("Download speed: ${formatBytes(speedDownload, 2)}/s", style: AppDefaultTextStyle,),
+        if (needToShowDownloadSpeed && speedUpload != null) Text("Upload speed: ${formatBytes(speedUpload, 2)}/s", style: AppDefaultTextStyle,),
         if (_model.additional?.detail?.destination != null)
           Text("Destination: ${_model.additional?.detail?.destination}", style: AppDefaultTextStyle,),
         if (downloaded != null && downloaded != 0 && _model.size != 0)
