@@ -5,43 +5,37 @@ import '../../extensions/format_byte.dart';
 
 class TaskItemWidget extends StatelessWidget {
   final TaskInfoDetailModel model;
-  final Function(TaskInfoDetailModel) onClick;
 
-  const TaskItemWidget(this.model, this.onClick, {super.key});
+  const TaskItemWidget(this.model, {super.key});
 
   @override
   Widget build(BuildContext context) {
     var additionalInfo = _buildInfoString(model);
-    return GestureDetector(
-      onTap: () {
-        onClick(model);
-      },
-      child: Column(
-        children: [
-          Text(
-            model.title,
-            style: const TextStyle(fontSize: 14),
-          ),
-          RichText(
-              text: TextSpan(
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 14.0,
-                  ),
-                  children: [
-                WidgetSpan(
-                    child: Icon(
-                  Icons.circle,
-                  size: 13,
-                  color: _getIconColor(model.status),
-                )),
-                TextSpan(text: '${model.status}')
-              ])),
-          if (additionalInfo.children?.isNotEmpty == true)
-            RichText(text: additionalInfo),
-          const Divider(height: 1, color: Colors.black),
-        ],
-      ),
+    return Column(
+      children: [
+        Text(
+          model.title,
+          style: const TextStyle(fontSize: 14),
+        ),
+        RichText(
+            text: TextSpan(
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14.0,
+                ),
+                children: [
+                  WidgetSpan(
+                      child: Icon(
+                        Icons.circle,
+                        size: 13,
+                        color: _getIconColor(model.status),
+                      )),
+                  TextSpan(text: '${model.status}')
+                ])),
+        if (additionalInfo.children?.isNotEmpty == true)
+          RichText(text: additionalInfo),
+        const Divider(height: 1, color: Colors.black),
+      ],
     );
   }
 

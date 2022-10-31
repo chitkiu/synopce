@@ -2,7 +2,6 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class BaseScaffold extends StatelessWidget {
   final Widget child;
@@ -30,12 +29,18 @@ class BaseScaffold extends StatelessWidget {
       );
     } else {
       return Scaffold(
-        appBar: AppBar(
-          title: barWidget,
-        ),
+        appBar: _getAppBar(),
         backgroundColor: backgroundColor,
         body: child,
         floatingActionButton: _getFloatingActionButton(),
+      );
+    }
+  }
+
+  AppBar? _getAppBar() {
+    if (barWidget != null) {
+      return AppBar(
+        title: barWidget,
       );
     }
   }

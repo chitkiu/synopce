@@ -162,21 +162,24 @@ class TasksScreenWidget extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         var taskInfoDetailModel = items[index];
-        return SwipeActionCell(
-          key: ObjectKey(taskInfoDetailModel),
-          trailingActions: [
-            SwipeAction(
-                title: "delete",
-                onTap: (CompletionHandler handler) {
-                  BlocProvider.of<TasksBloc>(context)
-                      .add(DeleteTasksEvent(taskInfoDetailModel.id));
-                },
-                color: Colors.red),
-          ],
-          child: TaskItemWidget(taskInfoDetailModel, (model) {
+        return GestureDetector(
+          onTap: () {
             BlocProvider.of<TaskInfoBloc>(context)
                 .add(ShowTaskInfoEvent(taskInfoDetailModel));
-          }),
+          },
+          child: SwipeActionCell(
+            key: ObjectKey(taskInfoDetailModel),
+            trailingActions: [
+              SwipeAction(
+                  title: "delete",
+                  onTap: (CompletionHandler handler) {
+                    BlocProvider.of<TasksBloc>(context)
+                        .add(DeleteTasksEvent(taskInfoDetailModel.id));
+                  },
+                  color: Colors.red),
+            ],
+            child: TaskItemWidget(taskInfoDetailModel),
+          ),
         );
       },
     );
