@@ -13,13 +13,18 @@ class TaskInfoScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
-      mobile: _mobileWidget(),
+      mobile: _mobileWidget(context),
       tablet: _desktopWidget(),
       desktop: _desktopWidget(),
     );
   }
 
-  Widget _mobileWidget() {
+  Widget _mobileWidget(BuildContext context) {
+    if (_model == null) {
+      Future.delayed(Duration.zero, () {
+        Navigator.pop(context);
+      });
+    }
     return BaseScaffold(
       barWidget: const Text('Info about task'),
       child: _wrappedDataWidget(_model),

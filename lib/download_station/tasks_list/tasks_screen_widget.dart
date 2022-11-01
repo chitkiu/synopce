@@ -157,7 +157,7 @@ class TasksScreenWidget extends StatelessWidget {
   }
 
   Widget _getItemsList(List<TaskInfoDetailModel> items) {
-    return ListView.builder(
+    return ListView.separated(
       padding: const EdgeInsets.all(8),
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
@@ -182,6 +182,7 @@ class TasksScreenWidget extends StatelessWidget {
           ),
         );
       },
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
   }
 }

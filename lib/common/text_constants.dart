@@ -9,3 +9,8 @@ const TextStyle AppSmallTextStyle = TextStyle(
   fontSize: 14,
   color: Colors.black,
 );
+
+const TextStyle AppGreySmallTextStyle = TextStyle(
+  fontSize: 14,
+  color: Colors.grey,
+);

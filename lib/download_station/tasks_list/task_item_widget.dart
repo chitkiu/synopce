@@ -1,6 +1,7 @@
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/text_constants.dart';
 import '../../extensions/format_byte.dart';
 
 class TaskItemWidget extends StatelessWidget {
@@ -10,105 +11,68 @@ class TaskItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var additionalInfo = _buildInfoString(model);
+    var firstAdditionalInfo = _buildInfoString(model);
+    var secondAdditionalInfo = _buildSecondInfoString(model);
+
     return Column(
       children: [
         Text(
           model.title,
-          style: const TextStyle(fontSize: 14),
+          style: AppDefaultTextStyle,
         ),
-        RichText(
-            text: TextSpan(
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 14.0,
-                ),
-                children: [
-                  WidgetSpan(
-                      child: Icon(
-                        Icons.circle,
-                        size: 13,
-                        color: _getIconColor(model.status),
-                      )),
-                  TextSpan(text: '${model.status}')
-                ])),
-        if (additionalInfo.children?.isNotEmpty == true)
-          RichText(text: additionalInfo),
-        const Divider(height: 1, color: Colors.black),
+        if (firstAdditionalInfo.children?.isNotEmpty == true)
+          RichText(text: firstAdditionalInfo),
+        RichText(text: secondAdditionalInfo),
       ],
     );
   }
 
   TextSpan _buildInfoString(TaskInfoDetailModel model) {
     var resultString = <InlineSpan>[];
-
-    if (model.status == TaskInfoDetailStatus.DOWNLOADING) {
-      resultString.addAll(_getAdditionalInfoForDownloadingStatus(model));
-    }
-
-    return TextSpan(
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 14.0,
-        ),
-        children: resultString);
-  }
-
-  Color _getIconColor(TaskInfoDetailStatus status) {
-    switch (status) {
-      case TaskInfoDetailStatus.UNKNOWN:
-        return Colors.grey;
-      case TaskInfoDetailStatus.DOWNLOADING:
-        return Colors.lightBlue;
-      case TaskInfoDetailStatus.ERROR:
-        return Colors.red;
-      case TaskInfoDetailStatus.FINISHED:
-        return Colors.green;
-      case TaskInfoDetailStatus.HASH_CHEKING:
-      case TaskInfoDetailStatus.PAUSED:
-      case TaskInfoDetailStatus.WAITING:
-      case TaskInfoDetailStatus.SEEDING:
-        return Colors.orange;
-    }
-  }
-
-  List<InlineSpan> _getAdditionalInfoForDownloadingStatus(
-      TaskInfoDetailModel model) {
-    var resultList = <InlineSpan>[];
+    resultString.add(
+      TextSpan(text: model.status.name),
+    );
 
     var downloaded = model.additional?.transfer?.sizeDownloaded;
-    if (downloaded != null && downloaded != 0 && model.size != 0) {
-      resultList.add(TextSpan(
-          text:
-              "Percent: ${double.parse((downloaded / model.size * 100).toStringAsFixed(2))}"));
-    }
-    var speedDownload = model.additional?.transfer?.speedDownload;
-    if (speedDownload != null) {
-      if (resultList.isNotEmpty) {
-        resultList.add(const TextSpan(text: " - "));
+    if (downloaded != null) {
+      var percent =
+          double.parse((downloaded / model.size * 100).toStringAsFixed(2));
+      if (percent.isNaN) {
+        percent = 0;
       }
-      resultList.add(const WidgetSpan(
-          child: Icon(
-        Icons.download,
-        color: Colors.grey,
-        size: 14,
-      )));
-      resultList.add(TextSpan(text: "${formatBytes(speedDownload, 2)}/s"));
-    }
-    var speedUpload = model.additional?.transfer?.speedUpload;
-    if (speedUpload != null) {
-      if (resultList.isNotEmpty) {
-        resultList.add(const TextSpan(text: " - "));
-      }
-      resultList.add(const WidgetSpan(
-          child: Icon(
-        Icons.upload,
-        color: Colors.grey,
-        size: 14,
-      )));
-      resultList.add(TextSpan(text: "${formatBytes(speedUpload, 2)}/s"));
+      resultString.add(TextSpan(text: " · $percent%"));
     }
 
-    return resultList;
+    if (downloaded != null) {
+      var sizeString = formatBytes(model.size, 1);
+      if (downloaded == model.size) {
+        resultString.add(TextSpan(text: " · $sizeString"));
+      } else {
+        resultString.add(
+            TextSpan(text: " · ${formatBytes(downloaded, 1)}/$sizeString"));
+      }
+    }
+
+    return TextSpan(style: AppGreySmallTextStyle, children: resultString);
+  }
+
+  TextSpan _buildSecondInfoString(TaskInfoDetailModel model) {
+    var resultString = <InlineSpan>[];
+
+    if (model.status == TaskInfoDetailStatus.DOWNLOADING) {
+      var speedDownload = model.additional?.transfer?.speedDownload;
+      if (speedDownload != null) {
+        resultString
+            .add(TextSpan(text: " ⬇️ ${formatBytes(speedDownload, 1)}/s"));
+      }
+
+      var speedUpload = model.additional?.transfer?.speedUpload;
+      if (speedUpload != null) {
+        resultString
+            .add(TextSpan(text: "  ⬆️ ${formatBytes(speedUpload, 1)}/s"));
+      }
+    }
+
+    return TextSpan(style: AppGreySmallTextStyle, children: resultString);
   }
 }

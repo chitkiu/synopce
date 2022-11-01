@@ -1,71 +1,85 @@
-import 'package:dsm_app/common/text_constants.dart';
+import 'package:dsm_app/download_station/task_info/task_info_mapper.dart';
 import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/wrapped_button.dart';
-import '../../extensions/format_byte.dart';
+import 'task_info_model.dart';
 
 class TaskInfoWidget extends StatelessWidget {
   final TaskInfoDetailModel _model;
+  final TaskInfoMapper _mapper = TaskInfoMapper();
 
-  const TaskInfoWidget(this._model, {Key? key}) : super(key: key);
+  TaskInfoWidget(this._model, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var downloaded = _model.additional?.transfer?.sizeDownloaded;
-    var actionButton = _getButtonByState();
-    var needToShowDownloadSpeed = _model.status == TaskInfoDetailStatus.DOWNLOADING;
-    var speedDownload = _model.additional?.transfer?.speedDownload;
-    var speedUpload = _model.additional?.transfer?.speedUpload;
-    var downloadedSize = _model.additional?.transfer?.sizeDownloaded;
-    return ListView(
+    var models = _mapper.map(_model);
+    return ListView.builder(
       shrinkWrap: true,
+      itemBuilder: (context, index) {
+        var categoryModel = models[index];
+        if (categoryModel is GroupedTaskInfoModel) {
+          return _groupedTaskInfo(categoryModel);
+        } else if (categoryModel is ActionTaskInfoModel) {
+          return _actionTaskInfoModel(categoryModel);
+        } else {
+          return Container();
+        }
+      },
+      itemCount: models.length,
+    );
+  }
+
+  void _onButtonClicked(ActionTaskInfoModel model) async {
+    switch (model.type) {
+      case ActionTaskInfoType.RESUME:
+        await SDK.instance.sdk.dsSDK.resumeTask(ids: [model.id]);
+        break;
+      case ActionTaskInfoType.PAUSE:
+        await SDK.instance.sdk.dsSDK.pauseTask(ids: [model.id]);
+        break;
+      case ActionTaskInfoType.DELETE:
+        await SDK.instance.sdk.dsSDK.deleteTask(ids: [model.id]);
+        break;
+    }
+  }
+
+  Widget _groupedTaskInfo(GroupedTaskInfoModel categoryModel) {
+    return Column(
       children: [
-        Text("Name: ${_model.title}", style: AppDefaultTextStyle,),
-        Text("Status: ${_model.status}", style: AppDefaultTextStyle,),
-        Text("Total size: ${formatBytes(_model.size, 2)}", style: AppDefaultTextStyle,),
-        if (downloadedSize != null) Text("Downloaded size: ${formatBytes(downloadedSize, 2)}", style: AppDefaultTextStyle,),
-        if (needToShowDownloadSpeed && speedDownload != null) Text("Download speed: ${formatBytes(speedDownload, 2)}/s", style: AppDefaultTextStyle,),
-        if (needToShowDownloadSpeed && speedUpload != null) Text("Upload speed: ${formatBytes(speedUpload, 2)}/s", style: AppDefaultTextStyle,),
-        if (_model.additional?.detail?.destination != null)
-          Text("Destination: ${_model.additional?.detail?.destination}", style: AppDefaultTextStyle,),
-        if (downloaded != null && downloaded != 0 && _model.size != 0)
-          Text(
-              "Percent: ${double.parse((downloaded / _model.size * 100).toStringAsFixed(2))}", style: AppDefaultTextStyle,),
-        if (actionButton != null) const SizedBox(height: 30),
-        if (actionButton != null) actionButton,
-        const SizedBox(height: 30),
-        WrappedButton(
-          onPressed: () {
-            SDK.instance.sdk.dsSDK.deleteTask(ids: [_model.id]);
+        Text(categoryModel.title),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: categoryModel.items.length,
+          itemBuilder: (context, index) {
+            var itemModel = categoryModel.items[index];
+            return Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(itemModel.title),
+                Text(itemModel.text),
+              ],
+            );
           },
-          text: 'Delete',
         ),
+        const Divider(),
       ],
     );
   }
 
-  Widget? _getButtonByState() {
-    String text;
-    VoidCallback onPressed;
-    if (_model.status == TaskInfoDetailStatus.PAUSED) {
-      text = "Resume";
-      onPressed = () async {
-        await SDK.instance.sdk.dsSDK.resumeTask(ids: [_model.id]);
-      };
-    } else if (_model.status == TaskInfoDetailStatus.DOWNLOADING ||
-        _model.status == TaskInfoDetailStatus.WAITING) {
-      text = "Pause";
-      onPressed = () async {
-        await SDK.instance.sdk.dsSDK.pauseTask(ids: [_model.id]);
-      };
-    } else {
-      return null;
-    }
-    return WrappedButton(
-      onPressed: onPressed,
-      text: text,
+  Widget _actionTaskInfoModel(ActionTaskInfoModel categoryModel) {
+    return Column(
+      children: [
+        const SizedBox(height: 30),
+        WrappedButton(
+          onPressed: () {
+            _onButtonClicked(categoryModel);
+          },
+          text: categoryModel.title,
+        ),
+      ],
     );
   }
 }
