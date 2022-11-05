@@ -2,8 +2,8 @@ import 'package:dsm_app/download_station/task_info/task_info_mapper.dart';
 import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../common/wrapped_button.dart';
 import 'task_info_model.dart';
 
 class TaskInfoWidget extends StatelessWidget {
@@ -56,10 +56,14 @@ class TaskInfoWidget extends StatelessWidget {
             var itemModel = categoryModel.items[index];
             return Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(itemModel.title),
-                Text(itemModel.text),
+                Text("${itemModel.title}:"),
+                Flexible(
+                    child: Text(itemModel.text,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis)),
               ],
             );
           },
@@ -73,11 +77,11 @@ class TaskInfoWidget extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 30),
-        WrappedButton(
+        PlatformTextButton(
           onPressed: () {
             _onButtonClicked(categoryModel);
           },
-          text: categoryModel.title,
+          child: Text(categoryModel.title),
         ),
       ],
     );

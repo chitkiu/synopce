@@ -4,12 +4,10 @@ import 'package:dsm_app/auth/bloc/auth_state.dart';
 import 'package:dsm_app/sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../common/base_loading_dialog.dart';
-import '../common/base_page_router.dart';
-import '../common/base_text_field.dart';
 import '../common/text_constants.dart';
-import '../common/wrapped_switch.dart';
 import '../download_station/tasks_list/tasks_screen_widget.dart';
 import 'bloc/auth_cubit.dart';
 
@@ -47,7 +45,7 @@ class AuthWidget extends StatelessWidget {
               }
             } else if (state.state == InternalAuthState.SUCCESS) {
               Navigator.of(context).pushAndRemoveUntil(
-                  pageRoute(builder: (_) => const TasksScreenWidget()),
+                  platformPageRoute(context: context, builder: (_) => const TasksScreenWidget()),
                   (route) => false);
             }
           }
@@ -96,10 +94,10 @@ class AuthWidget extends StatelessWidget {
                 Container(
                   width: _EditTextWidth,
                   padding: const EdgeInsets.all(10),
-                  child: BaseTextField(
+                  child: PlatformTextField(
                     controller: _urlController,
                     keyboardType: TextInputType.url,
-                    placeholder: 'Server url',
+                    hintText: 'Server url',
                     onChanged: (newValue) {
                       BlocProvider.of<AuthCubit>(context).changeURL(newValue);
                     },
@@ -108,10 +106,10 @@ class AuthWidget extends StatelessWidget {
                 Container(
                   width: _EditTextWidth,
                   padding: const EdgeInsets.all(10),
-                  child: BaseTextField(
+                  child: PlatformTextField(
                     controller: _nameController,
                     keyboardType: TextInputType.text,
-                    placeholder: 'User Name',
+                    hintText: 'User Name',
                     onChanged: (newValue) {
                       BlocProvider.of<AuthCubit>(context)
                           .changeUsername(newValue);
@@ -121,26 +119,22 @@ class AuthWidget extends StatelessWidget {
                 Container(
                     width: _EditTextWidth,
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    child: BaseTextField(
+                    child: PlatformTextField(
                       controller: _passwordController,
                       obscureText: state.hidePassword,
-                      placeholder: 'Password',
-                      suffix: Material(
-                        child: IconButton(
-                          icon: Icon(
-                            // Based on passwordVisible state choose the icon
-                            state.hidePassword
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Theme.of(context).primaryColorDark,
+                      hintText: 'Password',
+                      cupertino: (context, platform) {
+                        return CupertinoTextFieldData(
+                          suffix: _suffixIcon(context, state)
+                        );
+                      },
+                      material: (context, platform) {
+                        return MaterialTextFieldData(
+                          decoration: InputDecoration(
+                            suffix: _suffixIcon(context, state),
                           ),
-                          onPressed: () {
-                            // Update the state i.e. toogle the state of passwordVisible variable
-                            BlocProvider.of<AuthCubit>(context)
-                                .hidePassword(!state.hidePassword);
-                          },
-                        ),
-                      ),
+                        );
+                      },
                       onChanged: (newValue) {
                         BlocProvider.of<AuthCubit>(context)
                             .changePassword(newValue);
@@ -153,7 +147,7 @@ class AuthWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Use HTTPS?', style: AppDefaultTextStyle),
-                      WrappedSwitch(
+                      PlatformSwitch(
                         onChanged: (bool? value) {
                           if (value != null) {
                             BlocProvider.of<AuthCubit>(context).isHttps(value);
@@ -171,7 +165,7 @@ class AuthWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Auto log in', style: AppDefaultTextStyle),
-                      WrappedSwitch(
+                      PlatformSwitch(
                         onChanged: (bool? value) {
                           if (value != null) {
                             BlocProvider.of<AuthCubit>(context)
@@ -197,6 +191,22 @@ class AuthWidget extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  Widget _suffixIcon(BuildContext context, DataAuthState state) {
+    return PlatformIconButton(
+      icon: Icon(
+        // Based on passwordVisible state choose the icon
+        state.hidePassword
+            ? Icons.visibility
+            : Icons.visibility_off,
+      ),
+      onPressed: () {
+        // Update the state i.e. toogle the state of passwordVisible variable
+        BlocProvider.of<AuthCubit>(context)
+            .hidePassword(!state.hidePassword);
+      },
     );
   }
 }

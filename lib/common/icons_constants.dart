@@ -1,49 +1,50 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 Widget doneIcon(BuildContext context, {Color? color}) {
-  if (Platform.isIOS) {
-    return Icon(
-      CupertinoIcons.checkmark_alt,
-      color: color ?? CupertinoTheme.of(context).primaryColor,
-    );
-  } else {
-    return Icon(
-      Icons.done,
-      color: color,
-    );
-  }
+  return _baseIcon(
+      context,
+      context.platformIcons.checkMark,
+      color: color
+  );
 }
 
 Widget addIcon(BuildContext context, {Color? color}) {
-  if (Platform.isIOS) {
+  return _baseIcon(
+      context,
+      context.platformIcons.add,
+      color: color
+  );
+}
+
+Widget _baseIcon(BuildContext context, IconData icon, {Color? color}) {
+  if (isMaterial(context)) {
     return Icon(
-      CupertinoIcons.add,
-      color: color ?? CupertinoTheme.of(context).primaryColor,
+      icon,
+      color: color ?? Theme.of(context).primaryColor,
     );
   } else {
     return Icon(
-      Icons.add,
-      color: color,
+      icon,
+      color: color ?? CupertinoTheme.of(context).primaryColor,
     );
   }
 }
 
-Widget loadingIcon({Color? color, double size = 15}) {
-  if (Platform.isIOS) {
-    return CupertinoActivityIndicator(
-      radius: size,
-      color: color,
-    );
-  } else {
+Widget loadingIcon(BuildContext context, {Color? color, double size = 15}) {
+  if (isMaterial(context)) {
     return SizedBox(
       height: size,
       width: size,
       child: CircularProgressIndicator(
         color: color,
       ),
+    );
+  } else {
+    return CupertinoActivityIndicator(
+      radius: size,
+      color: color,
     );
   }
 }

@@ -1,13 +1,10 @@
-import 'package:dsm_app/sdk.dart';
 import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../common/base_page_router.dart';
-import '../../common/base_scaffold.dart';
-import '../../common/base_text_field.dart';
 import '../../common/icons_constants.dart';
+import '../../sdk.dart';
 import 'select_destination_screen.dart';
 
 class AddDownloadTaskWidget extends StatefulWidget {
@@ -24,11 +21,29 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      barWidget: const Text('Add download'),
-      onPressed: () => _sendRequest(context),
-      actionButtonIcon: doneIcon(context),
-      child: Align(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: const Text('Add download'),
+        cupertino: (context, platform) {
+          return CupertinoNavigationBarData(
+              trailing: GestureDetector(
+            onTap: () {
+              _sendRequest(context);
+            },
+            child: doneIcon(context),
+          ));
+        },
+      ),
+      material: (context, platform) {
+        return MaterialScaffoldData(
+            floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _sendRequest(context);
+          },
+          child: doneIcon(context),
+        ));
+      },
+      body: Align(
         alignment: AlignmentDirectional.center,
         child: SizedBox(
           width: 300,
@@ -36,9 +51,9 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text("Enter URL"),
-              BaseTextField(
+              PlatformTextField(
                 keyboardType: TextInputType.url,
-                placeholder: 'URL',
+                hintText: 'URL',
                 onChanged: (newValue) {
                   setState(() {
                     _url = newValue;
@@ -103,8 +118,11 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                       await SDK.instance.sdk.fsSDK.getSharedFolderList();
                   if (result.isSuccess) {
                     List<FSFileInfoModel> data = result.successValue;
-                    var model = await Navigator.of(context).push(pageRoute(
-                        builder: (context) => SelectDestinationWidget(data)));
+                    var model = await Navigator.of(context).push(
+                        platformPageRoute(
+                            context: context,
+                            builder: (context) =>
+                                SelectDestinationWidget(data)));
                     setState(() {
                       _destination = model?.path.substring(1) ?? "";
                     });

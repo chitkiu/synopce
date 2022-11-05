@@ -125,6 +125,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  flutter_platform_widgets:
+    dependency: "direct main"
+    description:
+      name: flutter_platform_widgets
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -174,20 +181,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
-  flutter_spinkit:
-    dependency: "direct main"
-    description:
-      name: flutter_spinkit
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.1.0"
-  flutter_swipe_action_cell:
-    dependency: "direct main"
-    description:
-      name: flutter_swipe_action_cell
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -352,4 +345,4 @@ packages:
     version: "3.0.1"
 sdks:
   dart: ">=2.18.2 <3.0.0"
-  flutter: ">=2.8.0"
+  flutter: ">=3.0.0"

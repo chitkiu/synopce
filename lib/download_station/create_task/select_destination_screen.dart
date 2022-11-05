@@ -1,8 +1,8 @@
-import 'package:dsm_app/common/base_scaffold.dart';
 import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../sdk.dart';
 
@@ -20,9 +20,11 @@ class SelectDestinationWidget extends StatelessWidget {
               data: e,
             )));
     var controller = TreeViewController(rootNode: root);
-    return BaseScaffold(
-      barWidget: const Text("Select destination directory"),
-      child: TreeView(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: const Text("Select destination directory"),
+      ),
+      body: TreeView(
         controller: controller,
         nodeBuilder: (context, node) {
           return const NodeTreeView();

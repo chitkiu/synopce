@@ -1,6 +1,6 @@
-import 'package:dsm_app/common/base_scaffold.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import 'task_info_widget.dart';
@@ -25,9 +25,11 @@ class TaskInfoScreenWidget extends StatelessWidget {
         Navigator.pop(context);
       });
     }
-    return BaseScaffold(
-      barWidget: const Text('Info about task'),
-      child: _wrappedDataWidget(_model),
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: const Text('Info about task'),
+      ),
+      body: _wrappedDataWidget(_model),
     );
   }
 

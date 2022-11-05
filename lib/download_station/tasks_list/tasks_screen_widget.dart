@@ -3,11 +3,9 @@ import 'package:dsm_app/download_station/tasks_list/task_item_widget.dart';
 import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import '../../common/base_page_router.dart';
-import '../../common/base_scaffold.dart';
 import '../../common/icons_constants.dart';
 import '../../sdk.dart';
 import '../create_task/add_download_screen.dart';
@@ -36,29 +34,44 @@ class TasksScreenWidget extends StatelessWidget {
           BlocProvider(create: (context) => UpdateTasksCubit()),
         ],
         child: BlocBuilder<TasksBloc, TasksState>(builder: (context, state) {
-          return BaseScaffold(
-            barWidget: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Tasks list"),
-                if (state.isLoading)
-                  const Padding(padding: EdgeInsets.only(left: 10)),
-                if (state.isLoading)
-                  const SizedBox(
-                    width: 15,
-                    height: 15,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
+          return PlatformScaffold(
+            appBar: PlatformAppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Tasks list"),
+                  if (state.isLoading)
+                    const Padding(padding: EdgeInsets.only(left: 10)),
+                  if (state.isLoading)
+                    const SizedBox(
+                      width: 15,
+                      height: 15,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
+              cupertino: (context, platform) {
+                return CupertinoNavigationBarData(
+                    trailing: GestureDetector(
+                  onTap: () {
+                    _onClick(context);
+                  },
+                  child: addIcon(context),
+                ));
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).push(pageRoute(
-                  builder: (context) => const AddDownloadTaskWidget()));
+            material: (context, platform) {
+              return MaterialScaffoldData(
+                  floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  _onClick(context);
+                },
+                child: addIcon(context),
+              ));
             },
-            actionButtonIcon: addIcon(context),
-            child: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
+            body: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
                 listener: (localContext, state) {
               BlocProvider.of<TasksBloc>(context).add(LoadTasksEvent());
             }, child: BlocBuilder<TasksBloc, TasksState>(
@@ -111,7 +124,8 @@ class TasksScreenWidget extends StatelessWidget {
         if (state is ShowTaskInfoState) {
           Navigator.push(
             context,
-            pageRoute(
+            platformPageRoute(
+                context: context,
                 builder: (context) => StreamBuilder(
                       //TODO Try to find better way
                       stream: SDK.instance.repository.successDataStream,
@@ -167,22 +181,15 @@ class TasksScreenWidget extends StatelessWidget {
             BlocProvider.of<TaskInfoBloc>(context)
                 .add(ShowTaskInfoEvent(taskInfoDetailModel));
           },
-          child: SwipeActionCell(
-            key: ObjectKey(taskInfoDetailModel),
-            trailingActions: [
-              SwipeAction(
-                  title: "delete",
-                  onTap: (CompletionHandler handler) {
-                    BlocProvider.of<TasksBloc>(context)
-                        .add(DeleteTasksEvent(taskInfoDetailModel.id));
-                  },
-                  color: Colors.red),
-            ],
-            child: TaskItemWidget(taskInfoDetailModel),
-          ),
+          child: TaskItemWidget(taskInfoDetailModel),
         );
       },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
+  }
+
+  void _onClick(BuildContext context) {
+    Navigator.of(context).push(platformPageRoute(
+        context: context, builder: (context) => const AddDownloadTaskWidget()));
   }
 }

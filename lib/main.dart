@@ -14,20 +14,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
     if (Platform.isIOS) {
-      return const CupertinoApp(
+      return CupertinoApp(
         title: 'Flutter Demo',
-        theme: CupertinoThemeData(brightness: Brightness.light),
-        home: AuthScreenWidget(),
+        theme: (brightness == Brightness.light) ? _lightCupertinoTheme : _darkCupertinoTheme,
+        home: const AuthScreenWidget(),
       );
     } else {
       return MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: (brightness == Brightness.light) ? _lightMaterialTheme : _darkMaterialTheme,
         home: const AuthScreenWidget(),
       );
     }
   }
 }
+
+var _lightMaterialTheme = ThemeData.from(
+    colorScheme: const ColorScheme.light()
+);
+
+var _darkMaterialTheme = ThemeData.from(
+  colorScheme: const ColorScheme.dark()
+);
+
+const CupertinoThemeData _lightCupertinoTheme = CupertinoThemeData(
+  brightness: Brightness.light,
+);
+
+const CupertinoThemeData _darkCupertinoTheme = CupertinoThemeData(
+  brightness: Brightness.dark,
+);
