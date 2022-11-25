@@ -16,7 +16,7 @@ class TaskInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var models = _mapper.map(_model);
     return ListView.builder(
-      shrinkWrap: true,
+      // shrinkWrap: true,
       itemBuilder: (context, index) {
         var categoryModel = models[index];
         if (categoryModel is GroupedTaskInfoModel) {
@@ -49,25 +49,19 @@ class TaskInfoWidget extends StatelessWidget {
     return Column(
       children: [
         Text(categoryModel.title),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: categoryModel.items.length,
-          itemBuilder: (context, index) {
-            var itemModel = categoryModel.items[index];
-            return Row(
-              mainAxisSize: MainAxisSize.max,
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("${itemModel.title}:"),
-                Flexible(
-                    child: Text(itemModel.text,
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis)),
-              ],
-            );
-          },
-        ),
+        for(var itemModel in categoryModel.items)
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${itemModel.title}:"),
+              Flexible(
+                  child: Text(itemModel.text,
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis)),
+            ],
+          ),
         const Divider(),
       ],
     );
