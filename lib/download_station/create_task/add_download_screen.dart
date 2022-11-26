@@ -18,6 +18,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
   PlatformFile? _file;
   String _url = "";
   String? _destination;
+  bool _canSelectFile = true;
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +82,8 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                   ),
                 ),
                 onTap: () async {
+                  if (!_canSelectFile) return;
+                  _canSelectFile = false;
                   FilePickerResult? result =
                       await FilePicker.platform.pickFiles();
                   if (result != null) {
@@ -88,6 +91,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                       _file = result.files.single;
                     });
                   }
+                  _canSelectFile = true;
                 },
               ),
               const Padding(padding: EdgeInsets.only(top: 15)),
