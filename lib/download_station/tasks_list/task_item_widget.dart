@@ -1,11 +1,11 @@
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
+import 'package:synoapi/synoapi.dart';
 
 import '../../common/text_constants.dart';
 import '../../extensions/format_byte.dart';
 
 class TaskItemWidget extends StatelessWidget {
-  final TaskInfoDetailModel model;
+  final Task model;
 
   const TaskItemWidget(this.model, {super.key});
 
@@ -17,7 +17,7 @@ class TaskItemWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          model.title,
+          model.title ?? "",
           style: AppDefaultTextStyle,
         ),
         if (firstAdditionalInfo.children?.isNotEmpty == true)
@@ -28,24 +28,26 @@ class TaskItemWidget extends StatelessWidget {
     );
   }
 
-  TextSpan _buildInfoString(TaskInfoDetailModel model) {
+  TextSpan _buildInfoString(Task model) {
     var resultString = <InlineSpan>[];
-    resultString.add(
-      TextSpan(text: model.status.name),
-    );
+    if (model.status != null) {
+      resultString.add(
+        TextSpan(text: model.status?.toString()),
+      );
+    }
 
     var downloaded = model.additional?.transfer?.sizeDownloaded;
-    if (downloaded != null) {
+    if (downloaded != null && model.size != null) {
       var percent =
-          double.parse((downloaded / model.size * 100).toStringAsFixed(2));
+          double.parse((downloaded / (model.size ?? 1) * 100).toStringAsFixed(2));
       if (percent.isNaN) {
         percent = 0;
       }
       resultString.add(TextSpan(text: " · $percent%"));
     }
 
-    if (downloaded != null) {
-      var sizeString = formatBytes(model.size, 1);
+    if (downloaded != null && model.size != null) {
+      var sizeString = formatBytes(model.size ?? 0, 1);
       if (downloaded == model.size) {
         resultString.add(TextSpan(text: " · $sizeString"));
       } else {
@@ -57,10 +59,10 @@ class TaskItemWidget extends StatelessWidget {
     return TextSpan(style: AppGreySmallTextStyle, children: resultString);
   }
 
-  TextSpan _buildSecondInfoString(TaskInfoDetailModel model) {
+  TextSpan _buildSecondInfoString(Task model) {
     var resultString = <InlineSpan>[];
 
-    if (model.status == TaskInfoDetailStatus.DOWNLOADING) {
+    if (model.status == TaskStatus.downloading) {
       var speedDownload = model.additional?.transfer?.speedDownload;
       if (speedDownload != null) {
         resultString

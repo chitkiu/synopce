@@ -1,12 +1,12 @@
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:synoapi/synoapi.dart';
 
 import 'task_info_widget.dart';
 
 class TaskInfoScreenWidget extends StatelessWidget {
-  final TaskInfoDetailModel? _model;
+  final Task? _model;
 
   const TaskInfoScreenWidget(this._model, {Key? key}) : super(key: key);
 
@@ -38,7 +38,7 @@ class TaskInfoScreenWidget extends StatelessWidget {
     return _wrappedDataWidget(_model);
   }
 
-  Widget _wrappedDataWidget(TaskInfoDetailModel? model) {
+  Widget _wrappedDataWidget(Task? model) {
     if (model == null) {
       return const Align(
         alignment: AlignmentDirectional.center,

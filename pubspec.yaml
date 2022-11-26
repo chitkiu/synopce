@@ -32,8 +32,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  dsm_sdk:
-    path: ../dsm_sdk
+  synoapi:
+    git:
+      url: https://github.com/chitkiu/synoapi.git
+      ref: add_fs_api
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -44,6 +46,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   flutter_fancy_tree_view: ^0.5.3+2
   flutter_platform_widgets: ^2.0.0
+  logging: ^1.1.0
 
 dev_dependencies:
   flutter_test:

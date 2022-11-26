@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:dsm_app/download_station/tasks_list/bloc/tasks/tasks_state.dart';
-import 'package:dsm_sdk/core/models/error_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/tasks_repository.dart';
@@ -21,7 +20,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       emit(await repository.getData());
     } catch (error) {
       log(error.toString());
-      emit(ErrorTasksState(ErrorType.UNKNOWN, false));
+      emit(ErrorTasksState({}, false));
     }
   }
 

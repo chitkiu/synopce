@@ -1,7 +1,10 @@
-import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:synoapi/synoapi.dart';
 
 import '../../common/icons_constants.dart';
 import '../../sdk.dart';
@@ -115,9 +118,9 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                 ),
                 onTap: () async {
                   var result =
-                      await SDK.instance.sdk.fsSDK.getSharedFolderList();
-                  if (result.isSuccess) {
-                    List<FSFileInfoModel> data = result.successValue;
+                      await SDK.instance.fsSDK.list.listSharedFolder();
+                  if (result.success && result.data != null) {
+                    List<Directory> data = result.data!.shares;
                     var model = await Navigator.of(context).push(
                         platformPageRoute(
                             context: context,
@@ -149,17 +152,26 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       ));
       return;
     }
-    var result = await SDK.instance.sdk.dsSDK.addDownload(
-        destination: _destination ?? "",
-        filePath: (_file != null ? _file!.path : null),
-        url: (_url.isNotEmpty ? _url : null));
 
-    result.ifSuccess((p0) {
+    var result = await SDK.instance.dsSDK.task.create(
+        destination: _destination ?? "",
+        torrentBytes: (_file != null ? await _readFile(_file!) : null),
+        uris: (_url.isNotEmpty ? [_url] : null)
+    );
+    
+    if (result.success) {
       Navigator.pop(context);
-    }).ifError((p0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error: ${p0.name}'),
-      ));
-    });
+    } else {
+      print('Error: ${result.error}');
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text('Error: ${result.error}'),
+      // ));
+    }
+  }
+
+  Future<Uint8List> _readFile(PlatformFile file) {
+    Uri myUri = Uri.parse(file.path ?? "");
+    File audioFile = File.fromUri(myUri);
+    return audioFile.readAsBytes();
   }
 }

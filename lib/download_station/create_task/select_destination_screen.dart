@@ -1,13 +1,13 @@
-import 'package:dsm_sdk/file_station/fs_file_info_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:synoapi/synoapi.dart';
 
 import '../../sdk.dart';
 
 class SelectDestinationWidget extends StatelessWidget {
-  final List<FSFileInfoModel> models;
+  final List<Directory> models;
 
   const SelectDestinationWidget(this.models, {Key? key}) : super(key: key);
 
@@ -15,8 +15,8 @@ class SelectDestinationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var root = TreeNode(id: "Root");
     root.addChildren(
-        models.where((element) => element.isDir).map((e) => TreeNode(
-              id: e.path,
+        models.where((element) => element.isDir ?? false).map((e) => TreeNode(
+              id: e.path ?? "",
               data: e,
             )));
     var controller = TreeViewController(rootNode: root);
@@ -41,7 +41,7 @@ class NodeTreeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var scope = TreeNodeScope.of(context);
     var data = scope.node.data;
-    if (data is FSFileInfoModel) {
+    if (data is Directory) {
       var icon;
       if (scope.isExpanded) {
         icon = Icons.expand_less;
@@ -54,12 +54,12 @@ class NodeTreeView extends StatelessWidget {
               scope.collapse(context);
             } else {
               var newDirs =
-                  await SDK.instance.sdk.fsSDK.getFolderList(data.path);
-              if (newDirs.isSuccess) {
-                var items = newDirs.successValue
-                    .where((element) => element.isDir)
+                  await SDK.instance.fsSDK.list.listFolderFile(data.path ?? '/');
+              if (newDirs.success && newDirs.data != null) {
+                var items = newDirs.data!.files
+                    .where((element) => element.isDir ?? false)
                     .map((e) => TreeNode(
-                          id: e.path,
+                          id: e.path ?? "",
                           data: e,
                         ))
                     .toList();
@@ -78,7 +78,7 @@ class NodeTreeView extends StatelessWidget {
                 padding: const EdgeInsets.all(2), child: Icon(icon, size: 20)),
             Expanded(
                 child: Text(
-              data.name,
+              data.name ?? "",
               overflow: TextOverflow.ellipsis,
             )),
             TextButton(

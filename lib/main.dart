@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:logging/logging.dart';
 
 import 'auth/auth_screen_widget.dart';
 
@@ -13,6 +14,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Logger.root.level = Level.ALL; // defaults to Level.INFO
+    Logger.root.onRecord.listen((record) {
+      print('${record.level.name}: ${record.time}: ${record.message}');
+    });
+
     Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
     if (isMaterial(context)) {
       return MaterialApp(

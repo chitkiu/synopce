@@ -1,14 +1,14 @@
 import 'package:dsm_app/download_station/task_info/task_info_mapper.dart';
 import 'package:dsm_app/sdk.dart';
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:synoapi/synoapi.dart';
 
 import '../../common/text_constants.dart';
 import 'task_info_model.dart';
 
 class TaskInfoWidget extends StatelessWidget {
-  final TaskInfoDetailModel _model;
+  final Task _model;
   final TaskInfoMapper _mapper = TaskInfoMapper();
 
   TaskInfoWidget(this._model, {Key? key}) : super(key: key);
@@ -35,13 +35,13 @@ class TaskInfoWidget extends StatelessWidget {
   void _onButtonClicked(ActionTaskInfoModel model) async {
     switch (model.type) {
       case ActionTaskInfoType.RESUME:
-        await SDK.instance.sdk.dsSDK.resumeTask(ids: [model.id]);
+        await SDK.instance.dsSDK.task.resume([model.id]);
         break;
       case ActionTaskInfoType.PAUSE:
-        await SDK.instance.sdk.dsSDK.pauseTask(ids: [model.id]);
+        await SDK.instance.dsSDK.task.pause([model.id]);
         break;
       case ActionTaskInfoType.DELETE:
-        await SDK.instance.sdk.dsSDK.deleteTask(ids: [model.id]);
+        await SDK.instance.repository.tasksInfoProvider.removeItem(model.id);
         break;
     }
   }

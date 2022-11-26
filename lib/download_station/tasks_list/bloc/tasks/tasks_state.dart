@@ -1,5 +1,4 @@
-import 'package:dsm_sdk/core/models/error_type.dart';
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
+import 'package:synoapi/synoapi.dart';
 
 abstract class TasksState {
   final bool isLoading;
@@ -9,7 +8,7 @@ abstract class TasksState {
 }
 
 class SuccessTasksState extends TasksState {
-  final Iterable<TaskInfoDetailModel> models;
+  final Iterable<Task> models;
 
   SuccessTasksState(this.models, bool isLoading) : super._(isLoading);
 
@@ -23,7 +22,7 @@ class SuccessTasksState extends TasksState {
 }
 
 class ErrorTasksState extends TasksState {
-  final ErrorType errorType;
+  final Map<String, dynamic> errorType;
 
   ErrorTasksState(this.errorType, bool isLoading) : super._(isLoading);
 

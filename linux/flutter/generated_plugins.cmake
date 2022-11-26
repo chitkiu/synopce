@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  dsm_sdk
   flutter_secure_storage_linux
 )
 

@@ -1,9 +1,9 @@
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
+import 'package:synoapi/synoapi.dart';
 
 abstract class TaskInfoEvent {}
 
 class ShowTaskInfoEvent extends TaskInfoEvent {
-  final TaskInfoDetailModel? task;
+  final Task? task;
 
   ShowTaskInfoEvent(this.task);
 }

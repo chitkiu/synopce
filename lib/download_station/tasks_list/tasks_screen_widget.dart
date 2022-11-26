@@ -1,15 +1,15 @@
 import 'package:collection/collection.dart'; // You have to add this manually, for some reason it cannot be added automatically
-import 'package:dsm_app/download_station/tasks_list/task_item_widget.dart';
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:synoapi/synoapi.dart';
 
 import '../../common/icons_constants.dart';
 import '../../sdk.dart';
 import '../create_task/add_download_screen.dart';
 import '../task_info/task_info_screen_widget.dart';
+import '../tasks_list/task_item_widget.dart';
 import 'bloc/open_task_info/task_info_bloc.dart';
 import 'bloc/open_task_info/task_info_event.dart';
 import 'bloc/open_task_info/task_info_state.dart';
@@ -87,7 +87,7 @@ class TasksScreenWidget extends StatelessWidget {
                           desktop: _desktopWidget(list),
                         ));
                   case ErrorTasksState:
-                    var errorText = (state as ErrorTasksState).errorType.name;
+                    var errorText = (state as ErrorTasksState).errorType.toString();
                     return Center(
                       child: Align(
                         alignment: Alignment.center,
@@ -117,7 +117,7 @@ class TasksScreenWidget extends StatelessWidget {
         }));
   }
 
-  Widget _mobileWidget(List<TaskInfoDetailModel> items) {
+  Widget _mobileWidget(List<Task> items) {
     return BlocListener<TaskInfoBloc, TaskInfoState>(
       listener: (context, state) {
         if (state is ShowTaskInfoState) {
@@ -140,7 +140,7 @@ class TasksScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _desktopWidget(List<TaskInfoDetailModel> items) {
+  Widget _desktopWidget(List<Task> items) {
     return Row(
       children: [
         SizedBox(
@@ -162,7 +162,7 @@ class TasksScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _getItemsList(List<TaskInfoDetailModel> items) {
+  Widget _getItemsList(List<Task> items) {
     return ListView.separated(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
@@ -190,7 +190,7 @@ class TasksScreenWidget extends StatelessWidget {
         context: context, builder: (context) => const AddDownloadTaskWidget()));
   }
 
-  Widget _taskInfoScreen(List<TaskInfoDetailModel> items,
+  Widget _taskInfoScreen(List<Task> items,
       ShowTaskInfoState state) {
     return StreamBuilder(
       //TODO Try to find better way

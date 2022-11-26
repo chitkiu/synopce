@@ -1,10 +1,10 @@
 import 'package:dsm_app/extensions/format_byte.dart';
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
+import 'package:synoapi/synoapi.dart';
 
 import 'task_info_model.dart';
 
 class TaskInfoMapper {
-  List<TaskInfoModel> map(TaskInfoDetailModel model) {
+  List<TaskInfoModel> map(Task model) {
     var resultList = <TaskInfoModel>[];
 
     resultList
@@ -17,68 +17,68 @@ class TaskInfoMapper {
     resultList.add(GroupedTaskInfoModel(
         title: "Detailed", items: _getDetailedItems(model.additional?.detail)));
 
-    if (model.status == TaskInfoDetailStatus.DOWNLOADING) {
+    if (model.status == TaskStatus.downloading) {
       resultList.add(ActionTaskInfoModel(
         title: "Pause",
         type: ActionTaskInfoType.PAUSE,
-        id: model.id,
+        id: model.id ?? "",
       ));
     } else {
       resultList.add(ActionTaskInfoModel(
         title: "Resume",
         type: ActionTaskInfoType.RESUME,
-        id: model.id,
+        id: model.id ?? "",
       ));
     }
 
     resultList.add(ActionTaskInfoModel(
       title: "Delete",
       type: ActionTaskInfoType.DELETE,
-      id: model.id,
+      id: model.id ?? "",
     ));
 
     return resultList;
   }
 
-  List<TaskInfoDataModel> _getMainItems(TaskInfoDetailModel model) {
+  List<TaskInfoDataModel> _getMainItems(Task model) {
     var resultList = <TaskInfoDataModel>[];
 
     resultList.add(TaskInfoDataModel(
       title: "Title",
-      text: model.title,
+      text: model.title ?? "",
     ));
     resultList.add(TaskInfoDataModel(
       title: "Status",
-      text: model.status.name,
+      text: model.status.toString(),
     ));
     resultList.add(TaskInfoDataModel(
       title: "Type",
-      text: model.type.name,
+      text: model.type ?? "",
     ));
     resultList.add(TaskInfoDataModel(
       title: "Total size",
-      text: formatBytes(model.size, 1),
+      text: formatBytes(model.size ?? 0, 1),
     ));
 
     return resultList;
   }
 
   List<TaskInfoDataModel> _getTransferItems(
-      TaskInfoAdditionalTransferModel? transfer) {
+      TaskTransfer? transfer) {
     var resultList = <TaskInfoDataModel>[];
 
     if (transfer != null) {
       resultList.add(TaskInfoDataModel(
         title: "Downloaded size",
-        text: formatBytes(transfer.sizeDownloaded, 1),
+        text: formatBytes(transfer.sizeDownloaded ?? 0, 1),
       ));
       resultList.add(TaskInfoDataModel(
         title: "Download speed",
-        text: "${formatBytes(transfer.speedDownload, 1)}/s",
+        text: "${formatBytes(transfer.speedDownload ?? 0, 1)}/s",
       ));
       resultList.add(TaskInfoDataModel(
         title: "Upload speed",
-        text: "${formatBytes(transfer.speedUpload, 1)}/s",
+        text: "${formatBytes(transfer.speedUpload ?? 0, 1)}/s",
       ));
     }
 
@@ -86,19 +86,17 @@ class TaskInfoMapper {
   }
 
   List<TaskInfoDataModel> _getDetailedItems(
-      TaskInfoAdditionalDetailModel? detail) {
+      TaskDetail? detail) {
     var resultList = <TaskInfoDataModel>[];
 
     if (detail != null) {
       resultList.add(TaskInfoDataModel(
         title: "Destination",
-        text: detail.destination,
+        text: detail.destination ?? "",
       ));
-      var createDate =
-          DateTime.fromMillisecondsSinceEpoch(detail.createTime * 1000);
       resultList.add(TaskInfoDataModel(
         title: "Created time",
-        text: createDate.toString(), //TODO
+        text: detail.createTime.toString(), //TODO
       ));
     }
 

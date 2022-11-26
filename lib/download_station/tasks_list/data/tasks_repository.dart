@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
+import 'package:synoapi/synoapi.dart';
 
 import '../bloc/tasks/tasks_state.dart';
 import 'tasks_info_provider.dart';
@@ -11,20 +11,21 @@ class TasksRepository {
   TasksRepository(this.tasksInfoProvider);
 
   //TODO Try to find better way
-  final StreamController<List<TaskInfoDetailModel>> _successDataStream =
-      StreamController<List<TaskInfoDetailModel>>.broadcast();
+  final StreamController<List<Task>> _successDataStream =
+      StreamController<List<Task>>.broadcast();
 
-  Stream<List<TaskInfoDetailModel>> get successDataStream =>
+  Stream<List<Task>> get successDataStream =>
       _successDataStream.stream;
 
   Future<TasksState> getData() async {
     var result = await tasksInfoProvider.getData();
     TasksState response;
-    if (result.isSuccess) {
-      response = SuccessTasksState(result.successValue.tasks, false);
-      _successDataStream.add(result.successValue.tasks);
+    if (result.success) {
+      var successValue = result.data?.tasks ?? List.empty();
+      response = SuccessTasksState(successValue, false);
+      _successDataStream.add(successValue);
     } else {
-      response = ErrorTasksState(result.errorValue, false);
+      response = ErrorTasksState(result.error ?? {}, false);
     }
 
     return Future.value(response);
@@ -32,7 +33,7 @@ class TasksRepository {
 
   Future<TasksState> removeItem(String id, TasksState state) async {
     var result = await tasksInfoProvider.removeItem(id);
-    if (result.isSuccess && state.isSuccess) {
+    if (result.success && state.isSuccess) {
       var successState = (state as SuccessTasksState);
       var models = successState.models.toList();
       models.removeWhere((element) => element.id == id);

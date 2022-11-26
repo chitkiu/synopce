@@ -1,20 +1,15 @@
-import 'package:dsm_sdk/core/models/result_response.dart';
-import 'package:dsm_sdk/download_station/tasks/common/models/ds_task_method_result_model.dart';
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_additional_info.dart';
-import 'package:dsm_sdk/download_station/tasks/info/ds_task_info_model.dart';
-import 'package:dsm_sdk/dsm_sdk.dart';
+import 'package:synoapi/synoapi.dart';
 
 class TasksInfoProvider {
-  final DsmSdk sdk;
+  final DownloadStationAPI sdk;
 
   TasksInfoProvider(this.sdk);
 
-  Future<ResultResponse<TasksInfoModel>> getData() {
-    return sdk.dsSDK.getDownloadList(
-        additionalInfo: [AdditionalInfo.DETAIL, AdditionalInfo.TRANSFER]);
+  Future<APIResponse<ListTaskInfo>> getData() {
+    return sdk.task.list();
   }
 
-  Future<ResultResponse<List<DSTaskMethodResultModel>>> removeItem(String id) {
-    return sdk.dsSDK.deleteTask(ids: [id]);
+  Future<APIResponse<DownloadStationTaskDelete>> removeItem(String id) {
+    return sdk.task.delete([id], false);
   }
 }
