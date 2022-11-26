@@ -12,3 +12,17 @@ const TextStyle AppGreySmallTextStyle = TextStyle(
   fontSize: 14,
   color: Colors.grey,
 );
+
+TextStyle AppColoredTextStyle = TextStyle(
+  color: _getBrightnessColor(),
+);
+
+Color _getBrightnessColor() {
+  Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
+
+  if (brightness == Brightness.light) {
+    return Colors.black;
+  } else {
+    return Colors.white;
+  }
+}

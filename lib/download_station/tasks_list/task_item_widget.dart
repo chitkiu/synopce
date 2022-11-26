@@ -22,7 +22,8 @@ class TaskItemWidget extends StatelessWidget {
         ),
         if (firstAdditionalInfo.children?.isNotEmpty == true)
           RichText(text: firstAdditionalInfo),
-        RichText(text: secondAdditionalInfo),
+        if (secondAdditionalInfo.children?.isNotEmpty == true)
+          RichText(text: secondAdditionalInfo),
       ],
     );
   }

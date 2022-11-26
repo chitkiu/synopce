@@ -28,7 +28,8 @@ class TasksScreenWidget extends StatelessWidget {
         providers: [
           BlocProvider<TasksBloc>(
             create: (context) =>
-                TasksBloc(SDK.instance.repository)..add(LoadTasksEvent()),
+            TasksBloc(SDK.instance.repository)
+              ..add(LoadTasksEvent()),
           ),
           BlocProvider(create: (context) => TaskInfoBloc()),
           BlocProvider(create: (context) => UpdateTasksCubit()),
@@ -73,18 +74,18 @@ class TasksScreenWidget extends StatelessWidget {
             },
             body: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
                 listener: (localContext, state) {
-              BlocProvider.of<TasksBloc>(context).add(LoadTasksEvent());
-            }, child: BlocBuilder<TasksBloc, TasksState>(
+                  BlocProvider.of<TasksBloc>(context).add(LoadTasksEvent());
+                }, child: BlocBuilder<TasksBloc, TasksState>(
               builder: (context, state) {
                 switch (state.runtimeType) {
                   case SuccessTasksState:
                     var list = (state as SuccessTasksState).models.toList();
                     return SafeArea(
                         child: ScreenTypeLayout(
-                      mobile: _mobileWidget(list),
-                      tablet: _desktopWidget(list),
-                      desktop: _desktopWidget(list),
-                    ));
+                          mobile: _mobileWidget(list),
+                          tablet: _desktopWidget(list),
+                          desktop: _desktopWidget(list),
+                        ));
                   case ErrorTasksState:
                     var errorText = (state as ErrorTasksState).errorType.name;
                     return Center(
@@ -124,8 +125,7 @@ class TasksScreenWidget extends StatelessWidget {
             context,
             platformPageRoute(
                 context: context,
-                builder: (context) => _taskInfoScreen(items, state)
-            ),
+                builder: (context) => _taskInfoScreen(items, state)),
           );
         }
       },
@@ -147,19 +147,16 @@ class TasksScreenWidget extends StatelessWidget {
           width: 300,
           child: _getItemsList(items),
         ),
-        Container(width: 0.5, color: Colors.black),
+        Container(width: 0.5, color: _getDividerColor()),
         BlocBuilder<TaskInfoBloc, TaskInfoState>(builder: (context, state) {
           if (state is ShowTaskInfoState) {
-            return Expanded(
-                child: _taskInfoScreen(items, state)
-            );
+            return Expanded(child: _taskInfoScreen(items, state));
           }
           return const Expanded(
               child: Align(
                 alignment: AlignmentDirectional.center,
                 child: Text("Select item"),
-              )
-          );
+              ));
         }),
       ],
     );
@@ -167,19 +164,24 @@ class TasksScreenWidget extends StatelessWidget {
 
   Widget _getItemsList(List<TaskInfoDetailModel> items) {
     return ListView.separated(
-      padding: const EdgeInsets.all(8),
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         var taskInfoDetailModel = items[index];
         return GestureDetector(
-          onTap: () {
-            BlocProvider.of<TaskInfoBloc>(context)
-                .add(ShowTaskInfoEvent(taskInfoDetailModel));
-          },
-          child: TaskItemWidget(taskInfoDetailModel),
-        );
+              onTap: () {
+                BlocProvider.of<TaskInfoBloc>(context)
+                    .add(ShowTaskInfoEvent(taskInfoDetailModel));
+              },
+              child: Align(
+                alignment: AlignmentDirectional.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TaskItemWidget(taskInfoDetailModel),
+                ),
+              ),
+            );
       },
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      separatorBuilder: (BuildContext context, int index) => Divider(color: _getDividerColor()),
     );
   }
 
@@ -188,7 +190,8 @@ class TasksScreenWidget extends StatelessWidget {
         context: context, builder: (context) => const AddDownloadTaskWidget()));
   }
 
-  Widget _taskInfoScreen(List<TaskInfoDetailModel> items, ShowTaskInfoState state) {
+  Widget _taskInfoScreen(List<TaskInfoDetailModel> items,
+      ShowTaskInfoState state) {
     return StreamBuilder(
       //TODO Try to find better way
       stream: SDK.instance.repository.successDataStream,
@@ -199,5 +202,15 @@ class TasksScreenWidget extends StatelessWidget {
         return TaskInfoScreenWidget(task);
       },
     );
+  }
+
+  Color _getDividerColor() {
+    Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
+
+    if (brightness == Brightness.light) {
+      return Colors.black;
+    } else {
+      return Colors.white;
+    }
   }
 }

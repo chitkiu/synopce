@@ -180,11 +180,11 @@ class AuthWidget extends StatelessWidget {
                 Container(
                     height: 50,
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: ElevatedButton(
+                    child: PlatformElevatedButton(
                       onPressed: () {
                         BlocProvider.of<AuthCubit>(context).auth();
                       },
-                      child: const Text('Login'),
+                      child: Text(style: AppColoredTextStyle, 'Login'),
                     )),
               ],
             );
