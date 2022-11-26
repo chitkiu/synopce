@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -11,8 +12,8 @@ class AuthScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
       mobile: _mobileWidget(),
-      tablet: _desktopWidget(),
-      desktop: _desktopWidget(),
+      tablet: _desktopWidget(context),
+      desktop: _desktopWidget(context),
     );
   }
 
@@ -25,16 +26,22 @@ class AuthScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _desktopWidget() {
+  Widget _desktopWidget(BuildContext context) {
     return PlatformScaffold(
       backgroundColor: Colors.lightBlue,
       body: Align(
         alignment: AlignmentDirectional.center,
         child: Container(
-            color: Colors.white,
+            color: _getDesktopWidgetBackground(context),
             padding: const EdgeInsets.only(bottom: 10),
             child: SizedBox(width: 350, child: AuthWidget())),
       ),
     );
+  }
+
+  Color _getDesktopWidgetBackground(BuildContext context) {
+    return isMaterial(context)
+        ? Theme.of(context).backgroundColor
+        : CupertinoTheme.of(context).scaffoldBackgroundColor;
   }
 }

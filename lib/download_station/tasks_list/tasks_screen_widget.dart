@@ -55,21 +55,21 @@ class TasksScreenWidget extends StatelessWidget {
               cupertino: (context, platform) {
                 return CupertinoNavigationBarData(
                     trailing: GestureDetector(
-                  onTap: () {
-                    _onClick(context);
-                  },
-                  child: addIcon(context),
-                ));
+                      onTap: () {
+                        _onClick(context);
+                      },
+                      child: addIcon(context),
+                    ));
               },
             ),
             material: (context, platform) {
               return MaterialScaffoldData(
                   floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _onClick(context);
-                },
-                child: addIcon(context),
-              ));
+                    onPressed: () {
+                      _onClick(context);
+                    },
+                    child: addIcon(context),
+                  ));
             },
             body: BlocListener<UpdateTasksCubit, RequestUpdateTasks>(
                 listener: (localContext, state) {
@@ -105,9 +105,7 @@ class TasksScreenWidget extends StatelessWidget {
                         child: SizedBox(
                           width: 60,
                           height: 60,
-                          child: CircularProgressIndicator(
-                            color: Colors.black,
-                          ),
+                          child: CircularProgressIndicator(),
                         ),
                       ),
                     );
@@ -126,16 +124,8 @@ class TasksScreenWidget extends StatelessWidget {
             context,
             platformPageRoute(
                 context: context,
-                builder: (context) => StreamBuilder(
-                      //TODO Try to find better way
-                      stream: SDK.instance.repository.successDataStream,
-                      initialData: items,
-                      builder: (context, snapshot) {
-                        var task = snapshot.data?.firstWhereOrNull(
-                            (element) => element.id == state.taskId);
-                        return TaskInfoScreenWidget(task);
-                      },
-                    )),
+                builder: (context) => _taskInfoScreen(items, state)
+            ),
           );
         }
       },
@@ -159,12 +149,17 @@ class TasksScreenWidget extends StatelessWidget {
         ),
         Container(width: 0.5, color: Colors.black),
         BlocBuilder<TaskInfoBloc, TaskInfoState>(builder: (context, state) {
-          var task;
           if (state is ShowTaskInfoState) {
-            task =
-                items.firstWhereOrNull((element) => element.id == state.taskId);
+            return Expanded(
+                child: _taskInfoScreen(items, state)
+            );
           }
-          return Expanded(child: TaskInfoScreenWidget(task));
+          return const Expanded(
+              child: Align(
+                alignment: AlignmentDirectional.center,
+                child: Text("Select item"),
+              )
+          );
         }),
       ],
     );
@@ -191,5 +186,18 @@ class TasksScreenWidget extends StatelessWidget {
   void _onClick(BuildContext context) {
     Navigator.of(context).push(platformPageRoute(
         context: context, builder: (context) => const AddDownloadTaskWidget()));
+  }
+
+  Widget _taskInfoScreen(List<TaskInfoDetailModel> items, ShowTaskInfoState state) {
+    return StreamBuilder(
+      //TODO Try to find better way
+      stream: SDK.instance.repository.successDataStream,
+      initialData: items,
+      builder: (context, snapshot) {
+        var task = snapshot.data
+            ?.firstWhereOrNull((element) => element.id == state.taskId);
+        return TaskInfoScreenWidget(task);
+      },
+    );
   }
 }

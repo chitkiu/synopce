@@ -16,7 +16,6 @@ class TaskInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var models = _mapper.map(_model);
     return ListView.builder(
-      // shrinkWrap: true,
       itemBuilder: (context, index) {
         var categoryModel = models[index];
         if (categoryModel is GroupedTaskInfoModel) {

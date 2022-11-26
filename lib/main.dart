@@ -1,7 +1,6 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import 'auth/auth_screen_widget.dart';
 
@@ -15,16 +14,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
-    if (Platform.isIOS) {
-      return CupertinoApp(
-        title: 'Flutter Demo',
-        theme: (brightness == Brightness.light) ? _lightCupertinoTheme : _darkCupertinoTheme,
-        home: const AuthScreenWidget(),
-      );
-    } else {
+    if (isMaterial(context)) {
       return MaterialApp(
         title: 'Flutter Demo',
         theme: (brightness == Brightness.light) ? _lightMaterialTheme : _darkMaterialTheme,
+        home: const AuthScreenWidget(),
+      );
+    } else {
+      return CupertinoApp(
+        title: 'Flutter Demo',
+        theme: (brightness == Brightness.light) ? _lightCupertinoTheme : _darkCupertinoTheme,
         home: const AuthScreenWidget(),
       );
     }

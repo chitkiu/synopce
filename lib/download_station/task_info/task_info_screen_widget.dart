@@ -24,6 +24,7 @@ class TaskInfoScreenWidget extends StatelessWidget {
       Future.delayed(Duration.zero, () {
         Navigator.pop(context);
       });
+      return PlatformScaffold();
     }
     return PlatformScaffold(
       appBar: PlatformAppBar(
