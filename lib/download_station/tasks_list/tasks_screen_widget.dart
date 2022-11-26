@@ -9,6 +9,7 @@ import '../../common/icons_constants.dart';
 import '../../sdk.dart';
 import '../create_task/add_download_screen.dart';
 import '../task_info/task_info_screen_widget.dart';
+import '../task_info/task_info_widget.dart';
 import '../tasks_list/task_item_widget.dart';
 import 'bloc/open_task_info/task_info_bloc.dart';
 import 'bloc/open_task_info/task_info_event.dart';
@@ -125,7 +126,8 @@ class TasksScreenWidget extends StatelessWidget {
             context,
             platformPageRoute(
                 context: context,
-                builder: (context) => _taskInfoScreen(items, state)),
+                builder: (context) =>
+                    _taskInfoScreen(items, state, (task) => TaskInfoScreenWidget(task))),
           );
         }
       },
@@ -150,7 +152,7 @@ class TasksScreenWidget extends StatelessWidget {
         Container(width: 0.5, color: _getDividerColor()),
         BlocBuilder<TaskInfoBloc, TaskInfoState>(builder: (context, state) {
           if (state is ShowTaskInfoState) {
-            return Expanded(child: _taskInfoScreen(items, state));
+            return Expanded(child: _taskInfoScreen(items, state, (task) => TaskInfoWidget(task)));
           }
           return const Expanded(
               child: Align(
@@ -191,7 +193,9 @@ class TasksScreenWidget extends StatelessWidget {
   }
 
   Widget _taskInfoScreen(List<Task> items,
-      ShowTaskInfoState state) {
+      ShowTaskInfoState state,
+      Widget Function(Task) func,
+      ) {
     return StreamBuilder(
       //TODO Try to find better way
       stream: SDK.instance.repository.successDataStream,
@@ -199,7 +203,13 @@ class TasksScreenWidget extends StatelessWidget {
       builder: (context, snapshot) {
         var task = snapshot.data
             ?.firstWhereOrNull((element) => element.id == state.taskId);
-        return TaskInfoScreenWidget(task);
+        if (task == null) {
+          return const Align(
+            alignment: AlignmentDirectional.center,
+            child: Text("Select item"),
+          );
+        }
+        return func(task);
       },
     );
   }

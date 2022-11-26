@@ -11,22 +11,13 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(this._storage) : super(InitialAuthState());
 
-  void changeHost(String newHost) => _ifIsDataAuthState((state) {
-        if (newHost != state.host) {
-          emit(state.copyWith(
-            host: newHost,
-          ));
-        }
-      });
-
-  void changePort(String newPort) => _ifIsDataAuthState((state) {
-        var parsedPort = int.parse(newPort);
-        if (parsedPort != state.port) {
-          emit(state.copyWith(
-            port: parsedPort,
-          ));
-        }
-      });
+  void changeURL(String newURL) => _ifIsDataAuthState((state) {
+    if (newURL != state.url) {
+      emit(state.copyWith(
+        url: newURL,
+      ));
+    }
+  });
 
   void changeUsername(String newUsername) => _ifIsDataAuthState((state) {
         if (newUsername != state.username) {
@@ -69,16 +60,21 @@ class AuthCubit extends Cubit<AuthState> {
       });
 
   void auth() => _ifIsDataAuthState((state) async {
-        log("LogInPressedAuthEvent host ${state.host} port ${state.port} username ${state.username} password ${state.password} isHttps ${state.isHttps} needToAutologin ${state.needToAutologin}");
+        log("LogInPressedAuthEvent url ${state.url} username ${state.username} password ${state.password} isHttps ${state.isHttps} needToAutologin ${state.needToAutologin}");
 
-        //TODO Add validation for synology quickaccess id
-        if (state.host.isEmpty) {
+        if (state.url.isEmpty) {
           emit(state.copyWith(error: "Enter URL"));
           return;
-        }
-        if (state.port <= 0) {
-          emit(state.copyWith(error: "Enter valid port number"));
-          return;
+        } else {
+          //TODO Add validation for synology quickaccess id
+          var splitted = state.url.split(":");
+          if (splitted.length != 2 ||
+              splitted[0].isEmpty ||
+              splitted[1].isEmpty) {
+            emit(state.copyWith(
+                error: "Enter valid URL in format ip/host:port"));
+            return;
+          }
         }
         if (state.username.isEmpty) {
           emit(state.copyWith(error: "Enter username"));
@@ -94,9 +90,7 @@ class AuthCubit extends Cubit<AuthState> {
         _saveData();
         try {
           var authResult = await SDK.instance.init(
-            protocol: (state.isHttps ? 'https' : 'http'),
-            host: state.host,
-            port: state.port,
+            url: '${(state.isHttps ? 'https' : 'http')}://${state.url}',
             username: state.username,
             password: state.password,
           );
@@ -111,8 +105,7 @@ class AuthCubit extends Cubit<AuthState> {
       });
 
   void _saveData() => _ifIsDataAuthState((state) async {
-        _storage.write(key: HOST_KEY_NAME, value: state.host);
-        _storage.write(key: PORT_KEY_NAME, value: state.port.toString());
+        _storage.write(key: URL_KEY_NAME, value: state.url);
         _storage.write(key: USERNAME_KEY_NAME, value: state.username);
         _storage.write(key: PASSWORD_KEY_NAME, value: state.password);
         _storage.write(key: IS_HTTPS_KEY_NAME, value: state.isHttps.toString());
@@ -122,25 +115,8 @@ class AuthCubit extends Cubit<AuthState> {
       });
 
   void loadSavedData() async {
-    var host = await _storage.read(key: HOST_KEY_NAME) ?? "";
-    var port = await _storage.read(key: PORT_KEY_NAME) ?? "";
-    //TODO Remove this part of parsing after start app on all platform
-    var url = await _storage.read(key: URL_KEY_NAME);
-    if (url != null) {
-      var splitHostAndPort = url.split(":");
-      if (splitHostAndPort.length == 2) {
-        if (host.isEmpty) {
-          host = splitHostAndPort[0];
-        }
-        if (port.isEmpty) {
-          port = splitHostAndPort[1];
-        }
-      }
-      _storage.delete(key: URL_KEY_NAME);
-    }
     var newState = DataAuthState(
-        host: host,
-        port: int.parse(port),
+        url: await _storage.read(key: URL_KEY_NAME) ?? "",
         username: await _storage.read(key: USERNAME_KEY_NAME) ?? "",
         password: await _storage.read(key: PASSWORD_KEY_NAME) ?? "",
         isHttps: await _storage.read(key: IS_HTTPS_KEY_NAME) == 'true',
@@ -161,8 +137,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   static const String URL_KEY_NAME = 'url';
-  static const String HOST_KEY_NAME = 'host';
-  static const String PORT_KEY_NAME = 'port';
   static const String USERNAME_KEY_NAME = 'name';
   static const String PASSWORD_KEY_NAME = 'password';
   static const String IS_HTTPS_KEY_NAME = 'isHttps';

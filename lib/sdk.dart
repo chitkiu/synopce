@@ -34,22 +34,16 @@ class SDK {
   }
 
   Future<bool> init({
-    required String protocol,
-    required String host,
-    required int port,
+    required String url,
     required String username,
     required String password,
   }) async {
-    var context = APIContext(host, port: port, proto: protocol);
+    var context = APIContext.uri(url);
     var localDsAPI = DownloadStationAPI(context);
     var localFsAPI = FileStationAPI(context);
     return context
-        .authApp(Syno.DownloadStation.name, username, password)
-        .then((dsResult) async {
-      var fsResult =
-          await context.authApp(Syno.FileStation.name, username, password);
-      return dsResult && fsResult;
-    }).then((value) {
+        .authApp(username, password)
+        .then((value) {
       if (value) {
         _dsAPI = localDsAPI;
         _fsAPI = localFsAPI;

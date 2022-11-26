@@ -14,8 +14,7 @@ import 'bloc/auth_cubit.dart';
 class AuthWidget extends StatelessWidget {
   AuthWidget({Key? key}) : super(key: key);
 
-  final TextEditingController _hostController = TextEditingController();
-  final TextEditingController _portController = TextEditingController();
+  final TextEditingController _urlController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoadingDialogVisible = false;
@@ -55,14 +54,9 @@ class AuthWidget extends StatelessWidget {
           if (state is! DataAuthState) {
             return Container();
           } else {
-            if (_hostController.text != state.host) {
-              _hostController.value = _hostController.value.copyWith(
-                text: state.host,
-              );
-            }
-            if (_portController.text != state.port.toString()) {
-              _portController.value = _portController.value.copyWith(
-                text: state.port.toString(),
+            if (_urlController.text != state.url) {
+              _urlController.value = _urlController.value.copyWith(
+                text: state.url,
               );
             }
             if (_nameController.text != state.username) {
@@ -101,23 +95,11 @@ class AuthWidget extends StatelessWidget {
                   width: _EditTextWidth,
                   padding: const EdgeInsets.all(10),
                   child: PlatformTextField(
-                    controller: _hostController,
+                    controller: _urlController,
                     keyboardType: TextInputType.url,
                     hintText: 'Server url',
                     onChanged: (newValue) {
-                      BlocProvider.of<AuthCubit>(context).changeHost(newValue);
-                    },
-                  ),
-                ),
-                Container(
-                  width: _EditTextWidth,
-                  padding: const EdgeInsets.all(10),
-                  child: PlatformTextField(
-                    controller: _portController,
-                    keyboardType: TextInputType.number,
-                    hintText: 'Server port',
-                    onChanged: (newValue) {
-                      BlocProvider.of<AuthCubit>(context).changePort(newValue);
+                      BlocProvider.of<AuthCubit>(context).changeURL(newValue);
                     },
                   ),
                 ),

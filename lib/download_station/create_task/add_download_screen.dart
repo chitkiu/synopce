@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -155,7 +152,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
 
     var result = await SDK.instance.dsSDK.task.create(
         destination: _destination ?? "",
-        torrentBytes: (_file != null ? await _readFile(_file!) : null),
+        filePath: _file?.path,
         uris: (_url.isNotEmpty ? [_url] : null)
     );
     
@@ -167,11 +164,5 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       //   content: Text('Error: ${result.error}'),
       // ));
     }
-  }
-
-  Future<Uint8List> _readFile(PlatformFile file) {
-    Uri myUri = Uri.parse(file.path ?? "");
-    File audioFile = File.fromUri(myUri);
-    return audioFile.readAsBytes();
   }
 }

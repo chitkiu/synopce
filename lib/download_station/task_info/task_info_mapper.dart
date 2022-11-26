@@ -17,13 +17,13 @@ class TaskInfoMapper {
     resultList.add(GroupedTaskInfoModel(
         title: "Detailed", items: _getDetailedItems(model.additional?.detail)));
 
-    if (model.status == TaskStatus.downloading) {
+    if (model.status == TaskStatus.downloading || model.status == TaskStatus.waiting) {
       resultList.add(ActionTaskInfoModel(
         title: "Pause",
         type: ActionTaskInfoType.PAUSE,
         id: model.id ?? "",
       ));
-    } else {
+    } else if (model.status == TaskStatus.paused) {
       resultList.add(ActionTaskInfoModel(
         title: "Resume",
         type: ActionTaskInfoType.RESUME,
