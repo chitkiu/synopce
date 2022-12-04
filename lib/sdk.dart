@@ -5,33 +5,11 @@ import 'download_station/tasks_list/data/tasks_info_provider.dart';
 import 'download_station/tasks_list/data/tasks_repository.dart';
 
 class SDK {
-  DownloadStationAPI? _dsAPI;
-  FileStationAPI? _fsAPI;
+  late final DownloadStationAPI dsSDK;
+  late final DownloadStation2API ds2SDK;
+  late final FileStationAPI fsSDK;
   final storage = const FlutterSecureStorage();
-  TasksRepository? _repo;
-
-  bool get isInit => _dsAPI != null && _fsAPI != null;
-
-  DownloadStationAPI get dsSDK {
-    if (_dsAPI == null) {
-      throw Exception("Disk Station API cannot be null");
-    }
-    return _dsAPI!;
-  }
-
-  FileStationAPI get fsSDK {
-    if (_fsAPI == null) {
-      throw Exception("File Station API cannot be null");
-    }
-    return _fsAPI!;
-  }
-
-  TasksRepository get repository {
-    if (_dsAPI == null) {
-      throw Exception("Disk Station API cannot be null");
-    }
-    return _repo!;
-  }
+  late final TasksRepository repository;
 
   Future<bool> init({
     required String url,
@@ -40,22 +18,22 @@ class SDK {
   }) async {
     var context = APIContext.uri(url);
     var localDsAPI = DownloadStationAPI(context);
+    var localDs2API = DownloadStation2API(context);
     var localFsAPI = FileStationAPI(context);
     return context
         .authApp(username, password)
         .then((value) {
       if (value) {
-        _dsAPI = localDsAPI;
-        _fsAPI = localFsAPI;
-        _repo = TasksRepository(TasksInfoProvider(localDsAPI));
+        dsSDK = localDsAPI;
+        ds2SDK = localDs2API;
+        fsSDK = localFsAPI;
+        repository = TasksRepository(TasksInfoProvider(localDsAPI));
       }
       return value;
     });
   }
 
-  static final SDK _singleton = SDK._();
-
-  static SDK get instance => _singleton;
+  static final SDK instance = SDK._();
 
   SDK._();
 }

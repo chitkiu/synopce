@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -42,12 +41,11 @@ class NodeTreeView extends StatelessWidget {
     var scope = TreeNodeScope.of(context);
     var data = scope.node.data;
     if (data is Directory) {
-      var icon;
+      var icon = Icons.expand_more;
       if (scope.isExpanded) {
         icon = Icons.expand_less;
-      } else {
-        icon = Icons.expand_more;
       }
+
       return GestureDetector(
           onTap: () async {
             if (scope.isExpanded) {

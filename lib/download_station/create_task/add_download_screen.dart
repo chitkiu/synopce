@@ -154,7 +154,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       return;
     }
 
-    var result = await SDK.instance.dsSDK.task.create(
+    var result = await SDK.instance.ds2SDK.task.create(
         destination: _destination ?? "",
         filePath: _file?.path,
         uris: (_url.isNotEmpty ? [_url] : null)
@@ -163,7 +163,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
     if (result.success) {
       Navigator.pop(context);
     } else {
-      print('Error: ${result.error}');
+      debugPrint('Error: ${result.error}');
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       //   content: Text('Error: ${result.error}'),
       // ));
