@@ -17,14 +17,13 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
-  - code_quality
   - test
   - deploy
 
 
 code_quality:
   stage: test
-  image: "cirrusci/flutter:latest"
+  #image: "cirrusci/flutter:latest"
   before_script:
     - pub global activate dart_code_metrics
     - export PATH="$PATH:$HOME/.pub-cache/bin"
@@ -36,7 +35,7 @@ code_quality:
 
 test:
   stage: test
-  image: "cirrusci/flutter:latest"
+  #image: "cirrusci/flutter:latest"
   before_script:
     - pub global activate junitreport
     - export PATH="$PATH:$HOME/.pub-cache/bin"
