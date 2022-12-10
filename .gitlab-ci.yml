@@ -24,7 +24,7 @@ stages:          # List of stages for jobs, and their order of execution
 code_quality:
   stage: test
   script:
-    - metrics lib -r codeclimate  > gl-code-quality-report.json
+    - dart metrics lib -r codeclimate  > gl-code-quality-report.json
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
@@ -35,8 +35,8 @@ test:
   stage: test
   script:
     - flutter test --machine --coverage | tojunit -o report.xml
-    - lcov --summary coverage/lcov.info
-    - genhtml coverage/lcov.info --output=coverage
+    - dart lcov --summary coverage/lcov.info
+    - dart genhtml coverage/lcov.info --output=coverage
   coverage: '/lines\.*: \d+\.\d+\%/'
   artifacts:
     name: coverage
