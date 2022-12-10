@@ -1,21 +1,18 @@
 stages:          # List of stages for jobs, and their order of execution
   - test
-  - prebuild
-  - build
+  - build_android
+  - build_macos
 
 flutter_test: # Name of the lane
   stage: test # type of stage
   script:
     - flutter test # Run Flutter test
 
-flutter_pre_build:
-  stage: prebuild
-  script:
-    - flutter clean
-    - flutter packages get
-
 flutter_build_android: #Job name
-  stage: build
+  stage: build_android
+  before_script:
+    - flutter packages get
+    - flutter clean
   script:
      - flutter build apk
   artifacts:
@@ -23,7 +20,10 @@ flutter_build_android: #Job name
       - build/app/outputs/apk/release/app-release.apk
 
 flutter_build_macos: #Job name
-  stage: build
+  stage: build_macos
+  before_script:
+    - flutter packages get
+    - flutter clean
   script:
      - flutter build macos
      - cd installers/dmg_creation
