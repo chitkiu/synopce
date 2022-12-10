@@ -135,7 +135,10 @@ class TasksScreenWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: _getItemsList(items)),
+            if (items.isEmpty)
+              PlatformText("No items")
+            else
+              Expanded(child: _getItemsList(items)),
           ],
         ),
       ),
@@ -152,7 +155,21 @@ class TasksScreenWidget extends StatelessWidget {
         Container(width: 0.5, color: _getDividerColor()),
         BlocBuilder<TaskInfoBloc, TaskInfoState>(builder: (context, state) {
           if (state is ShowTaskInfoState) {
-            return Expanded(child: _taskInfoScreen(items, state, (task) => TaskInfoWidget(task)));
+            return Expanded(
+                child: _taskInfoScreen(
+                  items,
+                  state,
+                  (task) {
+                    if (task == null) {
+                      return const Align(
+                        alignment: AlignmentDirectional.center,
+                        child: Text("Select item"),
+                      );
+                    }
+                    return TaskInfoWidget(task);
+                  },
+                )
+            );
           }
           return const Expanded(
               child: Align(
@@ -192,10 +209,11 @@ class TasksScreenWidget extends StatelessWidget {
         context: context, builder: (context) => const AddDownloadTaskWidget()));
   }
 
-  Widget _taskInfoScreen(List<Task> items,
+  Widget _taskInfoScreen(
+      List<Task> items,
       ShowTaskInfoState state,
-      Widget Function(Task) func,
-      ) {
+      Widget Function(Task?) onShowTask
+  ) {
     return StreamBuilder(
       //TODO Try to find better way
       stream: SDK.instance.repository.successDataStream,
@@ -203,13 +221,7 @@ class TasksScreenWidget extends StatelessWidget {
       builder: (context, snapshot) {
         var task = snapshot.data
             ?.firstWhereOrNull((element) => element.id == state.taskId);
-        if (task == null) {
-          return const Align(
-            alignment: AlignmentDirectional.center,
-            child: Text("Select item"),
-          );
-        }
-        return func(task);
+        return onShowTask(task);
       },
     );
   }
