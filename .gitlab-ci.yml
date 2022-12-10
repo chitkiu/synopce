@@ -1,41 +1,19 @@
 stages:          # List of stages for jobs, and their order of execution
   - test
-  - deploy
+  - build
 
-code_quality:
-  stage: test
+flutter_test: # Name of the lane
+  stage: test # type of stage
   script:
-    - metrics lib -r codeclimate  > gl-code-quality-report.json
-  artifacts:
-    reports:
-      codequality: gl-code-quality-report.json
+    - flutter test # Run Flutter test
 
-test:
-  stage: test
+flutter_build_android: #Job name
+  stage: build # kind of job
+  before_script:
+    - flutter packages get
+    - flutter clean
   script:
-    - flutter test --machine --coverage | tojunit -o report.xml
-   # - lcov --summary coverage/lcov.info
-   # - genhtml coverage/lcov.info --output=coverage
-  coverage: '/lines\.*: \d+\.\d+\%/'
-  artifacts:
-    name: coverage
-    paths:
-      - $CI_PROJECT_DIR/coverage
-    reports:
-      junit: report.xml
-
-deploy:
-  stage: deploy
-  script: echo "Define your deployment script!"
-  environment: production
-
-pages:
-  stage: deploy
-  script:
-    - cp -R $CI_PROJECT_DIR/coverage/* $CI_PROJECT_DIR/public
+     - flutter build apk
   artifacts:
     paths:
-      - public
-  #rules:
-  #  - if: $CI_COMMIT_BRANCH == "main"
-  environment: production
+      - build/app/outputs/apk/release/app-release.apk
