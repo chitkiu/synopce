@@ -11,8 +11,8 @@ flutter_test: # Name of the lane
 flutter_pre_build:
   stage: prebuild
   script:
-    - flutter packages get
     - flutter clean
+    - flutter packages get
 
 flutter_build_android: #Job name
   stage: build
