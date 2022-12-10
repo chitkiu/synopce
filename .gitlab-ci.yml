@@ -28,6 +28,8 @@ code_quality:
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
+  tags:
+    - macos
 
 test:
   stage: test
@@ -42,11 +44,15 @@ test:
       - $CI_PROJECT_DIR/coverage
     reports:
       junit: report.xml
+  tags:
+    - macos
 
 deploy:
   stage: deploy
   script: echo "Define your deployment script!"
   environment: production
+  tags:
+    - macos
 
 
 pages:
@@ -59,4 +65,6 @@ pages:
   #rules:
   #  - if: $CI_COMMIT_BRANCH == "main"
   environment: production
+  tags:
+    - macos
 
