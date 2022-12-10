@@ -1,7 +1,7 @@
 stages:          # List of stages for jobs, and their order of execution
   - test
-  - build_android
   - build_macos
+  - build_android
 
 flutter_test: # Name of the lane
   stage: test # type of stage
