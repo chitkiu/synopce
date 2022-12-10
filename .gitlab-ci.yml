@@ -34,7 +34,7 @@ code_quality:
 test:
   stage: test
   script:
-    - flutter test --machine --coverage | tojunit -o report.xml
+    - flutter test --machine --coverage | dart tojunit -o report.xml
     - dart lcov --summary coverage/lcov.info
     - dart genhtml coverage/lcov.info --output=coverage
   coverage: '/lines\.*: \d+\.\d+\%/'
