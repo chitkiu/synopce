@@ -23,10 +23,6 @@ stages:          # List of stages for jobs, and their order of execution
 
 code_quality:
   stage: test
-  #image: "cirrusci/flutter:latest"
-  before_script:
-    - pub global activate dart_code_metrics
-    - export PATH="$PATH:$HOME/.pub-cache/bin"
   script:
     - metrics lib -r codeclimate  > gl-code-quality-report.json
   artifacts:
@@ -35,10 +31,6 @@ code_quality:
 
 test:
   stage: test
-  #image: "cirrusci/flutter:latest"
-  before_script:
-    - pub global activate junitreport
-    - export PATH="$PATH:$HOME/.pub-cache/bin"
   script:
     - flutter test --machine --coverage | tojunit -o report.xml
     - lcov --summary coverage/lcov.info
