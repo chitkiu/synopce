@@ -14,8 +14,8 @@ test:
   stage: test
   script:
     - flutter test --machine --coverage | tojunit -o report.xml
-    - lcov --summary coverage/lcov.info
-    - genhtml coverage/lcov.info --output=coverage
+   # - lcov --summary coverage/lcov.info
+   # - genhtml coverage/lcov.info --output=coverage
   coverage: '/lines\.*: \d+\.\d+\%/'
   artifacts:
     name: coverage
