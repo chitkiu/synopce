@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:synoapi/synoapi.dart';
 
+import '../../common/base_snack_bar.dart';
 import '../../common/icons_constants.dart';
 import '../../sdk.dart';
 import 'select_destination_screen.dart';
@@ -142,15 +143,11 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
 
   void _sendRequest(BuildContext context) async {
     if (_destination == null || _destination?.isEmpty == true) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Enter destination'),
-      ));
+      showSnackBar(context, 'Enter destination');
       return;
     }
     if (_url.isEmpty && _file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Select file or enter url'),
-      ));
+      showSnackBar(context, 'Select file or enter url');
       return;
     }
 
@@ -163,10 +160,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
     if (result.success) {
       Navigator.pop(context);
     } else {
-      debugPrint('Error: ${result.error}');
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text('Error: ${result.error}'),
-      // ));
+      showSnackBar(context, 'Error: ${result.error}');
     }
   }
 }

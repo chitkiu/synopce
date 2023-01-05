@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../common/base_loading_dialog.dart';
+import '../common/base_snack_bar.dart';
 import '../common/text_constants.dart';
 import '../download_station/tasks_list/tasks_screen.dart';
 import '../sdk.dart';
@@ -29,10 +28,7 @@ class AuthWidget extends StatelessWidget {
         listener: (context, state) {
           if (state is DataAuthState) {
             if (state.error != null) {
-              log(state.error ?? "");
-              // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              //   content: Text('Error: ${state.error}'),
-              // ));
+              showSnackBar(context, 'Error: ${state.error}');
               if (_isLoadingDialogVisible) {
                 Navigator.of(context).pop();
               }
