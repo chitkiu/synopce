@@ -8,14 +8,22 @@ class UpdateTasksCubit extends Cubit<RequestUpdateTasks> {
   Timer? timer;
 
   UpdateTasksCubit() : super(RequestUpdateTasks()) {
-    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      emit(RequestUpdateTasks());
-    });
+    startTimer();
+  }
+
+  void startTimer() {
+    timer ??= Timer.periodic(const Duration(seconds: 3), (timer) {
+        emit(RequestUpdateTasks());
+      });
+  }
+
+  void stopTimer() {
+    timer?.cancel();
   }
 
   @override
   Future<void> close() {
-    timer?.cancel();
+    stopTimer();
     return super.close();
   }
 }

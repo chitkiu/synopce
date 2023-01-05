@@ -49,15 +49,15 @@ class TaskInfoWidget extends StatelessWidget {
   Widget _groupedTaskInfo(GroupedTaskInfoModel categoryModel) {
     return Column(
       children: [
-        Text(categoryModel.title),
+        PlatformText(categoryModel.title),
         for(var itemModel in categoryModel.items)
           Row(
             mainAxisSize: MainAxisSize.max,
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${itemModel.title}:"),
+              PlatformText("${itemModel.title}:"),
               Flexible(
-                  child: Text(itemModel.text,
+                  child: PlatformText(itemModel.text,
                       maxLines: 1,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis)),

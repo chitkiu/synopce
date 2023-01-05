@@ -8,7 +8,7 @@ abstract class TasksState {
 }
 
 class SuccessTasksState extends TasksState {
-  final Iterable<Task> models;
+  final List<Task> models;
 
   SuccessTasksState(this.models, bool isLoading) : super._(isLoading);
 

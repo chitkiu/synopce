@@ -80,7 +80,7 @@ class TasksScreenWidget extends StatelessWidget {
               builder: (context, state) {
                 switch (state.runtimeType) {
                   case SuccessTasksState:
-                    var list = (state as SuccessTasksState).models.toList();
+                    var list = (state as SuccessTasksState).models;
                     return SafeArea(
                         child: ScreenTypeLayout(
                           mobile: _mobileWidget(list),
