@@ -1,10 +1,10 @@
-import 'package:dsm_app/download_station/task_info/task_info_mapper.dart';
-import 'package:dsm_app/sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:synoapi/synoapi.dart';
 
 import '../../common/text_constants.dart';
+import '../../sdk.dart';
+import 'task_info_mapper.dart';
 import 'task_info_model.dart';
 
 class TaskInfoWidget extends StatelessWidget {
@@ -41,7 +41,7 @@ class TaskInfoWidget extends StatelessWidget {
         await SDK.instance.dsSDK.task.pause([model.id]);
         break;
       case ActionTaskInfoType.DELETE:
-        await SDK.instance.repository.tasksInfoProvider.removeItem(model.id);
+        await SDK.instance.provider.removeItem(model.id);
         break;
     }
   }

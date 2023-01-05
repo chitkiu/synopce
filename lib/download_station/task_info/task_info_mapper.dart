@@ -1,6 +1,6 @@
-import 'package:dsm_app/extensions/format_byte.dart';
 import 'package:synoapi/synoapi.dart';
 
+import '../../extensions/format_byte.dart';
 import 'task_info_model.dart';
 
 class TaskInfoMapper {

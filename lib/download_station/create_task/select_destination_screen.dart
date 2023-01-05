@@ -62,8 +62,8 @@ class NodeTreeView extends StatelessWidget {
                         ))
                     .toList();
                 scope.node.addChildren(items);
-                scope.expand(context);
               }
+              scope.expand(context);
             }
           },
           child:

@@ -1,15 +1,15 @@
 import 'dart:developer';
 
-import 'package:dsm_app/auth/bloc/auth_state.dart';
-import 'package:dsm_app/sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../common/base_loading_dialog.dart';
 import '../common/text_constants.dart';
-import '../download_station/tasks_list/tasks_screen_widget.dart';
+import '../download_station/tasks_list/tasks_screen.dart';
+import '../sdk.dart';
 import 'bloc/auth_cubit.dart';
+import 'bloc/auth_state.dart';
 
 class AuthWidget extends StatelessWidget {
   AuthWidget({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class AuthWidget extends StatelessWidget {
               }
             } else if (state.state == InternalAuthState.SUCCESS) {
               Navigator.of(context).pushAndRemoveUntil(
-                  platformPageRoute(context: context, builder: (_) => const TasksScreenWidget()),
+                  platformPageRoute(context: context, builder: (_) => const TaskScreen()),
                   (route) => false);
             }
           }

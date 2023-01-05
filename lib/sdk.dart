@@ -2,14 +2,15 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:synoapi/synoapi.dart';
 
 import 'download_station/tasks_list/data/tasks_info_provider.dart';
-import 'download_station/tasks_list/data/tasks_repository.dart';
+import 'download_station/tasks_list/data/tasks_info_updater.dart';
 
 class SDK {
   late final DownloadStationAPI dsSDK;
   late final DownloadStation2API ds2SDK;
   late final FileStationAPI fsSDK;
   final storage = const FlutterSecureStorage();
-  late final TasksRepository repository;
+  late final TasksInfoProvider provider;
+  late final TasksInfoUpdater updater;
 
   Future<bool> init({
     required String url,
@@ -27,7 +28,8 @@ class SDK {
         dsSDK = localDsAPI;
         ds2SDK = localDs2API;
         fsSDK = localFsAPI;
-        repository = TasksRepository(TasksInfoProvider(localDsAPI));
+        provider = TasksInfoProvider(localDsAPI);
+        updater = TasksInfoUpdater(provider);
       }
       return value;
     });
