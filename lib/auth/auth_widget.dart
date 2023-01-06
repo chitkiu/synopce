@@ -5,8 +5,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../common/base_loading_dialog.dart';
 import '../common/base_snack_bar.dart';
 import '../common/text_constants.dart';
-import '../download_station/tasks_list/tasks_screen.dart';
 import '../sdk.dart';
+import '../settings/settings_screen.dart';
 import 'bloc/auth_cubit.dart';
 import 'bloc/auth_state.dart';
 
@@ -27,7 +27,7 @@ class AuthWidget extends StatelessWidget {
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is DataAuthState) {
-            if (state.error != null) {
+            if (state.error != null && state.error?.isNotEmpty == true) {
               showSnackBar(context, 'Error: ${state.error}');
               if (_isLoadingDialogVisible) {
                 Navigator.of(context).pop();
@@ -41,7 +41,7 @@ class AuthWidget extends StatelessWidget {
               }
             } else if (state.state == InternalAuthState.SUCCESS) {
               Navigator.of(context).pushAndRemoveUntil(
-                  platformPageRoute(context: context, builder: (_) => const TaskScreen()),
+                  platformPageRoute(context: context, builder: (_) => const SettingsScreen()),
                   (route) => false);
             }
           }

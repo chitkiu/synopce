@@ -33,13 +33,14 @@ dependencies:
     sdk: flutter
 
   synoapi:
-    git:
-      url: https://github.com/chitkiu/synoapi.git
-      ref: new_create_api
+    path: ../synoapi
+#    git:
+#      url: https://github.com/chitkiu/synoapi.git
+#      ref: new_create_api
 
   cupertino_icons: ^1.0.2
   file_picker: ^5.2.1
-  flutter_secure_storage: ^6.0.0
+  flutter_secure_storage: ^7.0.1
   responsive_builder: ^0.4.3
   flutter_bloc: ^8.1.1
   flutter_fancy_tree_view: ^0.5.3+2

@@ -15,6 +15,7 @@ class AuthCubit extends Cubit<AuthState> {
     if (newURL != state.url) {
       emit(state.copyWith(
         url: newURL,
+        error: null,
       ));
     }
   });
@@ -23,6 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (newUsername != state.username) {
           emit(state.copyWith(
             username: newUsername,
+            error: null,
           ));
         }
       });
@@ -31,6 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (newPass != state.password) {
           emit(state.copyWith(
             password: newPass,
+            error: null,
           ));
         }
       });
@@ -39,6 +42,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (isHttps != state.isHttps) {
           emit(state.copyWith(
             isHttps: isHttps,
+            error: null,
           ));
         }
       });
@@ -47,6 +51,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (isAutologin != state.needToAutologin) {
           emit(state.copyWith(
             needToAutologin: isAutologin,
+            error: null,
           ));
         }
       });
@@ -55,6 +60,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (hidePassword != state.hidePassword) {
           emit(state.copyWith(
             hidePassword: hidePassword,
+            error: null,
           ));
         }
       });
@@ -107,7 +113,6 @@ class AuthCubit extends Cubit<AuthState> {
   void _saveData() => _ifIsDataAuthState((state) async {
         _storage.write(key: URL_KEY_NAME, value: state.url);
         _storage.write(key: USERNAME_KEY_NAME, value: state.username);
-        _storage.write(key: PASSWORD_KEY_NAME, value: state.password);
         _storage.write(key: IS_HTTPS_KEY_NAME, value: state.isHttps.toString());
         _storage.write(
             key: NEED_TO_AUTOLOGIN_KEY_NAME,
@@ -118,14 +123,29 @@ class AuthCubit extends Cubit<AuthState> {
     var newState = DataAuthState(
         url: await _storage.read(key: URL_KEY_NAME) ?? "",
         username: await _storage.read(key: USERNAME_KEY_NAME) ?? "",
-        password: await _storage.read(key: PASSWORD_KEY_NAME) ?? "",
         isHttps: await _storage.read(key: IS_HTTPS_KEY_NAME) == 'true',
         needToAutologin:
             await _storage.read(key: NEED_TO_AUTOLOGIN_KEY_NAME) == 'true');
-    log(newState.toString());
     emit(newState);
+
     if (newState.needToAutologin) {
-      auth();
+      try {
+        var loadResult = await SDK.instance.initWithCookies(
+          url: '${(newState.isHttps ? 'https' : 'http')}://${newState.url}',
+        );
+        if (loadResult) {
+          //TODO
+          var response = await SDK.instance.fsSDK.list.listSharedFolder();
+          if (response.success) {
+            emit(newState.copyWith(state: InternalAuthState.SUCCESS));
+            return;
+          }
+        }
+      } on Exception catch (e) {
+        print(e);
+      }
+
+      emit(newState.copyWith(state: null));
     }
   }
 
@@ -138,7 +158,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   static const String URL_KEY_NAME = 'url';
   static const String USERNAME_KEY_NAME = 'name';
-  static const String PASSWORD_KEY_NAME = 'password';
   static const String IS_HTTPS_KEY_NAME = 'isHttps';
   static const String NEED_TO_AUTOLOGIN_KEY_NAME = 'needToAutologin';
+  static const String COOKIES_KEY_NAME = 'cookies';
 }
