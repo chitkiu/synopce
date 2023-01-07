@@ -12,57 +12,51 @@ class AuthManager extends GetxController {
 
   AuthManager(this._storage);
 
-  var authState = const AuthDataModel(
-          url: "",
-          username: "",
-          needToAutologin: false,
-          isHttps: false)
-      .obs;
+  Rx<AuthDataModel?> authState = (null as AuthDataModel?).obs;
 
   var hidePassword = true.obs;
 
-
   @override
   void onInit() async {
-    var result = await loadSavedData();
+    var result = await _loadSavedData();
+    await _tryToAuthFromCookie(result);
     authState.value = result;
-    await tryToAuthFromCookie(result);
     super.onInit();
   }
 
   void updateURL(String newUrl) {
-    if (newUrl != authState.value.url) {
-      authState.value = authState.value.copyWith(
+    if (newUrl != authState.value?.url) {
+      authState.value = authState.value?.copyWith(
         url: newUrl,
       );
     }
   }
 
   void updateUsername(String newValue) {
-    if (newValue != authState.value.username) {
-      authState.value = authState.value.copyWith(
+    if (newValue != authState.value?.username) {
+      authState.value = authState.value?.copyWith(
         username: newValue,
       );
     }
   }
 
   void updateIsHttps(bool newValue) {
-    if (newValue != authState.value.isHttps) {
-      authState.value = authState.value.copyWith(
+    if (newValue != authState.value?.isHttps) {
+      authState.value = authState.value?.copyWith(
         isHttps: newValue,
       );
     }
   }
 
   void updateNeedToAutologin(bool newValue) {
-    if (newValue != authState.value.needToAutologin) {
-      authState.value = authState.value.copyWith(
+    if (newValue != authState.value?.needToAutologin) {
+      authState.value = authState.value?.copyWith(
         needToAutologin: newValue,
       );
     }
   }
 
-  Future<AuthDataModel> loadSavedData() async {
+  Future<AuthDataModel> _loadSavedData() async {
     var result = AuthDataModel(
         url: await _storage.read(key: URL_KEY_NAME) ?? "",
         username: await _storage.read(key: USERNAME_KEY_NAME) ?? "",
@@ -73,36 +67,32 @@ class AuthManager extends GetxController {
     return Future.value(result);
   }
 
-  Future<void> tryToAuthFromCookie(AuthDataModel authModel) async {
+  Future<bool> _tryToAuthFromCookie(AuthDataModel authModel) async {
     if (authModel.needToAutologin) {
-      await executeWithLoadingDialog<bool>(
-          () async {
-            try {
-              var loadResult = await SDK.instance.initWithCookies(
-                url: '${(authModel.isHttps ? 'https' : 'http')}://${authModel.url}',
-              );
-              if (loadResult) {
-                //TODO Find and replace to better endpoint
-                var response = await SDK.instance.fsSDK.list.listSharedFolder();
-                return response.success;
-              }
-            } on Exception catch (e) {
-              Get.log.printError(info: e.toString());
-            }
-
-            return false;
-          },
-        actionWithResult: (p0) {
-          if (p0 == true) {
+      try {
+        var loadResult = await SDK.instance.initWithCookies(
+          url: '${(authModel.isHttps ? 'https' : 'http')}://${authModel.url}',
+        );
+        if (loadResult) {
+          //TODO Find and replace to better endpoint
+          var response = await SDK.instance.fsSDK.list.listSharedFolder();
+          if (response.success) {
             _goToSettings();
+            return true;
           }
-        },
-      );
+        }
+      } on Exception catch (e) {
+        Get.log.printError(info: e.toString());
+      }
     }
+    return false;
   }
 
   void auth(String? password) async {
     var state = authState.value;
+    if (state == null) {
+      return;
+    }
     if (state.url.isEmpty) {
       errorSnackbar("Enter URL");
       return;
@@ -152,13 +142,17 @@ class AuthManager extends GetxController {
   }
 
   void _saveData() {
-    _storage.write(key: URL_KEY_NAME, value: authState.value.url);
-    _storage.write(key: USERNAME_KEY_NAME, value: authState.value.username);
+    var state = authState.value;
+    if (state == null) {
+      return;
+    }
+    _storage.write(key: URL_KEY_NAME, value: state.url);
+    _storage.write(key: USERNAME_KEY_NAME, value: state.username);
     _storage.write(
-        key: IS_HTTPS_KEY_NAME, value: authState.value.isHttps.toString());
+        key: IS_HTTPS_KEY_NAME, value: state.isHttps.toString());
     _storage.write(
         key: NEED_TO_AUTOLOGIN_KEY_NAME,
-        value: authState.value.needToAutologin.toString());
+        value: state.needToAutologin.toString());
   }
 
   void _goToSettings() {

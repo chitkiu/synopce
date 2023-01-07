@@ -21,26 +21,13 @@ class AuthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return _dataView(_authmanager.authState.value);
+      var state = _authmanager.authState.value;
+      if (state == null) {
+        return _waitingView();
+      } else {
+        return _dataView(state);
+      }
     });
-/*    return FutureBuilder(
-        future: _loadData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _waitingView();
-          } else {
-            if (snapshot.hasError) {
-              return _errorView(snapshot);
-            } else {
-
-            }
-          }
-        });*/
-  }
-
-  Scaffold _errorView(AsyncSnapshot<Object?> snapshot) {
-    return Scaffold(
-        body: Center(child: Text('Error: ${snapshot.error}')));
   }
 
   Scaffold _waitingView() {
