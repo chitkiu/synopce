@@ -2,6 +2,7 @@ import 'package:dsm_app/auth/auth_data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
+import '../extensions/execute_with_loading_dialog.dart';
 import '../extensions/snackbar_extension.dart';
 import '../sdk.dart';
 import '../settings/settings_screen.dart';
@@ -74,21 +75,29 @@ class AuthManager extends GetxController {
 
   Future<void> tryToAuthFromCookie(AuthDataModel authModel) async {
     if (authModel.needToAutologin) {
-      try {
-        var loadResult = await SDK.instance.initWithCookies(
-          url: '${(authModel.isHttps ? 'https' : 'http')}://${authModel.url}',
-        );
-        if (loadResult) {
-          //TODO Find and replace to better endpoint
-          var response = await SDK.instance.fsSDK.list.listSharedFolder();
-          if (response.success) {
-            Get.offAll(() => const SettingsScreen());
+      await executeWithLoadingDialog<bool>(
+          () async {
+            try {
+              var loadResult = await SDK.instance.initWithCookies(
+                url: '${(authModel.isHttps ? 'https' : 'http')}://${authModel.url}',
+              );
+              if (loadResult) {
+                //TODO Find and replace to better endpoint
+                var response = await SDK.instance.fsSDK.list.listSharedFolder();
+                return response.success;
+              }
+            } on Exception catch (e) {
+              Get.log.printError(info: e.toString());
+            }
+
+            return false;
+          },
+        actionWithResult: (p0) {
+          if (p0 == true) {
+            _goToSettings();
           }
-          return;
-        }
-      } on Exception catch (e) {
-        print(e);
-      }
+        },
+      );
     }
   }
 
@@ -109,26 +118,37 @@ class AuthManager extends GetxController {
       errorSnackbar("Enter username");
       return;
     }
-    if (password == null || password!.isEmpty == true) {
+    if (password == null || password.isEmpty == true) {
       errorSnackbar("Enter password");
       return;
     }
 
-    _saveData();
-    try {
-      var authResult = await SDK.instance.init(
-        url: '${(state.isHttps ? 'https' : 'http')}://${state.url}',
-        username: state.username,
-        password: password ?? "",
-      );
-      if (authResult) {
-        Get.offAll(() => const SettingsScreen());
-      } else {
-        errorSnackbar("Auth failed!");
-      }
-    } on Exception catch (e) {
-      errorSnackbar(e.toString());
-    }
+    executeWithLoadingDialog<bool>(
+      () async {
+        _saveData();
+        try {
+          var authResult = await SDK.instance.init(
+            url: '${(state.isHttps ? 'https' : 'http')}://${state.url}',
+            username: state.username,
+            password: password ?? "",
+          );
+          if (authResult) {
+            return true;
+          } else {
+            errorSnackbar("Auth failed!");
+          }
+        } on Exception catch (e) {
+          errorSnackbar(e.toString());
+        }
+
+        return false;
+      },
+      actionWithResult: (p0) {
+        if (p0 == true) {
+          _goToSettings();
+        }
+      },
+    );
   }
 
   void _saveData() {
@@ -139,6 +159,10 @@ class AuthManager extends GetxController {
     _storage.write(
         key: NEED_TO_AUTOLOGIN_KEY_NAME,
         value: authState.value.needToAutologin.toString());
+  }
+
+  void _goToSettings() {
+    Get.offAll(() => const SettingsScreen());
   }
 
   static const String URL_KEY_NAME = 'url';
