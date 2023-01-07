@@ -47,6 +47,7 @@ dependencies:
   flutter_platform_widgets: ^2.0.0
   logging: ^1.1.0
   rxdart: ^0.27.7
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
