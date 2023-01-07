@@ -14,7 +14,6 @@ class AuthManager extends GetxController {
   var authState = const AuthDataModel(
           url: "",
           username: "",
-          password: "",
           needToAutologin: false,
           isHttps: false)
       .obs;
@@ -46,14 +45,6 @@ class AuthManager extends GetxController {
     }
   }
 
-  void updatePassword(String newValue) {
-    if (newValue != authState.value.password) {
-      authState.value = authState.value.copyWith(
-        password: newValue,
-      );
-    }
-  }
-
   void updateIsHttps(bool newValue) {
     if (newValue != authState.value.isHttps) {
       authState.value = authState.value.copyWith(
@@ -74,7 +65,6 @@ class AuthManager extends GetxController {
     var result = AuthDataModel(
         url: await _storage.read(key: URL_KEY_NAME) ?? "",
         username: await _storage.read(key: USERNAME_KEY_NAME) ?? "",
-        password: null,
         isHttps: await _storage.read(key: IS_HTTPS_KEY_NAME) == 'true',
         needToAutologin:
             await _storage.read(key: NEED_TO_AUTOLOGIN_KEY_NAME) == 'true');
@@ -89,10 +79,10 @@ class AuthManager extends GetxController {
           url: '${(authModel.isHttps ? 'https' : 'http')}://${authModel.url}',
         );
         if (loadResult) {
-          //TODO
+          //TODO Find and replace to better endpoint
           var response = await SDK.instance.fsSDK.list.listSharedFolder();
           if (response.success) {
-            Get.to(() => const SettingsScreen());
+            Get.offAll(() => const SettingsScreen());
           }
           return;
         }
@@ -102,7 +92,7 @@ class AuthManager extends GetxController {
     }
   }
 
-  void auth() async {
+  void auth(String? password) async {
     var state = authState.value;
     if (state.url.isEmpty) {
       errorSnackbar("Enter URL");
@@ -119,23 +109,20 @@ class AuthManager extends GetxController {
       errorSnackbar("Enter username");
       return;
     }
-    if (state.password == null || state.password!.isEmpty == true) {
+    if (password == null || password!.isEmpty == true) {
       errorSnackbar("Enter password");
       return;
     }
-
-    // emit(state.copyWith(state: InternalAuthState.LOADING));
 
     _saveData();
     try {
       var authResult = await SDK.instance.init(
         url: '${(state.isHttps ? 'https' : 'http')}://${state.url}',
         username: state.username,
-        password: state.password ?? "",
+        password: password ?? "",
       );
       if (authResult) {
-        Get.to(() => const SettingsScreen());
-        // emit(state.copyWith(state: InternalAuthState.SUCCESS));
+        Get.offAll(() => const SettingsScreen());
       } else {
         errorSnackbar("Auth failed!");
       }

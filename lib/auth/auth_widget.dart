@@ -71,11 +71,6 @@ class AuthWidget extends StatelessWidget {
         text: state.username,
       );
     }
-    if (_passwordController.text != state.password) {
-      _passwordController.value = _passwordController.value.copyWith(
-        text: state.password,
-      );
-    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -140,9 +135,6 @@ class AuthWidget extends StatelessWidget {
                   ),
                 );
               },
-              onChanged: (newValue) {
-                _authmanager.updatePassword(newValue);
-              },
             )),
         Container(
           width: _EditTextWidth,
@@ -185,7 +177,7 @@ class AuthWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: PlatformElevatedButton(
               onPressed: () {
-                _authmanager.auth();
+                _authmanager.auth(_passwordController.text);
               },
               child: Text(style: AppColoredTextStyle, 'Login'),
             )),

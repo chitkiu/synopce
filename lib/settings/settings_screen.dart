@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:get/get.dart';
 
 import '../auth/auth_screen_widget.dart';
 import '../sdk.dart';
@@ -34,10 +35,7 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () async {
                   var result = await SDK.instance.logout();
                   if (result) {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        platformPageRoute(context: context,
-                            builder: (_) => const AuthScreenWidget()),
-                            (route) => false);
+                    Get.offAll(() => const AuthScreenWidget());
                   }
                 },
               )
