@@ -11,7 +11,7 @@ class AuthWidget extends StatelessWidget {
   AuthWidget({Key? key}) : super(key: key);
 
   final AuthManager _authmanager = Get.put(AuthManager(SDK.instance.storage));
-
+  final RxBool hidePassword = true.obs;
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -109,16 +109,16 @@ class AuthWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: PlatformTextField(
               controller: _passwordController,
-              obscureText: _authmanager.hidePassword.value,
+              obscureText: hidePassword.value,
               hintText: 'Password',
               cupertino: (context, platform) {
                 return CupertinoTextFieldData(
-                    suffix: _suffixIcon(context, _authmanager.hidePassword.value));
+                    suffix: _suffixIcon(context, hidePassword.value));
               },
               material: (context, platform) {
                 return MaterialTextFieldData(
                   decoration: InputDecoration(
-                    suffix: _suffixIcon(context, _authmanager.hidePassword.value),
+                    suffix: _suffixIcon(context, hidePassword.value),
                   ),
                 );
               },
@@ -180,7 +180,7 @@ class AuthWidget extends StatelessWidget {
       ),
       onPressed: () {
         // Update the state i.e. toogle the state of passwordVisible variable
-        _authmanager.hidePassword.value = !_authmanager.hidePassword.value;
+        this.hidePassword.value = !this.hidePassword.value;
       },
     );
   }

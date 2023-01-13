@@ -14,8 +14,6 @@ class AuthManager extends GetxController {
 
   Rx<AuthDataModel?> authState = (null as AuthDataModel?).obs;
 
-  var hidePassword = true.obs;
-
   @override
   void onInit() async {
     var result = await _loadSavedData();
@@ -115,7 +113,6 @@ class AuthManager extends GetxController {
 
     executeWithLoadingDialog<bool>(
       () async {
-        _saveData();
         try {
           var authResult = await SDK.instance.init(
             url: '${(state.isHttps ? 'https' : 'http')}://${state.url}',
@@ -123,6 +120,7 @@ class AuthManager extends GetxController {
             password: password ?? "",
           );
           if (authResult) {
+            await _saveData();
             return true;
           } else {
             errorSnackbar("Auth failed!");
@@ -141,16 +139,16 @@ class AuthManager extends GetxController {
     );
   }
 
-  void _saveData() {
+  Future<void> _saveData() async {
     var state = authState.value;
     if (state == null) {
       return;
     }
-    _storage.write(key: URL_KEY_NAME, value: state.url);
-    _storage.write(key: USERNAME_KEY_NAME, value: state.username);
-    _storage.write(
+    await _storage.write(key: URL_KEY_NAME, value: state.url);
+    await _storage.write(key: USERNAME_KEY_NAME, value: state.username);
+    await _storage.write(
         key: IS_HTTPS_KEY_NAME, value: state.isHttps.toString());
-    _storage.write(
+    await _storage.write(
         key: NEED_TO_AUTOLOGIN_KEY_NAME,
         value: state.needToAutologin.toString());
   }
