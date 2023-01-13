@@ -5,23 +5,14 @@ import 'package:get/get.dart';
 import '../auth/auth_screen.dart';
 import '../sdk.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class SettingsWidget extends StatelessWidget {
+  const SettingsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      appBar: PlatformAppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text("Settings"),
-          ],
-        ),
-      ),
-      body: ListView.builder(
+    return ListView.builder(
         itemCount: 1,
-          itemBuilder: (context, index) {
+        itemBuilder: (context, index) {
           return Column(
             children: [
               GestureDetector(
@@ -41,7 +32,6 @@ class SettingsScreen extends StatelessWidget {
               )
             ],
           );
-      })
-    );
+        });
   }
 }

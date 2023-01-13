@@ -15,7 +15,7 @@ class TaskInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: const Text('Info about task'),
+        title: const Text("Info about task"),
       ),
       body: SafeArea(
         child: Obx(
@@ -25,7 +25,7 @@ class TaskInfoScreen extends StatelessWidget {
               Future.delayed(Duration.zero, () {
                 Navigator.pop(context);
               });
-              return PlatformScaffold();
+              return Container();
             } else {
               return TaskInfoWidget(task);
             }
