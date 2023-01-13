@@ -2,8 +2,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:synoapi/synoapi.dart';
 
 import 'auth/safe_storage.dart';
-import 'download_station/tasks_list/data/tasks_info_provider.dart';
-import 'download_station/tasks_list/data/tasks_info_updater.dart';
+import 'common/data/tasks_info_provider.dart';
+import 'common/data/tasks_info_repository.dart';
+import 'common/data/tasks_info_storage.dart';
 
 class SDK {
   late APIContext _context;
@@ -13,7 +14,7 @@ class SDK {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   late CookieJar cookieJar = PersistCookieJar(storage: SafeStorage(storage));
   late TasksInfoProvider provider;
-  late TasksInfoUpdater updater;
+  late TasksInfoRepository repository;
 
   Future<bool> init({
     required String url,
@@ -53,7 +54,7 @@ class SDK {
         ds2SDK = localDs2API;
         fsSDK = localFsAPI;
         provider = TasksInfoProvider(localDsAPI);
-        updater = TasksInfoUpdater(provider);
+        repository = TasksInfoRepository(TasksInfoStorage(), provider);
       }
       return value;
     });

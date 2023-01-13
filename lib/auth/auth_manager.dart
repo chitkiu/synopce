@@ -2,10 +2,10 @@ import 'package:dsm_app/auth/auth_data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
+import '../download_station/tasks_list/tasks_list_screen.dart';
 import '../extensions/execute_with_loading_dialog.dart';
 import '../extensions/snackbar_extension.dart';
 import '../sdk.dart';
-import '../settings/settings_screen.dart';
 
 class AuthManager extends GetxController {
   final FlutterSecureStorage _storage;
@@ -156,7 +156,8 @@ class AuthManager extends GetxController {
   }
 
   void _goToSettings() {
-    Get.offAll(() => const SettingsScreen());
+    Get.offAll(() => const TasksListScreen());
+    // Get.offAll(() => const SettingsScreen());
   }
 
   static const String URL_KEY_NAME = 'url';

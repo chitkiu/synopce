@@ -5,7 +5,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:logging/logging.dart';
 
-import 'auth/auth_screen_widget.dart';
+import 'auth/auth_screen.dart';
 
 void main() {
   if (kDebugMode) {
@@ -27,13 +27,13 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         title: 'Flutter Demo',
         theme: (brightness == Brightness.light) ? _lightMaterialTheme : _darkMaterialTheme,
-        home: const AuthScreenWidget(),
+        home: const AuthScreen(),
       );
     } else {
       return GetCupertinoApp(
         title: 'Flutter Demo',
         theme: (brightness == Brightness.light) ? _lightCupertinoTheme : _darkCupertinoTheme,
-        home: const AuthScreenWidget(),
+        home: const AuthScreen(),
       );
     }
   }
