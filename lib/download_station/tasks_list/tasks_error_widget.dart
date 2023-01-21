@@ -9,11 +9,7 @@ class TasksErrorWidget extends StatelessWidget {
     return Center(
       child: Align(
         alignment: Alignment.center,
-        child: SizedBox(
-          width: 60,
-          height: 60,
-          child: Text("Error code: $_error"),
-        ),
+        child: Text("Error code: $_error"),
       ),
     );
   }

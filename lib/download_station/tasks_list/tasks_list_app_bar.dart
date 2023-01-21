@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -27,14 +28,29 @@ class TasksListAppBar extends PlatformAppBar {
                   })
                 ],
               ),
+              actions: [
+                Obx(() {
+                  var hasError = controller.errorText.value != null;
+                  if (hasError) {
+                    return IconButton(
+                        onPressed: () {
+                          controller.reload();
+                        },
+                        icon: const Icon(Icons.refresh),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                })
+              ]
             );
           },
           cupertino: (context, platform) {
             return CupertinoNavigationBarData(
               title: const Text("Tasks list"),
               automaticallyImplyMiddle: true,
-              trailing: GestureDetector(
-                onTap: () {
+              trailing: CupertinoButton(
+                onPressed: () {
                   controller.onAddClick();
                 },
                 child: addIcon(context),
@@ -44,7 +60,20 @@ class TasksListAppBar extends PlatformAppBar {
                 if (isLoading) {
                   return progressIcon(context, size: 12);
                 } else {
-                  return const SizedBox.shrink();
+                  //TODO Maybe move it to trailing
+                  var hasError = controller.errorText.value != null;
+                  if (hasError) {
+                    return CupertinoButton(
+                      child: const Icon(
+                        CupertinoIcons.refresh,
+                      ),
+                      onPressed: () {
+                        controller.reload();
+                      },
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 }
               })
             );

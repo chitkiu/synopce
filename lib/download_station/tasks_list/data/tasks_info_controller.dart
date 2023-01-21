@@ -22,20 +22,32 @@ class TasksListController extends GetxController {
 
   @override
   void onReady() async {
+    await reload();
+  }
+
+  @override
+  void onClose() {
+    _stopTimer();
+  }
+
+  void onAddClick() {
+    Get.to(() => const AddDownloadTaskWidget());
+  }
+
+  Future<void> reload() async {
+    _startTimer();
     await _loadData();
+  }
+
+  void _startTimer() {
     timer ??= Timer.periodic(const Duration(seconds: 3), (timer) async {
       _loadData();
     });
   }
 
-  @override
-  void onClose() {
+  void _stopTimer() {
     timer?.cancel();
     timer = null;
-  }
-
-  void onAddClick() {
-    Get.to(() => const AddDownloadTaskWidget());
   }
 
   Future<void> _loadData() async {
@@ -45,6 +57,10 @@ class TasksListController extends GetxController {
       errorText.value = null;
     } on ApiErrorException catch (e) {
       errorText.value = e.errorType.toString();
+      _stopTimer();
+    } on Exception catch (e) {
+      errorText.value = e.toString();
+      _stopTimer();
     }
     isLoading.value = false;
   }
