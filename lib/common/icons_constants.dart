@@ -2,6 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+Widget progressIcon(BuildContext context, {double? size, Color? color}) {
+  if (isMaterial(context)) {
+    if (size != null) {
+      return SizedBox(
+        height: size,
+        width: size,
+        child: CircularProgressIndicator(
+          color: color,
+        ),
+      );
+    }
+    return const CircularProgressIndicator();
+  } else {
+    return CupertinoActivityIndicator(
+      radius: size ?? 10.0,
+      color: color,
+    );
+  }
+}
+
 Widget doneIcon(BuildContext context, {Color? color}) {
   return _baseIcon(
       context,
