@@ -11,6 +11,8 @@ class SDK {
   late DownloadStationAPI dsSDK;
   late DownloadStation2API ds2SDK;
   late FileStationAPI fsSDK;
+  late NoteStationAPI nsSDK;
+  late Uri uri;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   late CookieJar cookieJar = PersistCookieJar(storage: SafeStorage(storage));
   late TasksInfoProvider provider;
@@ -21,6 +23,7 @@ class SDK {
     required String username,
     required String password,
   }) {
+    uri = Uri.parse(url);
     var context = APIContext.uri(url, cookieJar);
     return _baseInit(
         context,
@@ -31,6 +34,7 @@ class SDK {
   Future<bool> initWithCookies({
     required String url,
   }) {
+    uri = Uri.parse(url);
     var context = APIContext.cookie(url, cookieJar);
     return _baseInit(
         context,
@@ -46,6 +50,7 @@ class SDK {
     var localDsAPI = DownloadStationAPI(context);
     var localDs2API = DownloadStation2API(context);
     var localFsAPI = FileStationAPI(context);
+    var localNsAPI = NoteStationAPI(context);
     return request
         .then((value) {
       if (value) {
@@ -53,6 +58,7 @@ class SDK {
         dsSDK = localDsAPI;
         ds2SDK = localDs2API;
         fsSDK = localFsAPI;
+        nsSDK = localNsAPI;
         provider = TasksInfoProvider(localDsAPI);
         repository = TasksInfoRepository(TasksInfoStorage(), provider);
       }

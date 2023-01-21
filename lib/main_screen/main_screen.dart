@@ -1,4 +1,5 @@
 import 'package:dsm_app/download_station/tasks_list/tasks_list_app_bar.dart';
+import 'package:dsm_app/note_station/note_station_widget.dart';
 import 'package:dsm_app/settings/settings_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,15 +10,13 @@ import '../common/icons_constants.dart';
 import '../download_station/task_info/task_info_widget.dart';
 import '../download_station/tasks_list/data/tasks_info_controller.dart';
 import '../download_station/tasks_list/tasks_data_widget.dart';
+import '../note_station/note_station_app_bar.dart';
 import '../sdk.dart';
 import '../settings/settings_app_bar.dart';
 import 'main_screen_type.dart';
 
 class MainScreen extends StatefulWidget {
-  final TasksListController _mainController =
-      Get.put(TasksListController(SDK.instance.repository));
-
-  MainScreen({Key? key}) : super(key: key);
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -25,6 +24,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   MainScreenType _selected = MainScreenType.tasksList;
+
+  @override
+  void initState() {
+    super.initState();
+    Get.put(TasksListController(SDK.instance.repository));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +67,8 @@ class _MainScreenState extends State<MainScreen> {
         ));
       case MainScreenType.settings:
         return MaterialScaffoldData();
+      case MainScreenType.noteStation:
+        return MaterialScaffoldData();
     }
   }
 
@@ -71,6 +78,8 @@ class _MainScreenState extends State<MainScreen> {
         return _tasksListWidget(Get.find());
       case MainScreenType.settings:
         return const SettingsWidget();
+      case MainScreenType.noteStation:
+        return const NoteStationWidget();
     }
   }
 
@@ -80,6 +89,8 @@ class _MainScreenState extends State<MainScreen> {
         return TasksListAppBar(Get.find());
       case MainScreenType.settings:
         return SettingsAppBar();
+      case MainScreenType.noteStation:
+        return NoteStationAppBar();
     }
   }
 
