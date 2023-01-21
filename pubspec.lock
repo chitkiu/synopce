@@ -21,7 +21,7 @@ packages:
       name: args
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   async:
     dependency: transitive
     description:
@@ -161,7 +161,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.4"
+    version: "5.2.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -194,7 +194,7 @@ packages:
       name: flutter_platform_widgets
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.2.5"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -288,14 +288,14 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.7.0"
+    version: "4.8.0"
   json_serializable:
     dependency: transitive
     description:
       name: json_serializable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.5.4"
+    version: "6.6.0"
   lints:
     dependency: transitive
     description:
@@ -386,7 +386,7 @@ packages:
       name: responsive_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.5.0+1"
   rxdart:
     dependency: "direct main"
     description:
@@ -444,10 +444,12 @@ packages:
   synoapi:
     dependency: "direct main"
     description:
-      path: "../synoapi"
-      relative: true
-    source: path
-    version: "0.1.7"
+      path: "."
+      ref: master
+      resolved-ref: "615b7e979574dfbd68c9ead87c1149d5b8c24fa5"
+      url: "https://github.com/chitkiu/synoapi.git"
+    source: git
+    version: "0.1.8"
   term_glyph:
     dependency: transitive
     description:
@@ -499,4 +501,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.18.2 <3.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=3.3.0"
