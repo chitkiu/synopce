@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Color getDividerColor() {
-  Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
+  return getBaseColor();
+}
 
-  if (brightness == Brightness.light) {
+Color getBaseColor() {
+  if (Get.isDarkMode) {
     return Colors.black;
   } else {
     return Colors.white;

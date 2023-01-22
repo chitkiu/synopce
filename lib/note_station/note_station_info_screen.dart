@@ -1,8 +1,11 @@
 import 'package:dsm_app/settings/settings_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:zoom_widget/zoom_widget.dart';
 
+import '../common/colors.dart';
 import '../common/icons_constants.dart';
 import '../sdk.dart';
 
@@ -34,7 +37,10 @@ class NoteStationNoteScreen extends StatelessWidget {
                         content.replaceAll(RegExp(r'(font-size: \dpx;)'), '');
                   }
 
-                  return SingleChildScrollView(
+                  return Zoom(
+                    initScale: 1,
+                    backgroundColor: getBaseColor(),
+                    canvasColor: getBaseColor(),
                     child: Html(
                       data: content,
                     ),
