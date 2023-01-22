@@ -537,7 +537,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "94df38469fae167f017f7764806e644dc8568cf7"
+      resolved-ref: b2c9b5d5c326be68b324a15d3b4b337379f478cd
       url: "https://github.com/chitkiu/synoapi.git"
     source: git
     version: "0.1.9"

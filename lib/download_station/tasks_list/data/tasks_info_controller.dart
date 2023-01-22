@@ -19,7 +19,6 @@ class TasksListController extends GetxController {
 
   TasksListController(this._repository);
 
-
   @override
   void onReady() async {
     await reload();

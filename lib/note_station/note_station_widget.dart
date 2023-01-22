@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../common/colors.dart';
+import '../common/text_constants.dart';
 import '../sdk.dart';
 import 'note_station_info_screen.dart';
 
@@ -21,9 +22,23 @@ class NoteStationWidget extends StatelessWidget {
               itemBuilder: (context, index) {
                 var note = notes[index];
                 return GestureDetector(
-                  child: Text(note.brief ?? ""),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        note.title ?? "",
+                        style: AppDefaultTextStyle.copyWith(
+                            fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 4)),
+                      Text(note.brief ?? "", style: AppGreySmallTextStyle),
+                    ],
+                  ),
                   onTap: () {
-                    Get.to(() => NoteStationNoteScreen(note.id ?? '', note.title ?? ''));
+                    Get.to(() =>
+                        NoteStationNoteScreen(note.id ?? '', note.title ?? ''));
                   },
                 );
               },

@@ -1,3 +1,4 @@
+import 'package:dsm_app/settings/settings_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,22 @@ class SettingsWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const Text("Is UI fix for notes enabled?"),
+                  Obx(() => PlatformSwitch(
+                    value: SettingsStorage
+                        .instance.isUIFixForNotesEnabled.value,
+                    onChanged: (p0) {
+                      SettingsStorage
+                          .instance.isUIFixForNotesEnabled.value = p0;
+                    },
+                  ))
+                ],
+              ),
+
               GestureDetector(
                 child: Align(
                   alignment: Alignment.center,
@@ -29,7 +46,7 @@ class SettingsWidget extends StatelessWidget {
                     Get.offAll(() => const AuthScreen());
                   }
                 },
-              )
+              ),
             ],
           );
         });
