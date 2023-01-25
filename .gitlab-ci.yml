@@ -5,11 +5,13 @@ stages:          # List of stages for jobs, and their order of execution
 
 flutter_test: # Name of the lane
   stage: test # type of stage
+  tags: [mac-os]
   script:
     - flutter test # Run Flutter test
 
 flutter_build_android: #Job name
   stage: build_android
+  tags: [mac-os]
   before_script:
     - flutter packages get
     - flutter clean
@@ -21,6 +23,7 @@ flutter_build_android: #Job name
 
 flutter_build_macos: #Job name
   stage: build_macos
+  tags: [mac-os]
   before_script:
     - flutter packages get
     - flutter clean
