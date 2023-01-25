@@ -1,17 +1,18 @@
-stages:          # List of stages for jobs, and their order of execution
+stages:
   - test
-  - build_macos
-  - build_android
+  - build
 
-flutter_test: # Name of the lane
-  stage: test # type of stage
-  tags: [mac-os]
+flutter_test:
+  image: cirrusci/flutter:stable
+  stage: test
+  tags: [docker]
   script:
-    - flutter test # Run Flutter test
+    - flutter test
 
-flutter_build_android: #Job name
-  stage: build_android
-  tags: [mac-os]
+flutter_build_android:
+  image: cirrusci/flutter:stable
+  stage: build
+  tags: [docker]
   before_script:
     - flutter packages get
     - flutter clean
@@ -21,8 +22,8 @@ flutter_build_android: #Job name
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
 
-flutter_build_macos: #Job name
-  stage: build_macos
+flutter_build_macos:
+  stage: build
   tags: [mac-os]
   before_script:
     - flutter packages get
