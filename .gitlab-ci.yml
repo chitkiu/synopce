@@ -57,5 +57,5 @@ deploy:
     - flutter_build_android
     - flutter_build_macos
   script:
-    - appcenter distribute alpha -f build/app/outputs/flutter-apk/app-release.apk
-    - appcenter distribute alpha -f installers/dmg_creation/dsm_app.dmg
+    - appcenter distribute alpha -f build/app/outputs/flutter-apk/app-release.apk -g Collaborators --app dmytro-k/Synopce
+    - appcenter distribute alpha -f installers/dmg_creation/dsm_app.dmg -g Collaborators --app dmytro-k/Synopce
