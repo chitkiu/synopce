@@ -1,10 +1,10 @@
-import 'package:dsm_app/settings/settings_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 
 import '../auth/auth_screen.dart';
 import '../sdk.dart';
+import 'settings_storage.dart';
 
 class SettingsWidget extends StatelessWidget {
   const SettingsWidget({Key? key}) : super(key: key);

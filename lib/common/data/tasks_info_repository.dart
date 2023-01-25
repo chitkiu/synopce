@@ -1,9 +1,9 @@
-import 'package:dsm_app/common/data/api_error_exception.dart';
-import 'package:dsm_app/common/data/tasks_info_storage.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
+import 'api_error_exception.dart';
 import 'tasks_info_provider.dart';
+import 'tasks_info_storage.dart';
 
 class TasksInfoRepository {
   final TasksInfoStorage _storage;

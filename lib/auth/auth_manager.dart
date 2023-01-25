@@ -1,4 +1,3 @@
-import 'package:dsm_app/auth/auth_data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
@@ -6,6 +5,7 @@ import '../extensions/execute_with_loading_dialog.dart';
 import '../extensions/snackbar_extension.dart';
 import '../main_screen/main_screen.dart';
 import '../sdk.dart';
+import 'auth_data_model.dart';
 
 class AuthManager extends GetxController {
   final FlutterSecureStorage _storage;

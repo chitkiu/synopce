@@ -1,9 +1,9 @@
-import 'package:dsm_app/common/icons_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../common/colors.dart';
+import '../common/icons_constants.dart';
 import '../common/text_constants.dart';
 import '../sdk.dart';
 import 'note_station_info_screen.dart';

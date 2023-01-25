@@ -1,10 +1,10 @@
-import 'package:dsm_app/download_station/tasks_list/tasks_error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
 import 'data/tasks_info_controller.dart';
+import 'tasks_error_widget.dart';
 import 'tasks_list_widget.dart';
 
 class TasksDataWidget extends StatelessWidget {

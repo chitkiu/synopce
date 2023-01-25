@@ -1,6 +1,3 @@
-import 'package:dsm_app/download_station/tasks_list/tasks_list_app_bar.dart';
-import 'package:dsm_app/note_station/note_station_widget.dart';
-import 'package:dsm_app/settings/settings_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -10,9 +7,12 @@ import '../common/icons_constants.dart';
 import '../download_station/task_info/task_info_widget.dart';
 import '../download_station/tasks_list/data/tasks_info_controller.dart';
 import '../download_station/tasks_list/tasks_data_widget.dart';
+import '../download_station/tasks_list/tasks_list_app_bar.dart';
 import '../note_station/note_station_app_bar.dart';
+import '../note_station/note_station_widget.dart';
 import '../sdk.dart';
 import '../settings/settings_app_bar.dart';
+import '../settings/settings_widget.dart';
 import 'main_screen_type.dart';
 
 class MainScreen extends StatefulWidget {

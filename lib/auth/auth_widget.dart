@@ -1,4 +1,3 @@
-import 'package:dsm_app/auth/auth_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
@@ -6,6 +5,7 @@ import 'package:get/get.dart';
 import '../common/text_constants.dart';
 import '../sdk.dart';
 import 'auth_data_model.dart';
+import 'auth_manager.dart';
 
 class AuthWidget extends StatelessWidget {
   AuthWidget({Key? key}) : super(key: key);

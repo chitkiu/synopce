@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:dsm_app/common/data/api_error_exception.dart';
-import 'package:dsm_app/common/data/tasks_info_repository.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
+import '../../../common/data/api_error_exception.dart';
+import '../../../common/data/tasks_info_repository.dart';
 import '../../create_task/add_download_screen.dart';
 
 class TasksListController extends GetxController {
