@@ -2,6 +2,10 @@ stages:
   - test
   - build
 
+before_script:
+  - flutter packages get
+  - flutter clean
+
 flutter_test:
   image: cirrusci/flutter:stable
   stage: test
@@ -13,9 +17,6 @@ flutter_build_android:
   image: cirrusci/flutter:stable
   stage: build
   tags: [docker]
-  before_script:
-    - flutter packages get
-    - flutter clean
   script:
      - flutter build apk
   artifacts:
@@ -25,9 +26,6 @@ flutter_build_android:
 flutter_build_macos:
   stage: build
   tags: [mac-os]
-  before_script:
-    - flutter packages get
-    - flutter clean
   script:
      - flutter build macos
      - cd installers/dmg_creation
