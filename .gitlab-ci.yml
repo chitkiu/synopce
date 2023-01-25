@@ -1,12 +1,16 @@
 stages:
   - test
   - build
+  - deploy
 
-before_script:
+.with-flutter:
+  before_script:
   - flutter packages get
   - flutter clean
 
 flutter_test:
+  extends:
+    - .with-flutter
   image: cirrusci/flutter:stable
   stage: test
   tags: [docker]
@@ -14,6 +18,8 @@ flutter_test:
     - flutter test
 
 flutter_build_android:
+  extends:
+    - .with-flutter
   image: cirrusci/flutter:stable
   stage: build
   tags: [docker]
@@ -24,6 +30,8 @@ flutter_build_android:
       - build/app/outputs/flutter-apk/app-release.apk
 
 flutter_build_macos:
+  extends:
+    - .with-flutter
   stage: build
   tags: [mac-os]
   script:
@@ -33,3 +41,21 @@ flutter_build_macos:
   artifacts:
     paths:
       - installers/dmg_creation/dsm_app.dmg
+
+.with-deploy:
+  before_script:
+    - npm install --location=global appcenter-cli
+    - appcenter login --token $APPCENTER_API_TOKEN
+
+deploy:
+  extends:
+    - .with-deploy
+  image: node:16-alpine
+  tags: [docker]
+  stage: deploy
+  dependencies:
+    - flutter_build_android
+    - flutter_build_macos
+  script:
+    - appcenter distribute alpha -f build/app/outputs/flutter-apk/app-release.apk
+    - appcenter distribute alpha -f installers/dmg_creation/dsm_app.dmg
