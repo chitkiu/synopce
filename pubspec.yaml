@@ -16,13 +16,13 @@ dependencies:
       url: https://github.com/chitkiu/synoapi.git
       ref: master
 
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
   file_picker: ^5.2.5
   flutter_secure_storage: ^7.0.1
   responsive_builder: ^0.5.0+1
   flutter_fancy_tree_view: ^0.5.3+2
-  flutter_platform_widgets: ^2.2.5
-  logging: ^1.1.0
+  flutter_platform_widgets: ^2.2.6
+  logging: ^1.1.1
   rxdart: ^0.27.7
   get: ^4.6.5
   flutter_html: ^2.2.1
