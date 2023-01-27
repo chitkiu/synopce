@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
+import '../../common/icons_constants.dart';
 import 'data/tasks_info_controller.dart';
 import 'tasks_error_widget.dart';
 import 'tasks_list_widget.dart';
@@ -23,21 +23,17 @@ class TasksDataWidget extends StatelessWidget {
       }
       var tasks = _controller.tasksModel.value?.values;
       if (tasks == null) {
-        return _loadingWidget();
+        return _loadingWidget(context);
       }
       return TasksListWidget(tasks.toList(), _onTaskSelected, _selectedTaskWidget);
     });
   }
 
-  Widget _loadingWidget() {
-    return const Center(
+  Widget _loadingWidget(BuildContext context) {
+    return Center(
       child: Align(
         alignment: Alignment.center,
-        child: SizedBox(
-          width: 60,
-          height: 60,
-          child: CircularProgressIndicator(),
-        ),
+        child: progressIcon(context, size: 60),
       ),
     );
   }

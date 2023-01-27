@@ -1,9 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
+import '../app_route_type.dart';
 import '../extensions/execute_with_loading_dialog.dart';
 import '../extensions/snackbar_extension.dart';
-import '../main_screen/main_screen.dart';
 import '../sdk.dart';
 import 'auth_data_model.dart';
 
@@ -75,7 +75,7 @@ class AuthManager extends GetxController {
           //TODO Find and replace to better endpoint
           var response = await SDK.instance.fsSDK.list.listSharedFolder();
           if (response.success) {
-            _goToSettings();
+            _goToMainScreen();
             return true;
           }
         }
@@ -117,7 +117,7 @@ class AuthManager extends GetxController {
           var authResult = await SDK.instance.init(
             url: '${(state.isHttps ? 'https' : 'http')}://${state.url}',
             username: state.username,
-            password: password ?? "",
+            password: password,
           );
           if (authResult) {
             await _saveData();
@@ -133,7 +133,7 @@ class AuthManager extends GetxController {
       },
       actionWithResult: (p0) {
         if (p0 == true) {
-          _goToSettings();
+          _goToMainScreen();
         }
       },
     );
@@ -153,8 +153,8 @@ class AuthManager extends GetxController {
         value: state.needToAutologin.toString());
   }
 
-  void _goToSettings() {
-    Get.offAll(() => MainScreen());
+  void _goToMainScreen() {
+    Get.offAllNamed(AppRouteType.main.route);
   }
 
   static const String URL_KEY_NAME = 'url';

@@ -13,7 +13,9 @@ Widget progressIcon(BuildContext context, {double? size, Color? color}) {
         ),
       );
     }
-    return const CircularProgressIndicator();
+    return CircularProgressIndicator(
+      color: color,
+    );
   } else {
     return CupertinoActivityIndicator(
       radius: size ?? 10.0,

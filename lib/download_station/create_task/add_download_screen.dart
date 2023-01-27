@@ -1,9 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../common/base_snack_bar.dart';
 import '../../common/icons_constants.dart';
 import '../../sdk.dart';
 import 'select_destination_screen.dart';
@@ -119,15 +119,11 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                   ),
                 ),
                 onTap: () async {
-                  var result =
-                      await SDK.instance.fsSDK.list.listSharedFolder();
+                  var result = await SDK.instance.fsSDK.list.listSharedFolder();
                   if (result.success && result.data != null) {
                     List<Directory> data = result.data!.shares;
-                    var model = await Navigator.of(context).push(
-                        platformPageRoute(
-                            context: context,
-                            builder: (context) =>
-                                SelectDestinationWidget(data)));
+                    var model =
+                        await Get.to(() => SelectDestinationWidget(data));
                     setState(() {
                       _destination = model?.path.substring(1) ?? "";
                     });
@@ -143,24 +139,32 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
 
   void _sendRequest(BuildContext context) async {
     if (_destination == null || _destination?.isEmpty == true) {
-      showSnackBar(context, 'Enter destination');
+      Get.snackbar(
+        "Error when try to create task",
+        'Enter destination',
+      );
       return;
     }
     if (_url.isEmpty && _file == null) {
-      showSnackBar(context, 'Select file or enter url');
+      Get.snackbar(
+        "Error when try to create task",
+        'Select file or enter url',
+      );
       return;
     }
 
     var result = await SDK.instance.ds2SDK.task.create(
         destination: _destination ?? "",
         filePath: _file?.path,
-        uris: (_url.isNotEmpty ? [_url] : null)
-    );
-    
+        uris: (_url.isNotEmpty ? [_url] : null));
+
     if (result.success) {
-      Navigator.pop(context);
+      Get.back();
     } else {
-      showSnackBar(context, 'Error: ${result.error}');
+      Get.snackbar(
+        "Error when try to create task",
+        result.error.toString(),
+      );
     }
   }
 }

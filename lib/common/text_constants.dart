@@ -13,7 +13,7 @@ const TextStyle AppGreySmallTextStyle = TextStyle(
   color: Colors.grey,
 );
 
-TextStyle AppColoredTextStyle = TextStyle(
+final TextStyle AppColoredTextStyle = TextStyle(
   color: _getBrightnessColor(),
 );
 

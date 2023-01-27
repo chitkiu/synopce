@@ -3,25 +3,23 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 
 import '../common/text_constants.dart';
-import '../sdk.dart';
 import 'auth_data_model.dart';
 import 'auth_manager.dart';
 
-class AuthWidget extends StatelessWidget {
+const double _EditTextWidth = 300;
+
+class AuthWidget extends GetView<AuthManager> {
   AuthWidget({Key? key}) : super(key: key);
 
-  final AuthManager _authmanager = Get.put(AuthManager(SDK.instance.storage));
   final RxBool hidePassword = true.obs;
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  final double _EditTextWidth = 300;
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      var state = _authmanager.authState.value;
+      var state = controller.authState.value;
       if (state == null) {
         return _waitingView();
       } else {
@@ -88,7 +86,7 @@ class AuthWidget extends StatelessWidget {
             keyboardType: TextInputType.url,
             hintText: 'Server url',
             onChanged: (newValue) {
-              _authmanager.updateURL(newValue);
+              controller.updateURL(newValue);
             },
           ),
         ),
@@ -100,7 +98,7 @@ class AuthWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             hintText: 'User Name',
             onChanged: (newValue) {
-              _authmanager.updateUsername(newValue);
+              controller.updateUsername(newValue);
             },
           ),
         ),
@@ -133,7 +131,7 @@ class AuthWidget extends StatelessWidget {
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
-                    _authmanager.updateIsHttps(value);
+                    controller.updateIsHttps(value);
                   }
                 },
                 value: state.isHttps,
@@ -151,7 +149,7 @@ class AuthWidget extends StatelessWidget {
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
-                    _authmanager.updateNeedToAutologin(value);
+                    controller.updateNeedToAutologin(value);
                   }
                 },
                 value: state.needToAutologin,
@@ -164,7 +162,7 @@ class AuthWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: PlatformElevatedButton(
               onPressed: () {
-                _authmanager.auth(_passwordController.text);
+                controller.auth(_passwordController.text);
               },
               child: Text(style: AppColoredTextStyle, 'Login'),
             )),

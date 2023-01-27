@@ -5,7 +5,11 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:logging/logging.dart';
 
+import 'app_route_type.dart';
 import 'auth/auth_screen.dart';
+import 'auth/auth_screen_binding.dart';
+import 'main_screen/main_screen.dart';
+import 'main_screen/main_screen_binding.dart';
 
 void main() {
   if (kDebugMode) {
@@ -27,23 +31,40 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         title: 'Flutter Demo',
         theme: (brightness == Brightness.light) ? _lightMaterialTheme : _darkMaterialTheme,
-        home: const AuthScreen(),
+        initialRoute: AppRouteType.auth.route,
+        getPages: _getPages(),
       );
     } else {
       return GetCupertinoApp(
         title: 'Flutter Demo',
         theme: (brightness == Brightness.light) ? _lightCupertinoTheme : _darkCupertinoTheme,
-        home: const AuthScreen(),
+        initialRoute: AppRouteType.auth.route,
+        getPages: _getPages(),
       );
     }
   }
+
+  List<GetPage> _getPages() {
+    return [
+      GetPage(
+        name: AppRouteType.auth.route,
+        page: () => const AuthScreen(),
+        binding: AuthScreenBinding()
+      ),
+      GetPage(
+        name: AppRouteType.main.route,
+        page: () => const MainScreen(),
+        binding: MainScreenBinding(),
+      ),
+    ];
+  }
 }
 
-var _lightMaterialTheme = ThemeData.from(
+final ThemeData _lightMaterialTheme = ThemeData.from(
     colorScheme: const ColorScheme.light()
 );
 
-var _darkMaterialTheme = ThemeData.from(
+final ThemeData _darkMaterialTheme = ThemeData.from(
   colorScheme: const ColorScheme.dark()
 );
 

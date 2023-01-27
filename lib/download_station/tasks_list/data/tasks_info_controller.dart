@@ -8,9 +8,11 @@ import '../../../common/data/tasks_info_repository.dart';
 import '../../create_task/add_download_screen.dart';
 
 class TasksListController extends GetxController {
+  static TasksListController get to => Get.find();
+
   final TasksInfoRepository _repository;
 
-  Timer? timer;
+  Timer? _timer;
 
   Rx<bool> isLoading = true.obs;
   Rx<String?> errorText = (null as String?).obs;
@@ -39,14 +41,14 @@ class TasksListController extends GetxController {
   }
 
   void _startTimer() {
-    timer ??= Timer.periodic(const Duration(seconds: 3), (timer) async {
+    _timer ??= Timer.periodic(const Duration(seconds: 3), (timer) async {
       _loadData();
     });
   }
 
   void _stopTimer() {
-    timer?.cancel();
-    timer = null;
+    _timer?.cancel();
+    _timer = null;
   }
 
   Future<void> _loadData() async {
