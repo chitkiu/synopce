@@ -6,10 +6,10 @@ import 'package:get/get.dart';
 import 'package:logging/logging.dart';
 
 import 'app_route_type.dart';
-import 'auth/auth_screen.dart';
-import 'auth/auth_screen_binding.dart';
-import 'main_screen/main_screen.dart';
-import 'main_screen/main_screen_binding.dart';
+import 'auth/domain/auth_screen_binding.dart';
+import 'auth/ui/auth_screen.dart';
+import 'main_screen/domain/main_screen_binding.dart';
+import 'main_screen/ui/main_screen.dart';
 
 void main() {
   if (kDebugMode) {
