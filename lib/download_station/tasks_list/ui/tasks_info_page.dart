@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 
-import '../../../common/sdk.dart';
+import '../../../common/data/api_service.dart';
 import '../../../common/ui/icons_constants.dart';
 import '../../task_info/ui/task_info_widget.dart';
 import '../domain/tasks_info_controller.dart';
@@ -40,7 +40,7 @@ class TasksInfoPage extends GetView<TasksListController> {
         if (taskId == null) {
           return _emptySelectedTask();
         }
-        var task = SDK.instance.repository.tasks.value?[taskId];
+        var task = Get.find<ApiService>().repository.tasks.value?[taskId];
         if (task == null) {
           return _emptySelectedTask();
         }

@@ -1,11 +1,13 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:synopce/common/data/dependencies_service.dart';
 
 import 'models/local_auth_data_model.dart';
 
 class LocalAuthDataStorage {
-  final FlutterSecureStorage _storage;
+  FlutterSecureStorage get _storage => Get.find<DependenciesService>().storage;
 
-  LocalAuthDataStorage(this._storage);
+  const LocalAuthDataStorage();
 
   Future<LocalAuthDataModel> loadSavedData() async {
     var result = LocalAuthDataModel(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../common/sdk.dart';
+import '../../common/data/api_service.dart';
 import '../../common/ui/colors.dart';
 import '../../common/ui/icons_constants.dart';
 import '../../common/ui/text_constants.dart';
@@ -15,7 +15,7 @@ class NoteStationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: SDK.instance.nsSDK.note.getNoteList(),
+        future: Get.find<ApiService>().nsSDK.note.getNoteList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var notes = snapshot.data?.data?.notes ?? List.empty();

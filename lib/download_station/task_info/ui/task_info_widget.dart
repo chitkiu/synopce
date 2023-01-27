@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/sdk.dart';
+import '../../../common/data/api_service.dart';
 import '../../../common/ui/text_constants.dart';
 import 'mappers/task_info_ui_mapper.dart';
 import 'models/task_info_ui_model.dart';
@@ -35,13 +36,13 @@ class TaskInfoWidget extends StatelessWidget {
   void _onButtonClicked(ActionTaskInfoModel model) async {
     switch (model.type) {
       case ActionTaskInfoType.RESUME:
-        await SDK.instance.dsSDK.task.resume([model.id]);
+        await Get.find<ApiService>().dsSDK.task.resume([model.id]);
         break;
       case ActionTaskInfoType.PAUSE:
-        await SDK.instance.dsSDK.task.pause([model.id]);
+        await Get.find<ApiService>().dsSDK.task.pause([model.id]);
         break;
       case ActionTaskInfoType.DELETE:
-        await SDK.instance.provider.removeItem(model.id);
+        await Get.find<ApiService>().provider.removeItem(model.id);
         break;
     }
   }

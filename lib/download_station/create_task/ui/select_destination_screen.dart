@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/sdk.dart';
+import '../../../common/data/api_service.dart';
 
 class SelectDestinationWidget extends StatelessWidget {
   final List<Directory> models;
@@ -51,18 +52,23 @@ class NodeTreeView extends StatelessWidget {
             if (scope.isExpanded) {
               scope.collapse(context);
             } else {
-              var newDirs =
-                  await SDK.instance.fsSDK.list.listFolderFile(data.path ?? '/');
-              if (newDirs.success && newDirs.data != null) {
-                var items = newDirs.data!.files
+              try {
+                var newDirs = await Get
+                    .find<ApiService>()
+                    .fsService
+                    .listFolderFile(data.path ?? '/');
+                var items = newDirs.files
                     .where((element) => element.isDir ?? false)
-                    .map((e) => TreeNode(
-                          id: e.path ?? "",
-                          data: e,
-                        ))
+                    .map((e) =>
+                    TreeNode(
+                      id: e.path ?? "",
+                      data: e,
+                    ))
                     .toList();
                 scope.node.addChildren(items);
                 scope.expand(context);
+              } on Exception {
+                //Do nothing
               }
             }
           },

@@ -4,7 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/sdk.dart';
+import '../../../common/data/api_service.dart';
 import '../../../common/ui/icons_constants.dart';
 import 'select_destination_screen.dart';
 
@@ -119,14 +119,19 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                   ),
                 ),
                 onTap: () async {
-                  var result = await SDK.instance.fsSDK.list.listSharedFolder();
-                  if (result.success && result.data != null) {
-                    List<Directory> data = result.data!.shares;
+                  try {
+                    var result = await Get
+                        .find<ApiService>()
+                        .fsService
+                        .listSharedFolder();
+                    List<Directory> data = result.shares;
                     var model =
-                        await Get.to(() => SelectDestinationWidget(data));
+                    await Get.to(() => SelectDestinationWidget(data));
                     setState(() {
                       _destination = model?.path.substring(1) ?? "";
                     });
+                  } on Exception {
+                    //Do nothing
                   }
                 },
               ),
@@ -153,7 +158,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       return;
     }
 
-    var result = await SDK.instance.ds2SDK.task.create(
+    var result = await Get.find<ApiService>().ds2SDK.task.create(
         destination: _destination ?? "",
         filePath: _file?.path,
         uris: (_url.isNotEmpty ? [_url] : null));

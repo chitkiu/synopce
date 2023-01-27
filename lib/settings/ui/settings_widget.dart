@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
+import 'package:synopce/app_route_type.dart';
+import 'package:synopce/auth/data/auth_service/auth_service.dart';
 
-import '../../auth/ui/auth_screen.dart';
-import '../../common/sdk.dart';
 import '../data/settings_storage.dart';
 
 class SettingsWidget extends StatelessWidget {
@@ -41,9 +41,10 @@ class SettingsWidget extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  var result = await SDK.instance.logout();
+                  //TODO Rewrite using controller
+                  var result = await Get.find<AuthService>().logOut();
                   if (result) {
-                    Get.offAll(() => const AuthScreen());
+                    Get.offAllNamed(AppRouteType.auth.route);
                   }
                 },
               ),

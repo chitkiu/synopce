@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
+import 'package:synopce/auth/data/auth_service/auth_service.dart';
+import 'package:synopce/auth/data/models/auth_data_model.dart';
 import 'package:synopce/auth/data/models/local_auth_data_model.dart';
 
 import '../../app_route_type.dart';
 import '../../common/extensions/execute_with_loading_dialog.dart';
 import '../../common/extensions/snackbar_extension.dart';
-import '../../common/sdk.dart';
 import '../data/local_auth_data_storage.dart';
 
 class AuthScreenController extends GetxController {
@@ -57,16 +58,18 @@ class AuthScreenController extends GetxController {
   Future<bool> _tryToAuthFromCookie(LocalAuthDataModel authModel) async {
     if (authModel.needToAutologin) {
       try {
-        var loadResult = await SDK.instance.initWithCookies(
-          url: '${(authModel.isHttps ? 'https' : 'http')}://${authModel.url}',
+        var loadResult = await Get
+            .find<AuthService>()
+            .logInWithCookie(
+            AuthDataModel(
+                '${(authModel.isHttps ? 'https' : 'http')}://${authModel.url}',
+                null,
+                null
+            )
         );
         if (loadResult) {
-          //TODO Find and replace to better endpoint
-          var response = await SDK.instance.fsSDK.list.listSharedFolder();
-          if (response.success) {
-            _goToMainScreen();
-            return true;
-          }
+          _goToMainScreen();
+          return true;
         }
       } on Exception catch (e) {
         Get.log.printError(info: e.toString());
@@ -103,10 +106,14 @@ class AuthScreenController extends GetxController {
     executeWithLoadingDialog<bool>(
       () async {
         try {
-          var authResult = await SDK.instance.init(
-            url: '${(state.isHttps ? 'https' : 'http')}://${state.url}',
-            username: state.username,
-            password: password,
+          var authResult = await Get
+              .find<AuthService>()
+              .logIn(
+              AuthDataModel(
+                  '${(state.isHttps ? 'https' : 'http')}://${state.url}',
+                  state.username,
+                  password
+              )
           );
           if (authResult) {
             await _localDataStorage.saveData(authState.value);
