@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
+import 'package:synopce/auth/data/mappers/local_auth_data_mapper.dart';
 import 'package:synopce/auth/domain/auth_screen_controller.dart';
 
 import '../../common/ui/text_constants.dart';
@@ -15,15 +16,16 @@ class AuthWidget extends GetView<AuthScreenController> {
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final LocalAuthDataMapper _authDataMapper = LocalAuthDataMapper();
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      var state = controller.authState.value;
-      if (state == null) {
+      var model = controller.authState.value;
+      if (model == null) {
         return _waitingView();
       } else {
-        return _dataView(state);
+        return _dataView(_authDataMapper.mapToUIModel(model));
       }
     });
   }

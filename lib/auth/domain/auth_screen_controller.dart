@@ -1,22 +1,22 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:synopce/auth/data/models/local_auth_data_model.dart';
 
 import '../../app_route_type.dart';
 import '../../common/extensions/execute_with_loading_dialog.dart';
 import '../../common/extensions/snackbar_extension.dart';
 import '../../common/sdk.dart';
-import '../ui/models/auth_ui_model.dart';
+import '../data/local_auth_data_storage.dart';
 
 class AuthScreenController extends GetxController {
-  final FlutterSecureStorage _storage;
+  final LocalAuthDataStorage _localDataStorage;
 
-  AuthScreenController(this._storage);
+  AuthScreenController(this._localDataStorage);
 
-  Rx<AuthUIModel?> authState = (null as AuthUIModel?).obs;
+  Rx<LocalAuthDataModel?> authState = Rxn(null);
 
   @override
   void onInit() async {
-    var result = await _loadSavedData();
+    var result = await _localDataStorage.loadSavedData();
     await _tryToAuthFromCookie(result);
     authState.value = result;
     super.onInit();
@@ -54,18 +54,7 @@ class AuthScreenController extends GetxController {
     }
   }
 
-  Future<AuthUIModel> _loadSavedData() async {
-    var result = AuthUIModel(
-        url: await _storage.read(key: URL_KEY_NAME) ?? "",
-        username: await _storage.read(key: USERNAME_KEY_NAME) ?? "",
-        isHttps: await _storage.read(key: IS_HTTPS_KEY_NAME) == 'true',
-        needToAutologin:
-            await _storage.read(key: NEED_TO_AUTOLOGIN_KEY_NAME) == 'true');
-
-    return Future.value(result);
-  }
-
-  Future<bool> _tryToAuthFromCookie(AuthUIModel authModel) async {
+  Future<bool> _tryToAuthFromCookie(LocalAuthDataModel authModel) async {
     if (authModel.needToAutologin) {
       try {
         var loadResult = await SDK.instance.initWithCookies(
@@ -120,7 +109,7 @@ class AuthScreenController extends GetxController {
             password: password,
           );
           if (authResult) {
-            await _saveData();
+            await _localDataStorage.saveData(authState.value);
             return true;
           } else {
             errorSnackbar("Auth failed!");
@@ -139,27 +128,7 @@ class AuthScreenController extends GetxController {
     );
   }
 
-  Future<void> _saveData() async {
-    var state = authState.value;
-    if (state == null) {
-      return;
-    }
-    await _storage.write(key: URL_KEY_NAME, value: state.url);
-    await _storage.write(key: USERNAME_KEY_NAME, value: state.username);
-    await _storage.write(
-        key: IS_HTTPS_KEY_NAME, value: state.isHttps.toString());
-    await _storage.write(
-        key: NEED_TO_AUTOLOGIN_KEY_NAME,
-        value: state.needToAutologin.toString());
-  }
-
   void _goToMainScreen() {
     Get.offAllNamed(AppRouteType.main.route);
   }
-
-  static const String URL_KEY_NAME = 'url';
-  static const String USERNAME_KEY_NAME = 'name';
-  static const String IS_HTTPS_KEY_NAME = 'isHttps';
-  static const String NEED_TO_AUTOLOGIN_KEY_NAME = 'needToAutologin';
-  static const String COOKIES_KEY_NAME = 'cookies';
 }
