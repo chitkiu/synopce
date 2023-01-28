@@ -27,6 +27,7 @@ dependencies:
   get: ^4.6.5
   flutter_html: ^2.2.1
   zoom_widget: ^2.0.0
+  sentry_flutter: ^6.19.0
 
 dev_dependencies:
   flutter_test:
