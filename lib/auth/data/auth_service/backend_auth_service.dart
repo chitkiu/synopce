@@ -9,7 +9,7 @@ import 'auth_service.dart';
 
 class BackendAuthService extends AuthService {
 
-  APIContext? _context = null;
+  APIContext? _context;
 
   final Function(APIContext) _onSuccessAuth;
   final Function() _onAuthFail;

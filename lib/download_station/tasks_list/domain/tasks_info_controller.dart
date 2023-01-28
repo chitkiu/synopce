@@ -8,14 +8,12 @@ import '../../../common/data/models/api_error_exception.dart';
 import '../../create_task/ui/add_download_screen.dart';
 
 class TasksListController extends GetxController {
-  static TasksListController get to => Get.find();
-
   Timer? _timer;
 
   Rx<bool> isLoading = true.obs;
-  Rx<String?> errorText = (null as String?).obs;
+  Rx<String?> errorText = Rxn(null);
   Rx<Map<String, Task>?> get tasksModel => repository.tasks;
-  Rx<String?> selectedTaskModel = (null as String?).obs;
+  Rx<String?> selectedTaskModel = Rxn(null);
 
   TasksListController();
 

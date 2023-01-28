@@ -3,7 +3,7 @@ import 'package:synoapi/synoapi.dart';
 
 class TasksInfoStorage {
 
-  final _tasks = (null as Map<String, Task>?).obs;
+  final Rx<Map<String, Task>?> _tasks = Rxn(null);
 
   Rx<Map<String, Task>?> get tasks => _tasks;
 

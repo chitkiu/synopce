@@ -3,6 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:synoapi/synoapi.dart';
 
 import '../../../common/data/api_service.dart';
+import '../../../common/extensions/snackbar_extension.dart';
 import '../../../common/ui/text_constants.dart';
 import 'mappers/task_info_ui_mapper.dart';
 import 'models/task_info_ui_model.dart';
@@ -35,13 +36,13 @@ class TaskInfoWidget extends StatelessWidget {
   void _onButtonClicked(ActionTaskInfoModel model) async {
     switch (model.type) {
       case ActionTaskInfoType.RESUME:
-        await dsSDK.task.resume([model.id]);
+        await dsService.resume([model.id]);
         break;
       case ActionTaskInfoType.PAUSE:
-        await dsSDK.task.pause([model.id]);
+        await dsService.pause([model.id]);
         break;
       case ActionTaskInfoType.DELETE:
-        await provider.removeItem(model.id);
+        await dsService.delete([model.id], false);
         break;
     }
   }
@@ -74,7 +75,11 @@ class TaskInfoWidget extends StatelessWidget {
         const SizedBox(height: 30),
         PlatformElevatedButton(
           onPressed: () {
-            _onButtonClicked(categoryModel);
+            try {
+              _onButtonClicked(categoryModel);
+            } on Exception catch (e) {
+              errorSnackbar(e.toString());
+            }
           },
           child: Text(style: AppColoredTextStyle, categoryModel.title),
         ),

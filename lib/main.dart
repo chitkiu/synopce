@@ -26,10 +26,8 @@ void main() {
   runApp(const MyApp());
 }
 
-/**
- * Do not remove cast to abstract class for compatibility with demo mode
- * TODO Add demo mode
- */
+///Do not remove cast to abstract class for compatibility with demo mode
+//TODO Add demo mode
 void initDependency() {
   Get.lazyPut(() {
     return BackendAuthService((apiContext) {

@@ -1,24 +1,23 @@
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/data/models/api_error_exception.dart';
-import 'tasks_info_provider.dart';
+import '../../../common/data/download_station_service/download_station_service.dart';
 import 'tasks_info_storage.dart';
 
 class TasksInfoRepository {
   final TasksInfoStorage _storage;
-  final TasksInfoProvider _provider;
+  final DownloadStationService _dsService;
 
-  TasksInfoRepository(this._storage, this._provider);
+  TasksInfoRepository(this._storage, this._dsService);
 
   Rx<Map<String, Task>?> get tasks => _storage.tasks;
 
   Future<void> loadTasks() async {
-    var result = await _provider.getData();
-    if (result.success) {
-      _storage.putTasks(result.data?.tasks ?? List.empty());
-    } else {
-      throw ApiErrorException(result.error ?? {});
+    try {
+      var result = await _dsService.list();
+      _storage.putTasks(result.tasks);
+    } on Exception {
+      rethrow;
     }
   }
 }

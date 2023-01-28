@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
 import '../../../common/data/api_service.dart';
+import '../../../common/data/models/api_error_exception.dart';
+import '../../../common/extensions/snackbar_extension.dart';
 import '../../../common/ui/icons_constants.dart';
 import 'select_destination_screen.dart';
 
@@ -142,32 +144,26 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
 
   void _sendRequest(BuildContext context) async {
     if (_destination == null || _destination?.isEmpty == true) {
-      Get.snackbar(
-        "Error when try to create task",
+      errorSnackbar(
         'Enter destination',
       );
       return;
     }
     if (_url.isEmpty && _file == null) {
-      Get.snackbar(
-        "Error when try to create task",
+      errorSnackbar(
         'Select file or enter url',
       );
       return;
     }
 
-    var result = await ds2SDK.task.create(
-        destination: _destination ?? "",
-        filePath: _file?.path,
-        uris: (_url.isNotEmpty ? [_url] : null));
-
-    if (result.success) {
+    try {
+      await dsService.create(
+          destination: _destination ?? "",
+          filePath: _file?.path,
+          uris: (_url.isNotEmpty ? [_url] : null));
       Get.back();
-    } else {
-      Get.snackbar(
-        "Error when try to create task",
-        result.error.toString(),
-      );
+    } on ApiErrorException catch (e) {
+      errorSnackbar(e.errorType.toString());
     }
   }
 }
