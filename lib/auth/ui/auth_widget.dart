@@ -67,7 +67,7 @@ class AuthWidget extends GetView<AuthScreenController> {
             alignment: Alignment.center,
             padding: const EdgeInsets.all(10),
             child: const Text(
-              'DSM app',
+              'Synopce',
               style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.w500,
