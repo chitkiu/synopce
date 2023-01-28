@@ -1,7 +1,6 @@
-import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
-import 'package:synopce/common/data/dependencies_service.dart';
 
+import '../../../common/data/dependencies_service.dart';
 import '../../../common/data/file_station_service/backend_file_station_service.dart';
 import '../../../common/data/file_station_service/file_station_service.dart';
 import '../models/auth_data_model.dart';
@@ -15,7 +14,7 @@ class BackendAuthService extends AuthService {
   final Function(APIContext) _onSuccessAuth;
   final Function() _onAuthFail;
 
-  CookieJar get _cookieJar => PersistCookieJar(storage: SafeStorage(Get.find<DependenciesService>().storage));
+  CookieJar get _cookieJar => PersistCookieJar(storage: SafeStorage(flutterSecureStorage));
 
   BackendAuthService(this._onSuccessAuth, this._onAuthFail);
 

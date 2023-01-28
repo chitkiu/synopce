@@ -20,7 +20,7 @@ class TaskInfoScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(
           () {
-            Task? task = Get.find<ApiService>().repository.tasks.value?[_modelId];
+            Task? task = repository.tasks.value?[_modelId];
             if (task == null) {
               Future.delayed(Duration.zero, () {
                 Navigator.pop(context);

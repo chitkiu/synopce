@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
 import '../../../common/data/api_service.dart';
@@ -53,9 +52,7 @@ class NodeTreeView extends StatelessWidget {
               scope.collapse(context);
             } else {
               try {
-                var newDirs = await Get
-                    .find<ApiService>()
-                    .fsService
+                var newDirs = await fsService
                     .listFolderFile(data.path ?? '/');
                 var items = newDirs.files
                     .where((element) => element.isDir ?? false)

@@ -40,7 +40,7 @@ class TasksInfoPage extends GetView<TasksListController> {
         if (taskId == null) {
           return _emptySelectedTask();
         }
-        var task = Get.find<ApiService>().repository.tasks.value?[taskId];
+        var task = repository.tasks.value?[taskId];
         if (task == null) {
           return _emptySelectedTask();
         }

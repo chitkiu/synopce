@@ -15,7 +15,7 @@ class NoteStationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Get.find<ApiService>().nsSDK.note.getNoteList(),
+        future: nsSDK.note.getNoteList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var notes = snapshot.data?.data?.notes ?? List.empty();

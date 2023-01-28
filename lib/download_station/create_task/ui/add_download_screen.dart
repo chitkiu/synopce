@@ -120,9 +120,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                 ),
                 onTap: () async {
                   try {
-                    var result = await Get
-                        .find<ApiService>()
-                        .fsService
+                    var result = await fsService
                         .listSharedFolder();
                     List<Directory> data = result.shares;
                     var model =
@@ -158,7 +156,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       return;
     }
 
-    var result = await Get.find<ApiService>().ds2SDK.task.create(
+    var result = await ds2SDK.task.create(
         destination: _destination ?? "",
         filePath: _file?.path,
         uris: (_url.isNotEmpty ? [_url] : null));

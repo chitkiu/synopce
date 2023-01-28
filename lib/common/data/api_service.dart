@@ -29,3 +29,17 @@ class ApiService extends GetxService {
   }
 
 }
+
+
+//TODO Maybe remove in future
+extension ApiExtension on Object {
+  ApiService get _apiService => Get.find<ApiService>();
+
+  FileStationService get fsService => _apiService.fsService;
+  DownloadStationAPI get dsSDK => _apiService.dsSDK;
+  DownloadStation2API get ds2SDK => _apiService.ds2SDK;
+  NoteStationAPI get nsSDK => _apiService.nsSDK;
+  TasksInfoProvider get provider => _apiService.provider;
+  TasksInfoRepository get repository => _apiService.repository;
+}
+
