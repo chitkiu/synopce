@@ -4,10 +4,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
-import '../../common/data/api_service.dart';
-import '../../common/ui/colors.dart';
-import '../../common/ui/icons_constants.dart';
-import '../../settings/data/settings_storage.dart';
+import '../../../common/data/api_service.dart';
+import '../../../common/ui/colors.dart';
+import '../../../common/ui/icons_constants.dart';
+import '../../../settings/data/settings_storage.dart';
 
 class NoteStationNoteScreen extends StatelessWidget {
   final String id;

@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:synopce/common/data/api_service.dart';
-import 'package:synopce/common/data/note_station_service/note_station_service.dart';
-import 'package:synopce/note_station/domain/mappers/notes_ui_model_mapper.dart';
 
+import '../../../common/data/api_service.dart';
+import '../../../common/data/note_station_service/note_station_service.dart';
 import '../ui/models/notes_item_ui_model.dart';
+import 'mappers/notes_ui_model_mapper.dart';
 
 class NoteStationListController extends GetxController {
   final NotesUiModelMapper _mapper = NotesUiModelMapper();

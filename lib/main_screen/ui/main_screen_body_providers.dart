@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import '../../common/domain/deletable_bindings.dart';
 import '../../download_station/tasks_list/domain/tasks_info_binding.dart';
 import '../../download_station/tasks_list/ui/tasks_info_page.dart';
-import '../../note_station/domain/note_station_list_binding.dart';
-import '../../note_station/ui/note_station_page.dart';
+import '../../note_station/notes_list/domain/note_station_list_binding.dart';
+import '../../note_station/notes_list/ui/note_station_page.dart';
 import '../../settings/ui/settings_page.dart';
 import '../domain/models/main_screen_type.dart';
 
