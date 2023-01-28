@@ -1,6 +1,6 @@
 import 'package:synoapi/synoapi.dart';
 
-import '../api_responce_wrapper.dart';
+import '../api_response_wrapper.dart';
 import 'note_station_service.dart';
 
 class BackendNoteStationService extends NoteStationService {
