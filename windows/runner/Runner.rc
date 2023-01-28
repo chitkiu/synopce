@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "me.demontazz" "\0"
-            VALUE "FileDescription", "dsm_app" "\0"
+            VALUE "FileDescription", "synopce" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "dsm_app" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 me.demontazz. All rights reserved." "\0"
-            VALUE "OriginalFilename", "dsm_app.exe" "\0"
-            VALUE "ProductName", "dsm_app" "\0"
+            VALUE "InternalName", "synopce" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 All rights reserved." "\0"
+            VALUE "OriginalFilename", "synopce.exe" "\0"
+            VALUE "ProductName", "synopce" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

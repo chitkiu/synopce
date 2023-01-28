@@ -8,7 +8,7 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)me.demontazz.dsmApp</string>
+		<string>$(AppIdentifierPrefix)me.demontazz.synopce</string>
 	</array>
 </dict>
 </plist>

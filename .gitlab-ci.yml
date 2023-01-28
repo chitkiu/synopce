@@ -1,33 +1,61 @@
-stages:          # List of stages for jobs, and their order of execution
+stages:
   - test
-  - build_macos
-  - build_android
+  - build
+  - deploy
 
-flutter_test: # Name of the lane
-  stage: test # type of stage
-  script:
-    - flutter test # Run Flutter test
-
-flutter_build_android: #Job name
-  stage: build_android
+.with-flutter:
   before_script:
-    - flutter packages get
-    - flutter clean
+  - flutter packages get
+  - flutter clean
+
+flutter_test:
+  extends:
+    - .with-flutter
+  image: cirrusci/flutter:stable
+  stage: test
+  tags: [docker]
+  script:
+    - flutter test
+
+flutter_build_android:
+  extends:
+    - .with-flutter
+  image: cirrusci/flutter:stable
+  stage: build
+  tags: [docker]
   script:
      - flutter build apk
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
 
-flutter_build_macos: #Job name
-  stage: build_macos
-  before_script:
-    - flutter packages get
-    - flutter clean
+flutter_build_macos:
+  extends:
+    - .with-flutter
+  stage: build
+  tags: [mac-os]
   script:
      - flutter build macos
      - cd installers/dmg_creation
-     - appdmg config.json ./dsm_app.dmg
+     - appdmg config.json ./synopce.dmg
   artifacts:
     paths:
-      - installers/dmg_creation/dsm_app.dmg
+      - installers/dmg_creation/synopce.dmg
+
+.with-deploy:
+  before_script:
+    - npm install --location=global appcenter-cli
+    - appcenter login --token $APPCENTER_API_TOKEN
+
+deploy:
+  extends:
+    - .with-deploy
+  image: node:16-alpine
+  tags: [docker]
+  stage: deploy
+  dependencies:
+    - flutter_build_android
+    - flutter_build_macos
+  script:
+    - appcenter distribute release -f build/app/outputs/flutter-apk/app-release.apk -g Collaborators --app Synopce/Synopce-android --build-number $CI_PIPELINE_ID
+    - appcenter distribute release -f installers/dmg_creation/synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os --build-version $(grep 'version:' pubspec.yaml | tail -n1 | awk '{ print $2}') --build-number $CI_PIPELINE_ID
