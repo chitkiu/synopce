@@ -40,6 +40,14 @@ Widget addIcon(BuildContext context, {Color? color}) {
   );
 }
 
+Widget refreshIcon(BuildContext context, {Color? color}) {
+  return _baseIcon(
+      context,
+      context.platformIcons.refresh,
+      color: color
+  );
+}
+
 Widget _baseIcon(BuildContext context, IconData icon, {Color? color}) {
   if (isMaterial(context)) {
     return Icon(
