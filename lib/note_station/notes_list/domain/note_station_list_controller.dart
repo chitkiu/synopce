@@ -12,6 +12,8 @@ class NoteStationListController extends GetxController {
 
   RxList<NotesItemUIModel> notesList = RxList.of([]);
 
+  RxBool isLoading = true.obs;
+
   @override
   void onInit() async {
     await refreshItems();
@@ -19,7 +21,9 @@ class NoteStationListController extends GetxController {
   }
 
   Future<void> refreshItems() async {
+    isLoading.value = true;
     notesList.value = _mapper.mapToUIModel(await _nsService.getNoteList());
+    isLoading.value = false;
   }
 
 }

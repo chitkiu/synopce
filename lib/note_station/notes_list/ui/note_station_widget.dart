@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../common/ui/colors.dart';
+import '../../../common/ui/icons_constants.dart';
 import '../../../common/ui/text_constants.dart';
 import '../../note_info/ui/note_station_info_screen.dart';
 import '../domain/note_station_list_controller.dart';
@@ -13,6 +14,14 @@ class NoteStationWidget extends GetView<NoteStationListController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      if (controller.isLoading.value) {
+        return Center(
+          child: Align(
+            alignment: Alignment.center,
+            child: progressIcon(context, size: 60),
+          ),
+        );
+      }
       return ListView.separated(
         itemBuilder: (context, index) {
           var note = controller.notesList[index];
