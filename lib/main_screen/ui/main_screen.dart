@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../download_station/tasks_list/domain/tasks_info_binding.dart';
-import '../../download_station/tasks_list/ui/tasks_info_page.dart';
-import '../../note_station/ui/note_station_page.dart';
-import '../../settings/ui/settings_page.dart';
 import '../domain/models/main_screen_type.dart';
+import 'main_screen_body_providers.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -18,12 +15,14 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
+  final MainScreenBodyProviders _bodyProviders = MainScreenBodyProviders();
+
   MainScreenType _currentItem = MainScreenType.tasksList;
 
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-        body: _getBodyByType(_currentItem),
+        body: _bodyProviders.provideBody(_currentItem),
         bottomNavBar: PlatformNavBar(
           items: MainScreenType.values.map((e) => e.getNavBarItem()).toList(),
           currentIndex: _currentItem.index,
@@ -37,19 +36,5 @@ class _MainScreenState extends State<MainScreen> {
           },
         )
     );
-  }
-
-  Widget _getBodyByType(MainScreenType type) {
-    switch (type) {
-      case MainScreenType.tasksList:
-        TasksInfoBinding().dependencies();
-        return const TasksInfoPage();
-      case MainScreenType.noteStation:
-        TasksInfoBinding().delete();
-        return const NoteStationPage();
-      case MainScreenType.settings:
-        TasksInfoBinding().delete();
-        return const SettingsPage();
-    }
   }
 }

@@ -15,9 +15,9 @@ class TasksInfoBinding extends DeletableBindings {
 
   @override
   void delete() {
-    Get.delete<TasksListController>();
-    Get.delete<TasksInfoRepository>();
-    Get.delete<TasksInfoStorage>();
+    deleteIfExist<TasksListController>();
+    deleteIfExist<TasksInfoRepository>();
+    deleteIfExist<TasksInfoStorage>();
   }
 
 }
