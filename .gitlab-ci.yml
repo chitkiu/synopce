@@ -24,10 +24,10 @@ flutter_build_android:
   stage: build
   tags: [docker]
   script:
-     - flutter build apk
+     - flutter build appbundle
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/bundle/release/app-release.aab
 
 flutter_build_macos:
   extends:
@@ -57,5 +57,8 @@ deploy:
     - flutter_build_android
     - flutter_build_macos
   script:
-    - appcenter distribute release -f build/app/outputs/flutter-apk/app-release.apk -g Collaborators --app Synopce/Synopce-android --build-number $CI_PIPELINE_ID
+    - appcenter distribute release -f build/app/outputs/bundle/release/app-release.aab -g Collaborators --app Synopce/Synopce-android --build-number $CI_PIPELINE_ID
     - appcenter distribute release -f installers/dmg_creation/synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os --build-version $(grep 'version:' pubspec.yaml | tail -n1 | awk '{ print $2}') --build-number $CI_PIPELINE_ID
+  only:
+    - master
+  when: manual
