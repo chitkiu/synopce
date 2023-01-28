@@ -1,6 +1,7 @@
-# dsm_app
+# Synopce
 
-A new Flutter project.
+Client app for using Download and Note Station from Synology
+Synology is a trademark of Synology Inc.
 
 ## Getting Started
 

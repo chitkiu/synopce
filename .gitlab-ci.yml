@@ -37,10 +37,10 @@ flutter_build_macos:
   script:
      - flutter build macos
      - cd installers/dmg_creation
-     - appdmg config.json ./dsm_app.dmg
+     - appdmg config.json ./synopce.dmg
   artifacts:
     paths:
-      - installers/dmg_creation/dsm_app.dmg
+      - installers/dmg_creation/synopce.dmg
 
 .with-deploy:
   before_script:
@@ -58,4 +58,4 @@ deploy:
     - flutter_build_macos
   script:
     - appcenter distribute release -f build/app/outputs/flutter-apk/app-release.apk -g Collaborators --app Synopce/Synopce-android --build-number $CI_PIPELINE_ID
-    - appcenter distribute release -f installers/dmg_creation/dsm_app.dmg -g Collaborators --app Synopce/Synopce-mac-os --build-version $(grep 'version:' pubspec.yaml | tail -n1 | awk '{ print $2}') --build-number $CI_PIPELINE_ID
+    - appcenter distribute release -f installers/dmg_creation/synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os --build-version $(grep 'version:' pubspec.yaml | tail -n1 | awk '{ print $2}') --build-number $CI_PIPELINE_ID

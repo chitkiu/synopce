@@ -1,4 +1,4 @@
-package me.demontazz.dsm_app
+package me.demontazz.synopce
 
 import io.flutter.embedding.android.FlutterActivity
 
