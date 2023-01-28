@@ -12,7 +12,6 @@ import 'auth/data/auth_service/auth_service.dart';
 import 'auth/domain/auth_screen_binding.dart';
 import 'auth/ui/auth_screen.dart';
 import 'common/data/dependencies_service.dart';
-import 'main_screen/domain/main_screen_binding.dart';
 import 'main_screen/ui/main_screen.dart';
 
 void main() {
@@ -74,7 +73,6 @@ class MyApp extends StatelessWidget {
       GetPage(
         name: AppRouteType.main.route,
         page: () => const MainScreen(),
-        binding: MainScreenBinding(),
       ),
     ];
   }
