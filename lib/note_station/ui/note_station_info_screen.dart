@@ -23,10 +23,10 @@ class NoteStationNoteScreen extends StatelessWidget {
         ),
         body: SafeArea(
           child: FutureBuilder(
-              future: nsSDK.note.getSpecificNoteInfo(id),
+              future: nsService.getSpecificNoteInfo(id),
               builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data?.success == true) {
-                  var noteInfo = snapshot.data?.data;
+                if (snapshot.hasData && snapshot.error == null) {
+                  var noteInfo = snapshot.data;
 
                   String content = noteInfo?.content ?? '';
 

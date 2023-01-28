@@ -15,10 +15,10 @@ class NoteStationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: nsSDK.note.getNoteList(),
+        future: nsService.getNoteList(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            var notes = snapshot.data?.data?.notes ?? List.empty();
+          if (snapshot.hasData && snapshot.error == null) {
+            var notes = snapshot.data?.notes ?? List.empty();
             return ListView.separated(
               itemBuilder: (context, index) {
                 var note = notes[index];

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
 class TasksInfoStorage {
+  static TasksInfoStorage get storage => Get.find();
 
   final Rx<Map<String, Task>?> _tasks = Rxn(null);
 

@@ -1,28 +1,23 @@
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../download_station/tasks_list/data/tasks_info_repository.dart';
-import '../../download_station/tasks_list/data/tasks_info_storage.dart';
 import 'download_station_service/backend_download_station_service.dart';
 import 'download_station_service/download_station_service.dart';
 import 'file_station_service/backend_file_station_service.dart';
 import 'file_station_service/file_station_service.dart';
+import 'note_station_service/backend_note_station_service.dart';
+import 'note_station_service/note_station_service.dart';
 
 class ApiService extends GetxService {
 
   late FileStationService fsService;
   late DownloadStationService dsService;
-
-  //TODO Wrap with abstract class
-  late NoteStationAPI nsSDK;
-  late TasksInfoRepository repository;
+  late NoteStationService nsService;
 
   void init(APIContext context) {
     fsService = BackendFileStationService(context);
     dsService = BackendDownloadStationService(context);
-
-    nsSDK = NoteStationAPI(context);
-    repository = TasksInfoRepository(TasksInfoStorage(), dsService);
+    nsService = BackendNoteStationService(context);
   }
 
 }
@@ -34,7 +29,6 @@ extension ApiExtension on Object {
 
   FileStationService get fsService => _apiService.fsService;
   DownloadStationService get dsService => _apiService.dsService;
-  NoteStationAPI get nsSDK => _apiService.nsSDK;
-  TasksInfoRepository get repository => _apiService.repository;
+  NoteStationService get nsService => _apiService.nsService;
 }
 

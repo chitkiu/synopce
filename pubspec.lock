@@ -523,10 +523,10 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: b2c9b5d5c326be68b324a15d3b4b337379f478cd
+      resolved-ref: "267878f8417068b5e5153d40accba5367eb41850"
       url: "https://github.com/chitkiu/synoapi.git"
     source: git
-    version: "0.1.9"
+    version: "0.1.10"
   term_glyph:
     dependency: transitive
     description:

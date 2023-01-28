@@ -3,7 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/data/api_service.dart';
+import '../../tasks_list/data/tasks_info_storage.dart';
 import 'task_info_widget.dart';
 
 class TaskInfoScreen extends StatelessWidget {
@@ -20,7 +20,7 @@ class TaskInfoScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(
           () {
-            Task? task = repository.tasks.value?[_modelId];
+            Task? task = TasksInfoStorage.storage.tasks.value?[_modelId];
             if (task == null) {
               Future.delayed(Duration.zero, () {
                 Navigator.pop(context);

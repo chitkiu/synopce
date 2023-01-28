@@ -3,16 +3,18 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/data/api_service.dart';
 import '../../../common/data/models/api_error_exception.dart';
 import '../../create_task/ui/add_download_screen.dart';
+import '../data/tasks_info_repository.dart';
+import '../data/tasks_info_storage.dart';
 
 class TasksListController extends GetxController {
-  Timer? _timer;
+  TasksInfoRepository get _repository => TasksInfoRepository.repository;
 
+  Timer? _timer;
   Rx<bool> isLoading = true.obs;
   Rx<String?> errorText = Rxn(null);
-  Rx<Map<String, Task>?> get tasksModel => repository.tasks;
+  Rx<Map<String, Task>?> get tasksModel => TasksInfoStorage.storage.tasks;
   Rx<String?> selectedTaskModel = Rxn(null);
 
   TasksListController();
@@ -50,7 +52,7 @@ class TasksListController extends GetxController {
   Future<void> _loadData() async {
     isLoading.value = true;
     try {
-      await repository.loadTasks();
+      await _repository.loadTasks();
       errorText.value = null;
     } on ApiErrorException catch (e) {
       errorText.value = e.errorType.toString();

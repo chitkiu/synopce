@@ -1,16 +1,14 @@
 import 'package:get/get.dart';
-import 'package:synoapi/synoapi.dart';
 
+import '../../../common/data/api_service.dart';
 import '../../../common/data/download_station_service/download_station_service.dart';
 import 'tasks_info_storage.dart';
 
 class TasksInfoRepository {
-  final TasksInfoStorage _storage;
-  final DownloadStationService _dsService;
+  static TasksInfoRepository get repository => Get.find();
 
-  TasksInfoRepository(this._storage, this._dsService);
-
-  Rx<Map<String, Task>?> get tasks => _storage.tasks;
+  TasksInfoStorage get _storage => TasksInfoStorage.storage;
+  DownloadStationService get _dsService => dsService;
 
   Future<void> loadTasks() async {
     try {
