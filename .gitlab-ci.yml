@@ -50,6 +50,8 @@ flutter_build_android:
   stage: debug_build
   variables:
     BUILD_TYPE: debug
+  except:
+    - tags
 
 flutter_build_macos:
   extends:
@@ -58,6 +60,8 @@ flutter_build_macos:
   stage: debug_build
   variables:
     BUILD_TYPE: debug
+  except:
+    - tags
 
 .android-sign-setup:
   before_script:
