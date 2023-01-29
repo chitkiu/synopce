@@ -80,7 +80,7 @@ flutter_build_macos:
 .set-app-version: &set-app-version
   before_script:
     - echo ${CI_COMMIT_TAG}
-    - sed -ir 's/^version:.*/version:'"${CI_COMMIT_TAG}"'/g' pubspec.yaml
+    - sed -ir "s/^version:.*/version:\ ${CI_COMMIT_TAG}/g" pubspec.yaml
     - cat pubspec.yaml
     #- "sed -r 's/version:(.+)/version: ${CI_COMMIT_TAG}/g' pubspec.yaml > pubspec.yaml.new"
     #- cp pubspec.yaml.new pubspec.yaml
