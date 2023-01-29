@@ -13,13 +13,27 @@ stages:
   image: cirrusci/flutter:stable
   tags: [ docker ]
   variables:
-    BUILD_TYPE: debug
+    BUILD_TYPE: none
   script:
     - echo $BUILD_TYPE
     - flutter build appbundle --$BUILD_TYPE
   artifacts:
     paths:
       - build/app/outputs/bundle/$BUILD_TYPE/app-$BUILD_TYPE.aab
+
+.build-mac-os:
+  tags: [ mac-os ]
+  variables:
+    BUILD_TYPE: none
+  script:
+    - echo $BUILD_TYPE
+    - flutter build macos --$BUILD_TYPE
+    - cd installers/dmg_creation
+    - appdmg $BUILD_TYPE_config.json ./$BUILD_TYPE_synopce.dmg
+  artifacts:
+    paths:
+      - installers/dmg_creation/$BUILD_TYPE_synopce.dmg
+
 
 flutter_test:
   extends:
@@ -41,15 +55,10 @@ flutter_build_android:
 flutter_build_macos:
   extends:
     - .with-flutter
+    - .build-mac-os
   stage: debug_build
-  tags: [mac-os]
-  script:
-     - flutter build macos --debug
-     - cd installers/dmg_creation
-     - appdmg debug_config.json ./synopce.dmg
-  artifacts:
-    paths:
-      - installers/dmg_creation/synopce.dmg
+  variables:
+    BUILD_TYPE: debug
 
 .android-sign-setup:
   before_script:
@@ -75,15 +84,10 @@ release_build_android:
 release_build_macos:
   extends:
     - .with-flutter
+    - .build-mac-os
   stage: release_build
-  tags: [mac-os]
-  script:
-     - flutter build macos --release
-     - cd installers/dmg_creation
-     - appdmg release_config.json ./release_synopce.dmg
-  artifacts:
-    paths:
-      - installers/dmg_creation/release_synopce.dmg
+  variables:
+    BUILD_TYPE: release
   only:
     - tags
 
