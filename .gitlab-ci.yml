@@ -53,7 +53,7 @@ flutter_build_macos:
 
 .android-sign-setup:
   before_script:
-    - echo $ANDROID_KEYSTORE > android/my.jks
+    - echo $ANDROID_KEYSTORE | base64 -d > android/my.jks
     - echo "storePassword=$ANDROID_KEYSTORE_PASSWORD" >> android/signing.properties
     - echo "keyPassword=$ANDROID_KEY_PASSWORD" >> android/signing.properties
     - echo "keyAlias=$ANDROID_KEYSTORE_ALIAS" >> android/signing.properties
