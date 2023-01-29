@@ -1,6 +1,7 @@
 stages:
   - test
-  - build
+  - debug_build
+  - release_build
   - deploy
 
 .with-flutter:
@@ -21,26 +22,68 @@ flutter_build_android:
   extends:
     - .with-flutter
   image: cirrusci/flutter:stable
-  stage: build
+  stage: debug_build
   tags: [docker]
   script:
-     - flutter build appbundle
+     - flutter build appbundle --debug
   artifacts:
     paths:
-      - build/app/outputs/bundle/release/app-release.aab
+      - build/app/outputs/bundle/debug/app-debug.aab
 
 flutter_build_macos:
   extends:
     - .with-flutter
-  stage: build
+  stage: debug_build
   tags: [mac-os]
   script:
-     - flutter build macos
+     - flutter build macos --debug
      - cd installers/dmg_creation
-     - appdmg config.json ./synopce.dmg
+     - appdmg debug_config.json ./synopce.dmg
   artifacts:
     paths:
       - installers/dmg_creation/synopce.dmg
+
+.android-sign-setup:
+  before_script:
+    - echo $ANDROID_KEYSTORE > android/my.jks
+    - echo "storePassword=$ANDROID_KEYSTORE_PASSWORD" >> android/signing.properties
+    - echo "keyPassword=$ANDROID_KEY_PASSWORD" >> android/signing.properties
+    - echo "keyAlias=$ANDROID_KEYSTORE_ALIAS" >> android/signing.properties
+    - echo "storeFile=my.jks" > android/signing.properties
+
+## TODO Try to move it to templates
+
+release_build_android:
+  extends:
+    - .with-flutter
+    - .android-sign-setup
+  image: cirrusci/flutter:stable
+  stage: release_build
+  tags: [docker]
+  script:
+     - flutter build appbundle --release
+  artifacts:
+    paths:
+      - build/app/outputs/bundle/release/app-release.aab
+  only:
+    - master
+  when: manual
+
+release_build_macos:
+  extends:
+    - .with-flutter
+  stage: release_build
+  tags: [mac-os]
+  script:
+     - flutter build macos --release
+     - cd installers/dmg_creation
+     - appdmg release_config.json ./release_synopce.dmg
+  artifacts:
+    paths:
+      - installers/dmg_creation/release_synopce.dmg
+  only:
+    - master
+  when: manual
 
 .with-deploy:
   before_script:
@@ -54,11 +97,11 @@ deploy:
   tags: [docker]
   stage: deploy
   dependencies:
-    - flutter_build_android
-    - flutter_build_macos
+    - release_build_android
+    - release_build_macos
   script:
-    - appcenter distribute release -f build/app/outputs/bundle/release/app-release.aab -g Collaborators --app Synopce/Synopce-android --build-number $CI_PIPELINE_ID
-    - appcenter distribute release -f installers/dmg_creation/synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os --build-version $(grep 'version:' pubspec.yaml | tail -n1 | awk '{ print $2}') --build-number $CI_PIPELINE_ID
+    - appcenter distribute release -f build/app/outputs/bundle/release/app-release.aab -g Collaborators --app Synopce/Synopce-android
+    - appcenter distribute release -f installers/dmg_creation/release_synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os
   only:
     - master
   when: manual
