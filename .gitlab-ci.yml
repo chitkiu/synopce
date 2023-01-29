@@ -34,7 +34,6 @@ stages:
     paths:
       - installers/dmg_creation/$BUILD_TYPE_synopce.dmg
 
-
 flutter_test:
   extends:
     - .with-flutter
@@ -68,10 +67,15 @@ flutter_build_macos:
     - echo "keyAlias=$ANDROID_KEYSTORE_ALIAS" >> android/signing.properties
     - echo "storeFile=my.jks" > android/signing.properties
 
-## TODO Try to move it to templates
+.set-app-version:
+  before_script:
+    - sed -r 's/version:(.+)/version: $CI_COMMIT_TAG/g' pubspec.yaml > pubspec.yaml.new
+    - cp pubspec.yaml.new pubspec.yaml
+    - rm pubspec.yaml.new
 
 release_build_android:
   extends:
+    - .set-app-version
     - .with-flutter
     - .android-sign-setup
     - .build-android
@@ -83,6 +87,7 @@ release_build_android:
 
 release_build_macos:
   extends:
+    - .set-app-version
     - .with-flutter
     - .build-mac-os
   stage: release_build
