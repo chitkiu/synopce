@@ -3,17 +3,13 @@
 Client app for using Download and Note Station from Synology
 Synology is a trademark of Synology Inc.
 
-## Getting Started
+## Build in release mode
 
-This project is a starting point for a Flutter application.
+You need add to Gitlab CI variables:
+ANDROID_KEYSTORE - base64 encode key file
+ANDROID_KEY_PASSWORD
+ANDROID_KEYSTORE_ALIAS
+ANDROID_KEYSTORE_PASSWORD
+APPCENTER_API_TOKEN - api token for project in App Center
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-[Icon takes here](https://www.svgrepo.com/svg/29557/download)
+Also you need to add api key from Play Store Console to keys/fastlane_release_api_key.json
