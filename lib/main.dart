@@ -87,10 +87,10 @@ class MyApp extends StatelessWidget {
 }
 
 final ThemeData _lightMaterialTheme =
-    ThemeData.from(colorScheme: const ColorScheme.light());
+    ThemeData.from(colorScheme: const ColorScheme.light(), useMaterial3: true);
 
 final ThemeData _darkMaterialTheme =
-    ThemeData.from(colorScheme: const ColorScheme.dark());
+    ThemeData.from(colorScheme: const ColorScheme.dark(), useMaterial3: true);
 
 const CupertinoThemeData _lightCupertinoTheme = CupertinoThemeData(
   brightness: Brightness.light,
