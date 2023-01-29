@@ -9,6 +9,18 @@ stages:
   - flutter packages get
   - flutter clean
 
+.build-android:
+  image: cirrusci/flutter:stable
+  tags: [ docker ]
+  variables:
+    BUILD_TYPE: debug
+  script:
+    - echo $BUILD_TYPE
+    - flutter build appbundle --$BUILD_TYPE
+  artifacts:
+    paths:
+      - build/app/outputs/bundle/$BUILD_TYPE/app-$BUILD_TYPE.aab
+
 flutter_test:
   extends:
     - .with-flutter
@@ -21,14 +33,10 @@ flutter_test:
 flutter_build_android:
   extends:
     - .with-flutter
-  image: cirrusci/flutter:stable
+    - .build-android
   stage: debug_build
-  tags: [docker]
-  script:
-     - flutter build appbundle --debug
-  artifacts:
-    paths:
-      - build/app/outputs/bundle/debug/app-debug.aab
+  variables:
+    BUILD_TYPE: debug
 
 flutter_build_macos:
   extends:
@@ -57,17 +65,12 @@ release_build_android:
   extends:
     - .with-flutter
     - .android-sign-setup
-  image: cirrusci/flutter:stable
+    - .build-android
   stage: release_build
-  tags: [docker]
-  script:
-     - flutter build appbundle --release
-  artifacts:
-    paths:
-      - build/app/outputs/bundle/release/app-release.aab
+  variables:
+    BUILD_TYPE: release
   only:
-    - master
-  when: manual
+    - tags
 
 release_build_macos:
   extends:
@@ -82,8 +85,7 @@ release_build_macos:
     paths:
       - installers/dmg_creation/release_synopce.dmg
   only:
-    - master
-  when: manual
+    - tags
 
 .with-deploy:
   before_script:
@@ -103,5 +105,4 @@ deploy:
     - appcenter distribute release -f build/app/outputs/bundle/release/app-release.aab -g Collaborators --app Synopce/Synopce-android
     - appcenter distribute release -f installers/dmg_creation/release_synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os
   only:
-    - master
-  when: manual
+    - tags
