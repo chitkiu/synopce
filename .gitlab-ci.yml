@@ -6,102 +6,120 @@ stages:
 
 .with-flutter:
   before_script:
-  - flutter packages get
-  - flutter clean
+    - flutter packages get
+    - flutter clean
+
+.build-android:
+  image: cirrusci/flutter:stable
+  tags: [ docker ]
+  extends:
+    - .with-flutter
+  variables:
+    BUILD_TYPE: none
+  script:
+    - echo Build ${BUILD_TYPE} app
+    - flutter build appbundle --${BUILD_TYPE}
+  artifacts:
+    paths:
+      - build/app/outputs/bundle/$BUILD_TYPE/app-${BUILD_TYPE}.aab
+
+.build-mac-os:
+  extends:
+    - .with-flutter
+  tags: [ mac-os ]
+  variables:
+    BUILD_TYPE: none
+  script:
+    - echo Build ${BUILD_TYPE} app
+    - flutter build macos --${BUILD_TYPE}
+    - cd installers/dmg_creation
+    - appdmg ${BUILD_TYPE}_config.json ./${BUILD_TYPE}_synopce.dmg
+  artifacts:
+    paths:
+      - installers/dmg_creation/${BUILD_TYPE}_synopce.dmg
 
 flutter_test:
   extends:
     - .with-flutter
   image: cirrusci/flutter:stable
   stage: test
-  tags: [docker]
+  tags: [ docker ]
   script:
     - flutter test
 
 flutter_build_android:
   extends:
-    - .with-flutter
-  image: cirrusci/flutter:stable
+    - .build-android
   stage: debug_build
-  tags: [docker]
-  script:
-     - flutter build appbundle --debug
-  artifacts:
-    paths:
-      - build/app/outputs/bundle/debug/app-debug.aab
+  variables:
+    BUILD_TYPE: debug
+  except:
+    - tags
 
 flutter_build_macos:
   extends:
-    - .with-flutter
+    - .build-mac-os
   stage: debug_build
-  tags: [mac-os]
-  script:
-     - flutter build macos --debug
-     - cd installers/dmg_creation
-     - appdmg debug_config.json ./synopce.dmg
-  artifacts:
-    paths:
-      - installers/dmg_creation/synopce.dmg
+  variables:
+    BUILD_TYPE: debug
+  except:
+    - tags
 
-.android-sign-setup:
+.android-sign-setup: &sign-setup
   before_script:
-    - echo $ANDROID_KEYSTORE > android/my.jks
-    - echo "storePassword=$ANDROID_KEYSTORE_PASSWORD" >> android/signing.properties
-    - echo "keyPassword=$ANDROID_KEY_PASSWORD" >> android/signing.properties
-    - echo "keyAlias=$ANDROID_KEYSTORE_ALIAS" >> android/signing.properties
+    - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
+    - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
+    - echo "keyPassword=${ANDROID_KEY_PASSWORD}" >> android/signing.properties
+    - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
     - echo "storeFile=my.jks" > android/signing.properties
 
-## TODO Try to move it to templates
+.build-android-with-sign:
+  <<: *sign-setup
+  extends: .build-android
+
+.set-app-version: &set-app-version
+  before_script:
+    - echo Set version to ${CI_COMMIT_TAG}
+    - sed -ir "s/^version:.*/version:\ ${CI_COMMIT_TAG}/g" pubspec.yaml
+
+.set-app-version-and-build-signed-android:
+  <<: *set-app-version
+  extends: .build-android-with-sign
+
+.set-app-version-and-build-mac-os:
+  <<: *set-app-version
+  extends: .build-mac-os
 
 release_build_android:
   extends:
-    - .with-flutter
-    - .android-sign-setup
-  image: cirrusci/flutter:stable
+    - .set-app-version-and-build-signed-android
   stage: release_build
-  tags: [docker]
-  script:
-     - flutter build appbundle --release
-  artifacts:
-    paths:
-      - build/app/outputs/bundle/release/app-release.aab
+  variables:
+    BUILD_TYPE: release
   only:
-    - master
-  when: manual
+    - tags
 
 release_build_macos:
   extends:
-    - .with-flutter
+    - .set-app-version-and-build-mac-os
   stage: release_build
-  tags: [mac-os]
-  script:
-     - flutter build macos --release
-     - cd installers/dmg_creation
-     - appdmg release_config.json ./release_synopce.dmg
-  artifacts:
-    paths:
-      - installers/dmg_creation/release_synopce.dmg
+  variables:
+    BUILD_TYPE: release
   only:
-    - master
-  when: manual
-
-.with-deploy:
-  before_script:
-    - npm install --location=global appcenter-cli
-    - appcenter login --token $APPCENTER_API_TOKEN
+    - tags
 
 deploy:
-  extends:
-    - .with-deploy
   image: node:16-alpine
-  tags: [docker]
+  tags: [ docker ]
   stage: deploy
   dependencies:
     - release_build_android
     - release_build_macos
+  before_script:
+    - npm install --location=global appcenter-cli
+    - appcenter login --token $APPCENTER_API_TOKEN
   script:
     - appcenter distribute release -f build/app/outputs/bundle/release/app-release.aab -g Collaborators --app Synopce/Synopce-android
     - appcenter distribute release -f installers/dmg_creation/release_synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os
   only:
-    - master
-  when: manual
+    - tags
