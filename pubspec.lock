@@ -250,10 +250,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_platform_widgets
-      sha256: "04a373ebf654162791bfce4b7c157f48ec35ea8b0abe2a68de837ceda8bd39ff"
+      sha256: "654379d0b1c74011b0a440140d7445d472d9ea319aebab91217b88790341552d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.6"
+    version: "3.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -847,5 +847,5 @@ packages:
     source: hosted
     version: "2.0.0"
 sdks:
-  dart: ">=2.18.2 <4.0.0"
-  flutter: ">=3.3.0"
+  dart: ">=2.19.0-0 <4.0.0"
+  flutter: ">=3.7.0"
