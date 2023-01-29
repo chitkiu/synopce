@@ -18,6 +18,8 @@ stages:
 .build-android:
   image: cirrusci/flutter:stable
   tags: [ docker ]
+  extends:
+    - .with-flutter
   variables:
     BUILD_TYPE: none
   script:
@@ -28,6 +30,8 @@ stages:
       - build/app/outputs/bundle/$BUILD_TYPE/app-${BUILD_TYPE}.aab
 
 .build-mac-os:
+  extends:
+    - .with-flutter
   tags: [ mac-os ]
   variables:
     BUILD_TYPE: none
@@ -51,7 +55,6 @@ flutter_test:
 
 flutter_build_android:
   extends:
-    - .with-flutter
     - .build-android
   stage: debug_build
   variables:
@@ -61,7 +64,6 @@ flutter_build_android:
 
 flutter_build_macos:
   extends:
-    - .with-flutter
     - .build-mac-os
   stage: debug_build
   variables:
@@ -69,7 +71,7 @@ flutter_build_macos:
   except:
     - tags
 
-.android-sign-setup:
+.android-sign-setup: &sign-setup
   before_script:
     - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
     - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
@@ -77,12 +79,14 @@ flutter_build_macos:
     - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
     - echo "storeFile=my.jks" > android/signing.properties
 
+build-android-with-sign:
+  <<: *sign-setup
+  extends: .build-android
+
 release_build_android:
   extends:
     - .set-app-version
-    - .with-flutter
-    - .android-sign-setup
-    - .build-android
+    - build-android-with-sign
   stage: release_build
   variables:
     BUILD_TYPE: release
@@ -92,7 +96,6 @@ release_build_android:
 release_build_macos:
   extends:
     - .set-app-version
-    - .with-flutter
     - .build-mac-os
   stage: release_build
   variables:
