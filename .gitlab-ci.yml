@@ -79,14 +79,14 @@ flutter_build_macos:
     - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
     - echo "storeFile=my.jks" > android/signing.properties
 
-build-android-with-sign:
+.build-android-with-sign:
   <<: *sign-setup
   extends: .build-android
 
 release_build_android:
   extends:
     - .set-app-version
-    - build-android-with-sign
+    - .build-android-with-sign
   stage: release_build
   variables:
     BUILD_TYPE: release
