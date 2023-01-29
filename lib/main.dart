@@ -39,7 +39,7 @@ void initDependency() {
   Get.lazyPut(() {
     return BackendAuthService((apiContext) {
       Get.find<ApiService>().init(apiContext);
-    }, () {}) as AuthService;
+    }) as AuthService;
   });
   Get.lazyPut(() => ApiService());
   Get.lazyPut(() => DependenciesService());

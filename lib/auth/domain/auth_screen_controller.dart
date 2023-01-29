@@ -1,12 +1,14 @@
 import 'package:get/get.dart';
-import 'package:synopce/auth/data/auth_service/auth_service.dart';
-import 'package:synopce/auth/data/models/auth_data_model.dart';
-import 'package:synopce/auth/data/models/local_auth_data_model.dart';
 
 import '../../app_route_type.dart';
+import '../../common/data/api_service.dart';
 import '../../common/extensions/execute_with_loading_dialog.dart';
 import '../../common/extensions/snackbar_extension.dart';
+import '../data/auth_service/auth_service.dart';
+import '../data/auth_service/stub_auth_service.dart';
 import '../data/local_auth_data_storage.dart';
+import '../data/models/auth_data_model.dart';
+import '../data/models/local_auth_data_model.dart';
 
 class AuthScreenController extends GetxController {
   final LocalAuthDataStorage _localDataStorage;
@@ -52,6 +54,7 @@ class AuthScreenController extends GetxController {
       authState.value = authState.value?.copyWith(
         needToAutologin: newValue,
       );
+      _localDataStorage.changeNeedToAutologin(newValue);
     }
   }
 
@@ -103,8 +106,32 @@ class AuthScreenController extends GetxController {
       return;
     }
 
-    executeWithLoadingDialog<bool>(
-      () async {
+    bool result = await _auth(state, password);
+    if (result) {
+      await _localDataStorage.saveData(authState.value);
+    }
+  }
+
+  void startDemoMode() async {
+    Get.delete<AuthService>();
+    Get.put(StubAuthService(() {
+      Get.find<ApiService>().stubInit();
+    }) as AuthService);
+
+    await _auth(
+        LocalAuthDataModel(
+          url: "",
+          username: "",
+          needToAutologin: false,
+          isHttps: false,
+        ),
+        ""
+    );
+  }
+
+  Future<bool> _auth(LocalAuthDataModel state, String password) {
+    return executeWithLoadingDialog<bool>(
+          () async {
         try {
           var authResult = await Get
               .find<AuthService>()
@@ -116,7 +143,6 @@ class AuthScreenController extends GetxController {
               )
           );
           if (authResult) {
-            await _localDataStorage.saveData(authState.value);
             return true;
           } else {
             errorSnackbar("Auth failed!");

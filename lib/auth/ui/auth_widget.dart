@@ -25,7 +25,11 @@ class AuthWidget extends GetView<AuthScreenController> {
       if (model == null) {
         return _waitingView();
       } else {
-        return _dataView(_authDataMapper.mapToUIModel(model));
+        return SafeArea(
+            child: SingleChildScrollView(
+              child: _dataView(_authDataMapper.mapToUIModel(model)),
+            )
+        );
       }
     });
   }
@@ -167,7 +171,25 @@ class AuthWidget extends GetView<AuthScreenController> {
                 controller.auth(_passwordController.text);
               },
               child: Text(style: AppColoredTextStyle, 'Login'),
-            )),
+            )
+        ),
+        Container(
+            height: 50,
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+            child: PlatformTextButton(
+              onPressed: () {
+                controller.startDemoMode();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.question_mark),
+                  Text(style: AppColoredTextStyle, 'Launch in demo mode'),
+                ],
+              ),
+            )
+        ),
       ],
     );
   }

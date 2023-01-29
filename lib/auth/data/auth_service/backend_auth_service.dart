@@ -12,11 +12,10 @@ class BackendAuthService extends AuthService {
   APIContext? _context;
 
   final Function(APIContext) _onSuccessAuth;
-  final Function() _onAuthFail;
 
   CookieJar get _cookieJar => PersistCookieJar(storage: SafeStorage(flutterSecureStorage));
 
-  BackendAuthService(this._onSuccessAuth, this._onAuthFail);
+  BackendAuthService(this._onSuccessAuth);
 
   @override
   Future<bool> logIn(AuthDataModel authModel) {
@@ -27,8 +26,6 @@ class BackendAuthService extends AuthService {
       if (value) {
         _context = context;
         _onSuccessAuth(context);
-      } else {
-        _onAuthFail();
       }
       return Future.value(value);
     });
@@ -53,7 +50,6 @@ class BackendAuthService extends AuthService {
             }
           }
 
-          _onAuthFail();
           return false;
     });
   }

@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 
 import '../ui/icons_constants.dart';
 
-Future<void> executeWithLoadingDialog<T>(Future<T?> Function() action,
-    {Function(T?)? actionWithResult}) async {
+Future<T> executeWithLoadingDialog<T>(Future<T> Function() action,
+    {Function(T)? actionWithResult}) async {
   showPlatformDialog(
     context: Get.overlayContext!,
     builder: (context) => const _LoadingDialogWidget(),
@@ -20,6 +20,8 @@ Future<void> executeWithLoadingDialog<T>(Future<T?> Function() action,
   if (actionWithResult != null) {
     actionWithResult(result);
   }
+
+  return result;
 }
 
 class _LoadingDialogWidget extends StatelessWidget {

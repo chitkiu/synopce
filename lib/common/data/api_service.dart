@@ -3,10 +3,13 @@ import 'package:synoapi/synoapi.dart';
 
 import 'download_station_service/backend_download_station_service.dart';
 import 'download_station_service/download_station_service.dart';
+import 'download_station_service/stub_download_station_service.dart';
 import 'file_station_service/backend_file_station_service.dart';
 import 'file_station_service/file_station_service.dart';
+import 'file_station_service/stub_file_station_service.dart';
 import 'note_station_service/backend_note_station_service.dart';
 import 'note_station_service/note_station_service.dart';
+import 'note_station_service/stub_note_station_service.dart';
 
 class ApiService extends GetxService {
 
@@ -18,6 +21,12 @@ class ApiService extends GetxService {
     fsService = BackendFileStationService(context);
     dsService = BackendDownloadStationService(context);
     nsService = BackendNoteStationService(context);
+  }
+
+  void stubInit() {
+    fsService = StubFileStationService();
+    dsService = StubDownloadStationService();
+    nsService = StubNoteStationService();
   }
 
 }
