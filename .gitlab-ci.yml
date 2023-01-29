@@ -6,14 +6,14 @@ stages:
 
 .set-app-version:
   before_script:
-    - sed -r 's/version:(.+)/version: $CI_COMMIT_TAG/g' pubspec.yaml > pubspec.yaml.new
+    - sed -r 's/version:(.+)/version: ${CI_COMMIT_TAG}/g' pubspec.yaml > pubspec.yaml.new
     - cp pubspec.yaml.new pubspec.yaml
     - rm pubspec.yaml.new
 
 .with-flutter:
   before_script:
-  - flutter packages get
-  - flutter clean
+    - flutter packages get
+    - flutter clean
 
 .build-android:
   image: cirrusci/flutter:stable
@@ -22,30 +22,30 @@ stages:
     BUILD_TYPE: none
   script:
     - echo $BUILD_TYPE
-    - flutter build appbundle --$BUILD_TYPE
+    - flutter build appbundle --${BUILD_TYPE}
   artifacts:
     paths:
-      - build/app/outputs/bundle/$BUILD_TYPE/app-$BUILD_TYPE.aab
+      - build/app/outputs/bundle/$BUILD_TYPE/app-${BUILD_TYPE}.aab
 
 .build-mac-os:
   tags: [ mac-os ]
   variables:
     BUILD_TYPE: none
   script:
-    - echo $BUILD_TYPE
-    - flutter build macos --$BUILD_TYPE
+    - echo ${BUILD_TYPE}
+    - flutter build macos --${BUILD_TYPE}
     - cd installers/dmg_creation
-    - appdmg $BUILD_TYPE_config.json ./$BUILD_TYPE_synopce.dmg
+    - appdmg ${BUILD_TYPE}_config.json ./${BUILD_TYPE}_synopce.dmg
   artifacts:
     paths:
-      - installers/dmg_creation/$BUILD_TYPE_synopce.dmg
+      - installers/dmg_creation/${BUILD_TYPE}_synopce.dmg
 
 flutter_test:
   extends:
     - .with-flutter
   image: cirrusci/flutter:stable
   stage: test
-  tags: [docker]
+  tags: [ docker ]
   script:
     - flutter test
 
@@ -71,10 +71,10 @@ flutter_build_macos:
 
 .android-sign-setup:
   before_script:
-    - echo $ANDROID_KEYSTORE | base64 -d > android/my.jks
-    - echo "storePassword=$ANDROID_KEYSTORE_PASSWORD" >> android/signing.properties
-    - echo "keyPassword=$ANDROID_KEY_PASSWORD" >> android/signing.properties
-    - echo "keyAlias=$ANDROID_KEYSTORE_ALIAS" >> android/signing.properties
+    - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
+    - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
+    - echo "keyPassword=${ANDROID_KEY_PASSWORD}" >> android/signing.properties
+    - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
     - echo "storeFile=my.jks" > android/signing.properties
 
 release_build_android:
@@ -109,7 +109,7 @@ deploy:
   extends:
     - .with-deploy
   image: node:16-alpine
-  tags: [docker]
+  tags: [ docker ]
   stage: deploy
   dependencies:
     - release_build_android
