@@ -52,21 +52,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
+    AppColors.set(brightness);
     if (isMaterial(context)) {
       return GetMaterialApp(
         title: 'Flutter Demo',
-        theme: (brightness == Brightness.light)
-            ? _lightMaterialTheme
-            : _darkMaterialTheme,
+        theme: _getMaterialTheme(brightness),
         initialRoute: AppRouteType.auth.route,
         getPages: _getPages(),
       );
     } else {
       return GetCupertinoApp(
         title: 'Flutter Demo',
-        theme: (brightness == Brightness.light)
-            ? _lightCupertinoTheme
-            : _darkCupertinoTheme,
+        theme: _getCupertinoTheme(brightness),
         initialRoute: AppRouteType.auth.route,
         getPages: _getPages(),
       );
@@ -87,24 +84,57 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final ThemeData _lightMaterialTheme = ThemeData.from(
-  colorScheme: ColorScheme.fromSeed(
-      seedColor: MainLightAppColor, brightness: Brightness.light),
-  useMaterial3: true,
-);
+CupertinoThemeData _getCupertinoTheme(Brightness brightness) {
+  return CupertinoThemeData(
+    brightness: brightness,
+    primaryColor: AppColors.primary,
+    barBackgroundColor: AppColors.background,
+    primaryContrastingColor: AppColors.onPrimary,
+    scaffoldBackgroundColor: AppColors.surface,
+  );
+}
 
-final ThemeData _darkMaterialTheme = ThemeData.from(
-  colorScheme: ColorScheme.fromSeed(
-      seedColor: MainDarkAppColor, brightness: Brightness.dark),
-  useMaterial3: true,
-);
+ThemeData _getMaterialTheme(Brightness brightness) {
+  return ThemeData.from(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: AppColors.primary,
+      brightness: brightness,
 
-const CupertinoThemeData _lightCupertinoTheme = CupertinoThemeData(
-  brightness: Brightness.light,
-  primaryColor: MainLightAppColor,
-);
+      primary: AppColors.primary,
+      onPrimary: AppColors.onPrimary,
+      primaryContainer: AppColors.onPrimaryContainer,
+      onPrimaryContainer: AppColors.onPrimaryContainer,
 
-const CupertinoThemeData _darkCupertinoTheme = CupertinoThemeData(
-  brightness: Brightness.dark,
-  primaryColor: MainDarkAppColor,
-);
+      secondary: AppColors.secondary,
+      onSecondary: AppColors.onSecondary,
+      secondaryContainer: AppColors.secondaryContainer,
+      onSecondaryContainer: AppColors.onSecondaryContainer,
+
+      tertiary: AppColors.tertiary,
+      onTertiary: AppColors.onTertiary,
+      tertiaryContainer: AppColors.tertiaryContainer,
+      onTertiaryContainer: AppColors.onTertiaryContainer,
+
+      error: AppColors.error,
+      onError: AppColors.onError,
+
+      background: AppColors.background,
+      onBackground: AppColors.onBackground,
+
+      surface: AppColors.surface,
+      onSurface: AppColors.onSurface,
+      surfaceVariant: AppColors.surfaceVariant,
+      onSurfaceVariant: AppColors.onSurfaceVariant,
+
+      outline: AppColors.outline,
+      outlineVariant: AppColors.outlineVariant,
+      shadow: AppColors.shadow,
+      inverseSurface: AppColors.inverseSurface,
+      onInverseSurface: AppColors.onInverseSurface,
+      inversePrimary: AppColors.inversePrimary,
+
+      scrim: AppColors.scrim,
+    ),
+    useMaterial3: true,
+  );
+}

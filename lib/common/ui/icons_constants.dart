@@ -32,6 +32,22 @@ Widget questionIcon(BuildContext context, {Color? color}) {
   );
 }
 
+Widget visibilityIcon(BuildContext context, {Color? color}) {
+  return _baseIcon(
+      context,
+      isMaterial(context) ? Icons.visibility : CupertinoIcons.eye_fill,
+      color: color
+  );
+}
+
+Widget visibilityOffIcon(BuildContext context, {Color? color}) {
+  return _baseIcon(
+      context,
+      isMaterial(context) ? Icons.visibility_off : CupertinoIcons.eye_slash_fill,
+      color: color
+  );
+}
+
 IconData expandMoreIcon(BuildContext context) {
   return isMaterial(context) ? Icons.expand_more : CupertinoIcons.chevron_down;
 }

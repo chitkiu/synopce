@@ -3,6 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:synopce/auth/data/mappers/local_auth_data_mapper.dart';
 import 'package:synopce/auth/domain/auth_screen_controller.dart';
+import 'package:synopce/common/ui/colors.dart';
 
 import '../../common/ui/icons_constants.dart';
 import '../../common/ui/text_style.dart';
@@ -109,7 +110,7 @@ class AuthWidget extends GetView<AuthScreenController> {
         ),
         Container(
             width: _EditTextWidth,
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+            padding: const EdgeInsets.all(10),
             child: PlatformTextField(
               controller: _passwordController,
               obscureText: hidePassword.value,
@@ -181,7 +182,7 @@ class AuthWidget extends GetView<AuthScreenController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  questionIcon(context),
+                  questionIcon(context, color: AppColors.secondary),
                   Text(style: AppBaseTextStyle.mainStyle, 'Launch in demo mode'),
                 ],
               ),
@@ -193,12 +194,8 @@ class AuthWidget extends GetView<AuthScreenController> {
 
   Widget _suffixIcon(BuildContext context, bool hidePassword) {
     return PlatformIconButton(
-      icon: Icon(
-        // Based on passwordVisible state choose the icon
-        hidePassword ? Icons.visibility : Icons.visibility_off,
-      ),
+      icon: hidePassword ? visibilityIcon(context) : visibilityOffIcon(context),
       onPressed: () {
-        // Update the state i.e. toogle the state of passwordVisible variable
         this.hidePassword.value = !this.hidePassword.value;
       },
     );

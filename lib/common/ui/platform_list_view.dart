@@ -22,6 +22,20 @@ class PlatformListView<T extends PlatformListViewItems>
   const PlatformListView(
       {super.key, required this.items, this.onTap, this.separatorBuilder});
 
+
+  //TODO Remove
+  @override
+  Widget build(BuildContext context) {
+    Widget listView = super.build(context);
+    if (isMaterial(context)) {
+      return listView;
+    } else {
+      return SingleChildScrollView(
+        child: listView,
+      );
+    }
+  }
+
   @override
   CupertinoListSection createCupertinoWidget(BuildContext context) {
     //TODO Think about adding header
