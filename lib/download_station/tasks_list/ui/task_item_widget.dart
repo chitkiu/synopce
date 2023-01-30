@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
 import '../../../common/extensions/format_byte.dart';
+import '../../../common/ui/text_style.dart';
 
 class TaskItemWidget extends StatelessWidget {
   final Task model;
@@ -18,7 +18,7 @@ class TaskItemWidget extends StatelessWidget {
       children: [
         Text(
           model.title ?? "",
-          style: Get.textTheme.bodyMedium,
+          style: AppBaseTextStyle.mainStyle,
         ),
         if (firstAdditionalInfo.children?.isNotEmpty == true)
           RichText(text: firstAdditionalInfo),
@@ -56,7 +56,7 @@ class TaskItemWidget extends StatelessWidget {
       }
     }
 
-    return TextSpan(style: Get.textTheme.bodySmall, children: resultString);
+    return TextSpan(style: AppBaseTextStyle.submainStyle, children: resultString);
   }
 
   TextSpan _buildSecondInfoString(Task model) {
@@ -76,6 +76,6 @@ class TaskItemWidget extends StatelessWidget {
       }
     }
 
-    return TextSpan(style: Get.textTheme.bodySmall, children: resultString);
+    return TextSpan(style: AppBaseTextStyle.submainStyle, children: resultString);
   }
 }

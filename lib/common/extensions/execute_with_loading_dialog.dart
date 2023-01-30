@@ -40,7 +40,7 @@ class _LoadingDialogWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // The loading indicator
-            loadingIcon(context, size: 20),
+            progressIcon(context, size: 20),
             const SizedBox(
               height: 15,
             ),

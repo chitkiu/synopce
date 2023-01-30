@@ -48,7 +48,7 @@ class NoteStationNoteScreen extends StatelessWidget {
                 }
 
                 return Center(
-                  child: loadingIcon(context),
+                  child: progressIcon(context, size: 15),
                 );
               }),
         ));

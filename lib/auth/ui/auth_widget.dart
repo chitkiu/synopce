@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:synopce/auth/data/mappers/local_auth_data_mapper.dart';
 import 'package:synopce/auth/domain/auth_screen_controller.dart';
 
+import '../../common/ui/icons_constants.dart';
+import '../../common/ui/text_style.dart';
 import 'models/auth_ui_model.dart';
 
 const double _EditTextWidth = 300;
@@ -24,10 +26,8 @@ class AuthWidget extends GetView<AuthScreenController> {
       if (model == null) {
         return _waitingView();
       } else {
-        return SafeArea(
-            child: SingleChildScrollView(
-              child: _dataView(_authDataMapper.mapToUIModel(model)),
-            )
+        return SingleChildScrollView(
+          child: _dataView(context, _authDataMapper.mapToUIModel(model)),
         );
       }
     });
@@ -36,21 +36,21 @@ class AuthWidget extends GetView<AuthScreenController> {
   Scaffold _waitingView() {
     return Scaffold(
         body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              ),
-              Text('Loading...'),
-            ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(),
           ),
-        ));
+          Text('Loading...'),
+        ],
+      ),
+    ));
   }
 
-  Widget _dataView(AuthUIModel state) {
+  Widget _dataView(BuildContext context, AuthUIModel state) {
     if (_urlController.text != state.url) {
       _urlController.value = _urlController.value.copyWith(
         text: state.url,
@@ -79,9 +79,9 @@ class AuthWidget extends GetView<AuthScreenController> {
         Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(10),
-            child: const Text(
+            child: Text(
               'Sign in',
-              style: TextStyle(fontSize: 20),
+              style: AppBaseTextStyle.mainStyle.copyWith(fontSize: 20),
             )),
         Container(
           width: _EditTextWidth,
@@ -132,7 +132,7 @@ class AuthWidget extends GetView<AuthScreenController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Use HTTPS?', style: Get.textTheme.bodyMedium),
+              Text('Use HTTPS?', style: AppBaseTextStyle.mainStyle),
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
@@ -150,7 +150,7 @@ class AuthWidget extends GetView<AuthScreenController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Auto log in', style: Get.textTheme.bodyMedium),
+              Text('Auto log in', style: AppBaseTextStyle.mainStyle),
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
@@ -169,12 +169,10 @@ class AuthWidget extends GetView<AuthScreenController> {
               onPressed: () {
                 controller.auth(_passwordController.text);
               },
-              child: Text(style: Get.textTheme.bodyMedium, 'Login'),
-            )
-        ),
+              child: Text(style: AppBaseTextStyle.mainStyle, 'Login'),
+            )),
         Container(
-            height: 50,
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
             child: PlatformTextButton(
               onPressed: () {
                 controller.startDemoMode();
@@ -183,8 +181,8 @@ class AuthWidget extends GetView<AuthScreenController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.question_mark),
-                  Text(style: Get.textTheme.bodyMedium, 'Launch in demo mode'),
+                  questionIcon(context),
+                  Text(style: AppBaseTextStyle.mainStyle, 'Launch in demo mode'),
                 ],
               ),
             )

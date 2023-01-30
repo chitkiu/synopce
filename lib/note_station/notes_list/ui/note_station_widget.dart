@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../common/ui/icons_constants.dart';
+import '../../../common/ui/text_style.dart';
 import '../../note_info/ui/note_station_info_screen.dart';
 import '../domain/note_station_list_controller.dart';
 
@@ -30,12 +31,12 @@ class NoteStationWidget extends GetView<NoteStationListController> {
               children: [
                 Text(
                   note.title,
-                  style: Get.textTheme.bodyMedium?.copyWith(
+                  style: AppBaseTextStyle.mainStyle.copyWith(
                       fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                 ),
                 const Padding(padding: EdgeInsets.only(top: 4)),
-                Text(note.brief, style: Get.textTheme.bodySmall),
+                Text(note.brief, style: AppBaseTextStyle.submainStyle),
               ],
             ),
             onTap: () {

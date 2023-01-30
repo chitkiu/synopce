@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:synoapi/synoapi.dart';
+import 'package:synopce/common/ui/icons_constants.dart';
 
 import '../../../common/data/api_service.dart';
 
@@ -41,9 +42,9 @@ class NodeTreeView extends StatelessWidget {
     var scope = TreeNodeScope.of(context);
     var data = scope.node.data;
     if (data is Directory) {
-      var icon = Icons.expand_more;
+      var icon = expandMoreIcon(context);
       if (scope.isExpanded) {
-        icon = Icons.expand_less;
+        icon = expandLessIcon(context);
       }
 
       return GestureDetector(

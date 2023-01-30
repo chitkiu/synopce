@@ -24,6 +24,22 @@ Widget progressIcon(BuildContext context, {double? size, Color? color}) {
   }
 }
 
+Widget questionIcon(BuildContext context, {Color? color}) {
+  return _baseIcon(
+      context,
+      isMaterial(context) ? Icons.question_mark : CupertinoIcons.question,
+      color: color
+  );
+}
+
+IconData expandMoreIcon(BuildContext context) {
+  return isMaterial(context) ? Icons.expand_more : CupertinoIcons.chevron_down;
+}
+
+IconData expandLessIcon(BuildContext context) {
+  return isMaterial(context) ? Icons.expand_less : CupertinoIcons.chevron_up;
+}
+
 Widget doneIcon(BuildContext context, {Color? color}) {
   return _baseIcon(
       context,
@@ -58,23 +74,6 @@ Widget _baseIcon(BuildContext context, IconData icon, {Color? color}) {
     return Icon(
       icon,
       color: color ?? CupertinoTheme.of(context).primaryColor,
-    );
-  }
-}
-
-Widget loadingIcon(BuildContext context, {Color? color, double size = 15}) {
-  if (isMaterial(context)) {
-    return SizedBox(
-      height: size,
-      width: size,
-      child: CircularProgressIndicator(
-        color: color,
-      ),
-    );
-  } else {
-    return CupertinoActivityIndicator(
-      radius: size,
-      color: color,
     );
   }
 }
