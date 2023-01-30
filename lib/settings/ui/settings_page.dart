@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../common/ui/text_style.dart';
+import '../../common/ui/app_bar_title.dart';
 import 'settings_widget.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -11,7 +11,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: Text('Settings', style: AppBaseTextStyle.appBarTitleStyle,),
+        title: const AppBarTitle('Settings'),
       ),
       body: const SettingsWidget(),
     );

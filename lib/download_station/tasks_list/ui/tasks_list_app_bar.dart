@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
-import 'package:synopce/common/ui/text_style.dart';
 
+import '../../../common/ui/app_bar_title.dart';
 import '../../../common/ui/icons_constants.dart';
 import '../domain/tasks_info_controller.dart';
 
@@ -14,7 +14,7 @@ class TasksListAppBar extends PlatformAppBar {
             return MaterialAppBarData(
               title: Row(
                 children: [
-                  Text("Tasks list", style: AppBaseTextStyle.appBarTitleStyle,),
+                  const AppBarTitle("Tasks list"),
                   Obx(() {
                     var isLoading = controller.isLoading.value;
                     if (isLoading) {
@@ -47,7 +47,7 @@ class TasksListAppBar extends PlatformAppBar {
           },
           cupertino: (context, platform) {
             return CupertinoNavigationBarData(
-              title: Text("Tasks list", style: AppBaseTextStyle.appBarTitleStyle,),
+              title: const AppBarTitle("Tasks list"),
               automaticallyImplyMiddle: true,
               trailing: CupertinoButton(
                 onPressed: () {

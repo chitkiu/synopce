@@ -5,6 +5,7 @@ import 'package:synoapi/synoapi.dart';
 import 'package:synopce/common/ui/icons_constants.dart';
 
 import '../../../common/data/api_service.dart';
+import '../../../common/ui/app_bar_title.dart';
 
 class SelectDestinationWidget extends StatelessWidget {
   final List<Directory> models;
@@ -22,7 +23,7 @@ class SelectDestinationWidget extends StatelessWidget {
     var controller = TreeViewController(rootNode: root);
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: const Text("Select destination directory"),
+        title: const AppBarTitle("Select destination directory"),
       ),
       body: TreeView(
         controller: controller,

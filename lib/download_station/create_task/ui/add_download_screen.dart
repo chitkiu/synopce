@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,9 @@ import 'package:synoapi/synoapi.dart';
 import '../../../common/data/api_service.dart';
 import '../../../common/data/models/api_error_exception.dart';
 import '../../../common/extensions/snackbar_extension.dart';
+import '../../../common/ui/app_bar_title.dart';
 import '../../../common/ui/icons_constants.dart';
+import '../../../common/ui/text_style.dart';
 import 'select_destination_screen.dart';
 
 class AddDownloadTaskWidget extends StatefulWidget {
@@ -27,15 +30,16 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: const Text('Add download'),
+        title: const AppBarTitle('Add download'),
         cupertino: (context, platform) {
           return CupertinoNavigationBarData(
-              trailing: GestureDetector(
-            onTap: () {
-              _sendRequest(context);
-            },
-            child: doneIcon(context),
-          ));
+              trailing: CupertinoButton(
+                onPressed: () {
+                  _sendRequest(context);
+                  },
+                child: doneIcon(context),
+              )
+          );
         },
       ),
       material: (context, platform) {
@@ -54,7 +58,8 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Enter URL"),
+              Text("Enter URL", style: AppBaseTextStyle.mainStyle),
+              const Padding(padding: EdgeInsets.only(top: 8)),
               PlatformTextField(
                 keyboardType: TextInputType.url,
                 hintText: 'URL',
@@ -64,7 +69,9 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                   });
                 },
               ),
-              const Text("Or select file"),
+              const Padding(padding: EdgeInsets.only(top: 16)),
+              Text("Or select file", style: AppBaseTextStyle.mainStyle),
+              const Padding(padding: EdgeInsets.only(top: 8)),
               GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
@@ -97,8 +104,9 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                   _canSelectFile = true;
                 },
               ),
-              const Padding(padding: EdgeInsets.only(top: 15)),
-              const Text("Destination"),
+              const Padding(padding: EdgeInsets.only(top: 16)),
+              Text("Destination", style: AppBaseTextStyle.mainStyle),
+              const Padding(padding: EdgeInsets.only(top: 8)),
               GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
@@ -122,11 +130,10 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                 ),
                 onTap: () async {
                   try {
-                    var result = await fsService
-                        .listSharedFolder();
+                    var result = await fsService.listSharedFolder();
                     List<Directory> data = result.shares;
                     var model =
-                    await Get.to(() => SelectDestinationWidget(data));
+                        await Get.to(() => SelectDestinationWidget(data));
                     setState(() {
                       _destination = model?.path.substring(1) ?? "";
                     });

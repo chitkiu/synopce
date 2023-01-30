@@ -9,10 +9,10 @@ class AppBaseTextStyle {
 
   static TextStyle get appBarTitleStyle {
     if (isMaterial(_context)) {
-      return Get.textTheme.titleMedium!;
+      return Get.textTheme.titleLarge!;
     } else {
       return _cupertinoTheme.textTheme.textStyle.copyWith(
-        fontSize: 18,
+        fontSize: 20,
       );
     }
   }
