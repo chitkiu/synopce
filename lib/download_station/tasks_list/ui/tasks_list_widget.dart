@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/ui/colors.dart';
 import '../../task_info/ui/task_info_screen.dart';
 import 'task_item_widget.dart';
 
@@ -56,7 +55,7 @@ class TasksListWidget extends StatelessWidget {
             _onTaskSelected,
           ),
         ),
-        Container(width: 0.5, color: getDividerColor()),
+        const VerticalDivider(),
         Expanded(
           child: _selectedTaskWidget(),
         )
@@ -83,7 +82,7 @@ class TasksListWidget extends StatelessWidget {
         );
       },
       separatorBuilder: (BuildContext context, int index) =>
-          Divider(color: getDividerColor()),
+          const Divider(),
     );
   }
 }

@@ -1,14 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-Color getDividerColor() {
-  return getBaseColor();
-}
-
-Color getBaseColor() {
-  if (Get.isDarkMode) {
-    return Colors.black;
-  } else {
-    return Colors.white;
-  }
-}
+const Color MainLightAppColor = Color(0x0077d4fc);
+const Color MainDarkAppColor = Color(0x0077d4fc);

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
 import '../../../common/data/api_service.dart';
 import '../../../common/extensions/snackbar_extension.dart';
-import '../../../common/ui/text_constants.dart';
 import 'mappers/task_info_ui_mapper.dart';
 import 'models/task_info_ui_model.dart';
 
@@ -81,7 +81,7 @@ class TaskInfoWidget extends StatelessWidget {
               errorSnackbar(e.toString());
             }
           },
-          child: Text(style: AppColoredTextStyle, categoryModel.title),
+          child: Text(style: Get.textTheme.bodyMedium, categoryModel.title),
         ),
       ],
     );

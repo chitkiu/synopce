@@ -13,6 +13,7 @@ import 'auth/domain/auth_screen_binding.dart';
 import 'auth/ui/auth_screen.dart';
 import 'common/data/api_service.dart';
 import 'common/data/dependencies_service.dart';
+import 'common/ui/colors.dart';
 import 'main_screen/ui/main_screen.dart';
 
 void main() async {
@@ -86,16 +87,24 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final ThemeData _lightMaterialTheme =
-    ThemeData.from(colorScheme: const ColorScheme.light(), useMaterial3: true);
+final ThemeData _lightMaterialTheme = ThemeData.from(
+  colorScheme: ColorScheme.fromSeed(
+      seedColor: MainLightAppColor, brightness: Brightness.light),
+  useMaterial3: true,
+);
 
-final ThemeData _darkMaterialTheme =
-    ThemeData.from(colorScheme: const ColorScheme.dark(), useMaterial3: true);
+final ThemeData _darkMaterialTheme = ThemeData.from(
+  colorScheme: ColorScheme.fromSeed(
+      seedColor: MainDarkAppColor, brightness: Brightness.dark),
+  useMaterial3: true,
+);
 
 const CupertinoThemeData _lightCupertinoTheme = CupertinoThemeData(
   brightness: Brightness.light,
+  primaryColor: MainLightAppColor,
 );
 
 const CupertinoThemeData _darkCupertinoTheme = CupertinoThemeData(
   brightness: Brightness.dark,
+  primaryColor: MainDarkAppColor,
 );

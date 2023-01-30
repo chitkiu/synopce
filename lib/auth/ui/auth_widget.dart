@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:synopce/auth/data/mappers/local_auth_data_mapper.dart';
 import 'package:synopce/auth/domain/auth_screen_controller.dart';
 
-import '../../common/ui/text_constants.dart';
 import 'models/auth_ui_model.dart';
 
 const double _EditTextWidth = 300;
@@ -133,7 +132,7 @@ class AuthWidget extends GetView<AuthScreenController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Use HTTPS?', style: AppDefaultTextStyle),
+              Text('Use HTTPS?', style: Get.textTheme.bodyMedium),
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
@@ -151,7 +150,7 @@ class AuthWidget extends GetView<AuthScreenController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Auto log in', style: AppDefaultTextStyle),
+              Text('Auto log in', style: Get.textTheme.bodyMedium),
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
@@ -170,7 +169,7 @@ class AuthWidget extends GetView<AuthScreenController> {
               onPressed: () {
                 controller.auth(_passwordController.text);
               },
-              child: Text(style: AppColoredTextStyle, 'Login'),
+              child: Text(style: Get.textTheme.bodyMedium, 'Login'),
             )
         ),
         Container(
@@ -185,7 +184,7 @@ class AuthWidget extends GetView<AuthScreenController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.question_mark),
-                  Text(style: AppColoredTextStyle, 'Launch in demo mode'),
+                  Text(style: Get.textTheme.bodyMedium, 'Launch in demo mode'),
                 ],
               ),
             )
