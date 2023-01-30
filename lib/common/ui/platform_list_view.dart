@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:synopce/common/ui/text_style.dart';
+
+import 'text_style.dart';
 
 abstract class PlatformListViewItems {
   final String title;
-  final String? subtitle;
+  final TextSpan? subtitle;
 
-  PlatformListViewItems(this.title, this.subtitle);
+  PlatformListViewItems({required this.title, this.subtitle});
+  PlatformListViewItems.withString(this.title, String? subtitleStr) :
+      subtitle = subtitleStr != null ? TextSpan(text: subtitleStr) : null;
 }
 
 class PlatformListView<T extends PlatformListViewItems>
@@ -28,7 +31,7 @@ class PlatformListView<T extends PlatformListViewItems>
         return CupertinoListTile.notched(
             title: Text(item.title),
             subtitle: item.subtitle != null
-                ? Text(item.subtitle!)
+                ? RichText(text: item.subtitle!)
                 : null,
             onTap: onTap != null
                 ? () {
@@ -63,7 +66,7 @@ class PlatformListView<T extends PlatformListViewItems>
     return ListTile(
         title: Text(item.title, style: AppBaseTextStyle.mainStyle),
         subtitle: item.subtitle != null
-            ? Text(item.subtitle!, style: AppBaseTextStyle.submainStyle)
+            ? RichText(text: item.subtitle!)
             : null,
         onTap: onTap != null
             ? () {

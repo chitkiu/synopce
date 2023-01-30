@@ -15,15 +15,16 @@ class TasksInfoPage extends GetView<TasksListController> {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: TasksListAppBar(controller),
-      body: _tasksListWidget(),
+      body: SafeArea(child: _tasksListWidget()),
       material: (context, platform) {
         return MaterialScaffoldData(
             floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            controller.onAddClick();
-          },
-          child: addIcon(context),
-        ));
+              onPressed: () {
+                controller.onAddClick();
+                },
+              child: addIcon(context),
+            )
+        );
       },
     );
   }

@@ -6,9 +6,9 @@ class NotesUiModelMapper {
   List<NotesItemUIModel> mapToUIModel(NoteStationNoteList notes) {
     return notes.notes
             ?.map((item) => NotesItemUIModel(
-                  item.id ?? '',
-                  item.title ?? '',
-                  item.brief ?? '',
+                  id: item.id ?? '',
+                  title: item.title ?? '',
+                  brief: item.brief,
                 ))
             .toList() ??
         List.of([]);
