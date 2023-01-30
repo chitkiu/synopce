@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import 'colors.dart';
 import 'text_style.dart';
 
 abstract class PlatformListViewItems {
@@ -9,8 +10,9 @@ abstract class PlatformListViewItems {
   final TextSpan? subtitle;
 
   PlatformListViewItems({required this.title, this.subtitle});
-  PlatformListViewItems.withString(this.title, String? subtitleStr) :
-      subtitle = subtitleStr != null ? TextSpan(text: subtitleStr) : null;
+
+  PlatformListViewItems.withString(this.title, String? subtitleStr)
+      : subtitle = subtitleStr != null ? TextSpan(text: subtitleStr) : null;
 }
 
 class PlatformListView<T extends PlatformListViewItems>
@@ -21,7 +23,6 @@ class PlatformListView<T extends PlatformListViewItems>
 
   const PlatformListView(
       {super.key, required this.items, this.onTap, this.separatorBuilder});
-
 
   //TODO Remove
   @override
@@ -41,20 +42,24 @@ class PlatformListView<T extends PlatformListViewItems>
     //TODO Think about adding header
     return CupertinoListSection.insetGrouped(
       hasLeading: false,
+      backgroundColor: AppColors.surface,
       children: items.map((item) {
         return CupertinoListTile.notched(
-            title: Text(item.title),
-            subtitle: item.subtitle != null
-                ? RichText(text: item.subtitle!)
-                : null,
-            onTap: onTap != null
-                ? () {
-                    onTap!(item);
-                  }
-                : null,
-          trailing: onTap != null
-              ? const CupertinoListTileChevron()
+          backgroundColor: AppColors.secondaryContainer,
+          title: Text(item.title),
+          subtitle: item.subtitle != null
+              ? RichText(
+                  text: item.subtitle!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                )
               : null,
+          onTap: onTap != null
+              ? () {
+                  onTap!(item);
+                }
+              : null,
+          trailing: onTap != null ? const CupertinoListTileChevron() : null,
         );
       }).toList(),
     );
@@ -80,13 +85,16 @@ class PlatformListView<T extends PlatformListViewItems>
     return ListTile(
         title: Text(item.title, style: AppBaseTextStyle.mainStyle),
         subtitle: item.subtitle != null
-            ? RichText(text: item.subtitle!)
+            ? RichText(
+                text: item.subtitle!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )
             : null,
         onTap: onTap != null
             ? () {
                 onTap!(item);
               }
-            : null
-    );
+            : null);
   }
 }

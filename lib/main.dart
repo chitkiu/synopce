@@ -88,51 +88,46 @@ CupertinoThemeData _getCupertinoTheme(Brightness brightness) {
   return CupertinoThemeData(
     brightness: brightness,
     primaryColor: AppColors.primary,
-    barBackgroundColor: AppColors.background,
+    barBackgroundColor: AppColors.onSecondary,
     primaryContrastingColor: AppColors.onPrimary,
     scaffoldBackgroundColor: AppColors.surface,
+
+    textTheme: CupertinoTextThemeData(
+      primaryColor: AppColors.onPrimary,
+    ),
   );
 }
 
 ThemeData _getMaterialTheme(Brightness brightness) {
   return ThemeData.from(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
+    colorScheme: ColorScheme(
       brightness: brightness,
-
       primary: AppColors.primary,
       onPrimary: AppColors.onPrimary,
       primaryContainer: AppColors.onPrimaryContainer,
       onPrimaryContainer: AppColors.onPrimaryContainer,
-
       secondary: AppColors.secondary,
       onSecondary: AppColors.onSecondary,
       secondaryContainer: AppColors.secondaryContainer,
       onSecondaryContainer: AppColors.onSecondaryContainer,
-
       tertiary: AppColors.tertiary,
       onTertiary: AppColors.onTertiary,
       tertiaryContainer: AppColors.tertiaryContainer,
       onTertiaryContainer: AppColors.onTertiaryContainer,
-
       error: AppColors.error,
       onError: AppColors.onError,
-
       background: AppColors.background,
       onBackground: AppColors.onBackground,
-
       surface: AppColors.surface,
       onSurface: AppColors.onSurface,
       surfaceVariant: AppColors.surfaceVariant,
       onSurfaceVariant: AppColors.onSurfaceVariant,
-
       outline: AppColors.outline,
       outlineVariant: AppColors.outlineVariant,
       shadow: AppColors.shadow,
       inverseSurface: AppColors.inverseSurface,
       onInverseSurface: AppColors.onInverseSurface,
       inversePrimary: AppColors.inversePrimary,
-
       scrim: AppColors.scrim,
     ),
     useMaterial3: true,
