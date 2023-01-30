@@ -7,6 +7,7 @@ import 'package:zoom_widget/zoom_widget.dart';
 import '../../../common/data/api_service.dart';
 import '../../../common/ui/colors.dart';
 import '../../../common/ui/icons_constants.dart';
+import '../../../common/ui/text_style.dart';
 import '../../../settings/data/settings_storage.dart';
 
 class NoteStationNoteScreen extends StatelessWidget {
@@ -30,13 +31,6 @@ class NoteStationNoteScreen extends StatelessWidget {
 
                   String content = noteInfo?.content ?? '';
 
-                  if (SettingsStorage.instance.isUIFixForNotesEnabled.value) {
-                    content = content.replaceAll(
-                        RegExp(r'(style="font-size: \d;")'), '');
-                    content =
-                        content.replaceAll(RegExp(r'(font-size: \dpx;)'), '');
-                  }
-
                   return Zoom(
                     initScale: 1,
                     backgroundColor: AppColors.background,
@@ -44,6 +38,20 @@ class NoteStationNoteScreen extends StatelessWidget {
                     colorScrollBars: AppColors.onSurface,
                     child: Html(
                       data: content,
+                      style: {
+                        'li' : Style(
+                          color: AppBaseTextStyle.mainStyle.color,
+                          fontSize: _getFontSize(),
+                        ),
+                        "span" : Style(
+                          color: AppBaseTextStyle.mainStyle.color,
+                          fontSize: _getFontSize(),
+                        ),
+                        "div" : Style(
+                          color: AppBaseTextStyle.mainStyle.color,
+                          fontSize: _getFontSize(),
+                        ),
+                      },
                     ),
                   );
                 }
@@ -53,5 +61,13 @@ class NoteStationNoteScreen extends StatelessWidget {
                 );
               }),
         ));
+  }
+
+  FontSize? _getFontSize() {
+    if (SettingsStorage.instance.isUIFixForNotesEnabled.value) {
+      return FontSize.medium;
+    } else {
+      return null;
+    }
   }
 }

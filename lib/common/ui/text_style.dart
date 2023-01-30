@@ -19,7 +19,7 @@ class AppBaseTextStyle {
     if (isMaterial(_context)) {
       return Get.textTheme.bodySmall!;
     } else {
-      return const TextStyle(
+      return _cupertinoTheme.textTheme.textStyle.copyWith(
         fontSize: 12,
       );
     }

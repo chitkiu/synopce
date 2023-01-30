@@ -28,22 +28,17 @@ class SettingsWidget extends StatelessWidget {
             ))
           ],
         ),
-        GestureDetector(
-          child: Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: PlatformText("Log out"),
-            ),
-          ),
-          onTap: () async {
+        PlatformTextButton(
+          alignment: Alignment.center,
+          onPressed: () async {
             //TODO Rewrite using controller
             var result = await Get.find<AuthService>().logOut();
             if (result) {
               Get.offAllNamed(AppRouteType.auth.route);
             }
           },
-        ),
+          child: const Text("Log out"),
+        )
       ],
     );
   }

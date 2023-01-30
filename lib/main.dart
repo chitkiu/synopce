@@ -93,7 +93,10 @@ CupertinoThemeData _getCupertinoTheme(Brightness brightness) {
     scaffoldBackgroundColor: AppColors.surface,
 
     textTheme: CupertinoTextThemeData(
-      primaryColor: AppColors.onPrimary,
+      primaryColor: AppColors.onSurface,
+      textStyle: TextStyle(
+        color: AppColors.onSurface,
+      )
     ),
   );
 }

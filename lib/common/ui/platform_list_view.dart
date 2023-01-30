@@ -12,7 +12,9 @@ abstract class PlatformListViewItems {
   PlatformListViewItems({required this.title, this.subtitle});
 
   PlatformListViewItems.withString(this.title, String? subtitleStr)
-      : subtitle = subtitleStr != null ? TextSpan(text: subtitleStr) : null;
+      : subtitle = subtitleStr != null
+            ? TextSpan(style: AppBaseTextStyle.submainStyle, text: subtitleStr)
+            : null;
 }
 
 class PlatformListView<T extends PlatformListViewItems>
