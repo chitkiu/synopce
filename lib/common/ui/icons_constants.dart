@@ -89,7 +89,7 @@ Widget _baseIcon(BuildContext context, IconData icon, {Color? color}) {
   } else {
     return Icon(
       icon,
-      color: color ?? CupertinoTheme.of(context).primaryColor,
+      color: color ?? CupertinoTheme.of(context).textTheme.textStyle.color,
     );
   }
 }

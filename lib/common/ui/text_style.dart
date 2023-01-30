@@ -7,6 +7,28 @@ class AppBaseTextStyle {
 
   static CupertinoThemeData get _cupertinoTheme => CupertinoTheme.of(_context);
 
+  static TextStyle get appBarTitleStyle {
+    if (isMaterial(_context)) {
+      return Get.textTheme.titleMedium!;
+    } else {
+      return _cupertinoTheme.textTheme.textStyle.copyWith(
+        fontSize: 18,
+      );
+    }
+  }
+
+  static TextStyle get titleStyle {
+    if (isMaterial(_context)) {
+      return Get.textTheme.titleSmall!;
+    } else {
+      return _cupertinoTheme.textTheme.textStyle.copyWith(
+        fontSize: 16,
+      );
+    }
+  }
+
+  static TextStyle get titleBoldStyle => titleStyle.makeBold();
+
   static TextStyle get mainStyle {
     if (isMaterial(_context)) {
       return Get.textTheme.bodyMedium!;
@@ -14,6 +36,8 @@ class AppBaseTextStyle {
       return _cupertinoTheme.textTheme.textStyle;
     }
   }
+
+  static TextStyle get mainBoldStyle => mainStyle.makeBold();
 
   static TextStyle get submainStyle {
     if (isMaterial(_context)) {
@@ -23,5 +47,13 @@ class AppBaseTextStyle {
         fontSize: 12,
       );
     }
+  }
+}
+
+extension _FontStyleExt on TextStyle {
+  TextStyle makeBold() {
+    return copyWith(
+      fontWeight: FontWeight.bold
+    );
   }
 }

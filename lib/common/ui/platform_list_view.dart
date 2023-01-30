@@ -61,7 +61,13 @@ class PlatformListView<T extends PlatformListViewItems>
                   onTap!(item);
                 }
               : null,
-          trailing: onTap != null ? const CupertinoListTileChevron() : null,
+          trailing: onTap != null
+              ? Icon(
+                  CupertinoIcons.right_chevron,
+                  size: CupertinoTheme.of(context).textTheme.textStyle.fontSize,
+                  color: CupertinoTheme.of(context).textTheme.textStyle.color,
+                )
+              : null,
         );
       }).toList(),
     );

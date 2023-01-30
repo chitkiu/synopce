@@ -50,15 +50,16 @@ class TaskInfoWidget extends StatelessWidget {
   Widget _groupedTaskInfo(GroupedTaskInfoModel categoryModel) {
     return Column(
       children: [
-        PlatformText(categoryModel.title),
+        Text(categoryModel.title, style: AppBaseTextStyle.titleBoldStyle),
         for(var itemModel in categoryModel.items)
           Row(
             mainAxisSize: MainAxisSize.max,
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              PlatformText("${itemModel.title}:"),
+              Text("${itemModel.title}:", style: AppBaseTextStyle.mainBoldStyle),
               Flexible(
-                  child: PlatformText(itemModel.text,
+                  child: Text(itemModel.text,
+                      style: AppBaseTextStyle.mainStyle,
                       maxLines: 1,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis)),
@@ -81,7 +82,7 @@ class TaskInfoWidget extends StatelessWidget {
               errorSnackbar(e.toString());
             }
           },
-          child: Text(style: AppBaseTextStyle.mainStyle, categoryModel.title),
+          child: Text(categoryModel.title),
         ),
       ],
     );
