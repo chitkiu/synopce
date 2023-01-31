@@ -73,6 +73,12 @@ flutter_build_macos:
 .set-app-version-and-build-android:
   <<: *set-app-version
   extends: .build-android
+  before_script:
+    - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
+    - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
+    - echo "keyPassword=${ANDROID_KEY_PASSWORD}" >> android/signing.properties
+    - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
+    - echo "storeFile=android/my.jks" > android/signing.properties
 
 .set-app-version-and-build-mac-os:
   <<: *set-app-version
@@ -84,13 +90,6 @@ release_build_android:
   stage: release_build
   variables:
     BUILD_TYPE: release
-  before_script:
-    - pwd
-    - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
-    - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
-    - echo "keyPassword=${ANDROID_KEY_PASSWORD}" >> android/signing.properties
-    - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
-    - echo "storeFile=android/my.jks" > android/signing.properties
   only:
     - tags
 
