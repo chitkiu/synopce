@@ -4,28 +4,19 @@ stages:
   - release_build
   - deploy
 
-.with-flutter:
-  before_script:
-    - flutter packages get
-    - flutter clean
-
 .build-android:
   image: cirrusci/flutter:stable
   tags: [ docker ]
-  extends:
-    - .with-flutter
   variables:
     BUILD_TYPE: none
   script:
     - echo Build ${BUILD_TYPE} app
-    - flutter build appbundle --${BUILD_TYPE}
+    - flutter build appbundle --${BUILD_TYPE} --verbose
   artifacts:
     paths:
       - build/app/outputs/bundle/$BUILD_TYPE/app-${BUILD_TYPE}.aab
 
 .build-mac-os:
-  extends:
-    - .with-flutter
   tags: [ mac-os ]
   variables:
     BUILD_TYPE: none
@@ -47,58 +38,50 @@ stages:
 #  script:
 #    - flutter test
 
-flutter_build_android:
+debug_build_android:
   extends:
     - .build-android
   stage: debug_build
   variables:
     BUILD_TYPE: debug
+  before_script:
+    - sh ./script/with_flutter.sh
   except:
     - tags
 
-flutter_build_macos:
+debug_build_macos:
   extends:
     - .build-mac-os
   stage: debug_build
   variables:
     BUILD_TYPE: debug
+  before_script:
+    - sh ./script/with_flutter.sh
   except:
     - tags
 
-.set-app-version: &set-app-version
-  before_script:
-    - echo Set version to ${CI_COMMIT_TAG}
-    - sed -ir "s/^version:.*/version:\ ${CI_COMMIT_TAG}/g" pubspec.yaml
-
-.set-app-version-and-build-android:
-  <<: *set-app-version
-  extends: .build-android
-  before_script:
-    - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
-    - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
-    - echo "keyPassword=${ANDROID_KEY_PASSWORD}" >> android/signing.properties
-    - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
-    - echo "storeFile=android/my.jks" > android/signing.properties
-
-.set-app-version-and-build-mac-os:
-  <<: *set-app-version
-  extends: .build-mac-os
-
 release_build_android:
   extends:
-    - .set-app-version-and-build-android
+    - .build-android
   stage: release_build
   variables:
     BUILD_TYPE: release
+  before_script:
+    - sh ./script/setup_app_version.sh
+    - sh ./script/with_flutter.sh
+    - sh ./script/setup_android_sign.sh
   only:
     - tags
 
 release_build_macos:
   extends:
-    - .set-app-version-and-build-mac-os
+    - .build-mac-os
   stage: release_build
   variables:
     BUILD_TYPE: release
+  before_script:
+    - sh ./script/setup_app_version.sh
+    - sh ./script/with_flutter.sh
   only:
     - tags
 
