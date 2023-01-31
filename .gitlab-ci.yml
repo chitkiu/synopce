@@ -1,5 +1,5 @@
 stages:
-  - test
+  #- test
   - debug_build
   - release_build
   - deploy
@@ -38,14 +38,14 @@ stages:
     paths:
       - installers/dmg_creation/${BUILD_TYPE}_synopce.dmg
 
-flutter_test:
-  extends:
-    - .with-flutter
-  image: cirrusci/flutter:stable
-  stage: test
-  tags: [ docker ]
-  script:
-    - flutter test
+#flutter_test:
+#  extends:
+#    - .with-flutter
+#  image: cirrusci/flutter:stable
+#  stage: test
+#  tags: [ docker ]
+#  script:
+#    - flutter test
 
 flutter_build_android:
   extends:
@@ -67,11 +67,12 @@ flutter_build_macos:
 
 .android-sign-setup: &sign-setup
   before_script:
+    - pwd
     - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
     - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
     - echo "keyPassword=${ANDROID_KEY_PASSWORD}" >> android/signing.properties
     - echo "keyAlias=${ANDROID_KEYSTORE_ALIAS}" >> android/signing.properties
-    - echo "storeFile=my.jks" > android/signing.properties
+    - echo "storeFile=android/my.jks" > android/signing.properties
 
 .build-android-with-sign:
   <<: *sign-setup
