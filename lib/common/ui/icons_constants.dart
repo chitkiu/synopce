@@ -84,7 +84,7 @@ Widget _baseIcon(BuildContext context, IconData icon, {Color? color}) {
   if (isMaterial(context)) {
     return Icon(
       icon,
-      color: color ?? Theme.of(context).primaryColor,
+      color: color ?? Theme.of(context).primaryIconTheme.color,
     );
   } else {
     return Icon(
