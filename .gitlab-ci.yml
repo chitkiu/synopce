@@ -45,7 +45,7 @@ debug_build_android:
   variables:
     BUILD_TYPE: debug
   before_script:
-    - sh ./script/with_flutter.sh
+    - sh ./scripts/with_flutter.sh
   except:
     - tags
 
@@ -56,7 +56,7 @@ debug_build_macos:
   variables:
     BUILD_TYPE: debug
   before_script:
-    - sh ./script/with_flutter.sh
+    - sh ./scripts/with_flutter.sh
   except:
     - tags
 
@@ -67,9 +67,9 @@ release_build_android:
   variables:
     BUILD_TYPE: release
   before_script:
-    - sh ./script/setup_app_version.sh
-    - sh ./script/with_flutter.sh
-    - sh ./script/setup_android_sign.sh
+    - sh ./scripts/setup_app_version.sh
+    - sh ./scripts/with_flutter.sh
+    - sh ./scripts/setup_android_sign.sh
   only:
     - tags
 
@@ -80,8 +80,8 @@ release_build_macos:
   variables:
     BUILD_TYPE: release
   before_script:
-    - sh ./script/setup_app_version.sh
-    - sh ./script/with_flutter.sh
+    - sh ./scripts/setup_app_version.sh
+    - sh ./scripts/with_flutter.sh
   only:
     - tags
 
