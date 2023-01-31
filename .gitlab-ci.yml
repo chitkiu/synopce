@@ -84,7 +84,7 @@ release_build_android:
   stage: release_build
   variables:
     BUILD_TYPE: release
-  script:
+  before_script:
     - pwd
     - echo -n ${ANDROID_KEYSTORE} | base64 -d > android/my.jks
     - echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}" >> android/signing.properties
