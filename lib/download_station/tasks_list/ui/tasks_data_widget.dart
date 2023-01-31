@@ -1,15 +1,18 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:synoapi/synoapi.dart';
 
 import '../../../common/ui/icons_constants.dart';
 import '../domain/tasks_info_controller.dart';
+import 'mappers/task_ui_mapper.dart';
+import 'models/task_ui_model.dart';
 import 'tasks_error_widget.dart';
 import 'tasks_list_widget.dart';
 
 class TasksDataWidget extends GetView<TasksListController> {
-  final Function(Task task) _onTaskSelected;
+  final Function(TaskUIModel task) _onTaskSelected;
   final Widget Function() _selectedTaskWidget;
+
+  final TaskUIMapper _mapper = const TaskUIMapper();
 
   const TasksDataWidget(this._onTaskSelected, this._selectedTaskWidget, {Key? key}) : super(key: key);
 
@@ -24,7 +27,11 @@ class TasksDataWidget extends GetView<TasksListController> {
       if (tasks == null) {
         return _loadingWidget(context);
       }
-      return TasksListWidget(tasks.toList(), _onTaskSelected, _selectedTaskWidget);
+      return TasksListWidget(
+          tasks.map((e) => _mapper.map(e)).toList(),
+          _onTaskSelected,
+          _selectedTaskWidget
+      );
     });
   }
 

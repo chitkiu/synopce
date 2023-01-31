@@ -3,8 +3,10 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:synopce/auth/data/mappers/local_auth_data_mapper.dart';
 import 'package:synopce/auth/domain/auth_screen_controller.dart';
+import 'package:synopce/common/ui/colors.dart';
 
-import '../../common/ui/text_constants.dart';
+import '../../common/ui/icons_constants.dart';
+import '../../common/ui/text_style.dart';
 import 'models/auth_ui_model.dart';
 
 const double _EditTextWidth = 300;
@@ -25,7 +27,9 @@ class AuthWidget extends GetView<AuthScreenController> {
       if (model == null) {
         return _waitingView();
       } else {
-        return _dataView(_authDataMapper.mapToUIModel(model));
+        return SingleChildScrollView(
+          child: _dataView(context, _authDataMapper.mapToUIModel(model)),
+        );
       }
     });
   }
@@ -33,21 +37,21 @@ class AuthWidget extends GetView<AuthScreenController> {
   Scaffold _waitingView() {
     return Scaffold(
         body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              ),
-              Text('Loading...'),
-            ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(),
           ),
-        ));
+          Text('Loading...'),
+        ],
+      ),
+    ));
   }
 
-  Widget _dataView(AuthUIModel state) {
+  Widget _dataView(BuildContext context, AuthUIModel state) {
     if (_urlController.text != state.url) {
       _urlController.value = _urlController.value.copyWith(
         text: state.url,
@@ -76,9 +80,9 @@ class AuthWidget extends GetView<AuthScreenController> {
         Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(10),
-            child: const Text(
+            child: Text(
               'Sign in',
-              style: TextStyle(fontSize: 20),
+              style: AppBaseTextStyle.mainStyle.copyWith(fontSize: 20),
             )),
         Container(
           width: _EditTextWidth,
@@ -106,7 +110,7 @@ class AuthWidget extends GetView<AuthScreenController> {
         ),
         Container(
             width: _EditTextWidth,
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+            padding: const EdgeInsets.all(10),
             child: PlatformTextField(
               controller: _passwordController,
               obscureText: hidePassword.value,
@@ -129,7 +133,7 @@ class AuthWidget extends GetView<AuthScreenController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Use HTTPS?', style: AppDefaultTextStyle),
+              Text('Use HTTPS?', style: AppBaseTextStyle.mainStyle),
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
@@ -147,7 +151,7 @@ class AuthWidget extends GetView<AuthScreenController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Auto log in', style: AppDefaultTextStyle),
+              Text('Auto log in', style: AppBaseTextStyle.mainStyle),
               PlatformSwitch(
                 onChanged: (bool? value) {
                   if (value != null) {
@@ -166,20 +170,32 @@ class AuthWidget extends GetView<AuthScreenController> {
               onPressed: () {
                 controller.auth(_passwordController.text);
               },
-              child: Text(style: AppColoredTextStyle, 'Login'),
+              child: Text(style: AppBaseTextStyle.mainStyle, 'Login'),
             )),
+        Container(
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 0),
+            child: PlatformTextButton(
+              onPressed: () {
+                controller.startDemoMode();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  questionIcon(context, color: AppColors.secondary),
+                  Text(style: AppBaseTextStyle.mainStyle, 'Launch in demo mode'),
+                ],
+              ),
+            )
+        ),
       ],
     );
   }
 
   Widget _suffixIcon(BuildContext context, bool hidePassword) {
     return PlatformIconButton(
-      icon: Icon(
-        // Based on passwordVisible state choose the icon
-        hidePassword ? Icons.visibility : Icons.visibility_off,
-      ),
+      icon: hidePassword ? visibilityIcon(context) : visibilityOffIcon(context),
       onPressed: () {
-        // Update the state i.e. toogle the state of passwordVisible variable
         this.hidePassword.value = !this.hidePassword.value;
       },
     );

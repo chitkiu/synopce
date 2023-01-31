@@ -3,6 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
+import '../../../common/ui/app_bar_title.dart';
 import '../../tasks_list/data/tasks_info_storage.dart';
 import 'task_info_widget.dart';
 
@@ -15,7 +16,7 @@ class TaskInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: const Text("Info about task"),
+        title: const AppBarTitle("Info about task"),
       ),
       body: SafeArea(
         child: Obx(

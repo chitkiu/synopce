@@ -20,6 +20,12 @@ class LocalAuthDataStorage {
     return result;
   }
 
+  Future<void> changeNeedToAutologin(bool needToAutologin) async {
+    await _storage.write(
+        key: NEED_TO_AUTOLOGIN_KEY_NAME,
+        value: needToAutologin.toString());
+  }
+
   Future<void> saveData(LocalAuthDataModel? model) async {
     if (model == null) {
       return;

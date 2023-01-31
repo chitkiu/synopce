@@ -1,7 +1,7 @@
-class NotesItemUIModel {
-  final String id;
-  final String title;
-  final String brief;
+import '../../../../common/ui/platform_list_view.dart';
 
-  NotesItemUIModel(this.id, this.title, this.brief);
+class NotesItemUIModel extends PlatformListViewItems {
+  final String id;
+
+  NotesItemUIModel({required this.id, required String title, String? brief}) : super.withString(title, brief);
 }
