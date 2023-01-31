@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 
+import '../../../common/ui/colors.dart';
 import '../../../common/ui/icons_constants.dart';
 import '../../task_info/ui/task_info_widget.dart';
 import '../domain/tasks_info_controller.dart';
@@ -15,15 +16,16 @@ class TasksInfoPage extends GetView<TasksListController> {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: TasksListAppBar(controller),
-      body: _tasksListWidget(),
+      body: SafeArea(child: _tasksListWidget()),
       material: (context, platform) {
         return MaterialScaffoldData(
             floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            controller.onAddClick();
-          },
-          child: addIcon(context),
-        ));
+              onPressed: () {
+                controller.onAddClick();
+                },
+              child: addIcon(context, color: AppColors.onPrimary),
+            )
+        );
       },
     );
   }

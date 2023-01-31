@@ -3,7 +3,9 @@ import 'package:flutter_fancy_tree_view/flutter_fancy_tree_view.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/data/api_service.dart';
+import '../../../common/data/api_service/api_service.dart';
+import '../../../common/ui/app_bar_title.dart';
+import '../../../common/ui/icons_constants.dart';
 
 class SelectDestinationWidget extends StatelessWidget {
   final List<Directory> models;
@@ -21,7 +23,7 @@ class SelectDestinationWidget extends StatelessWidget {
     var controller = TreeViewController(rootNode: root);
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: const Text("Select destination directory"),
+        title: const AppBarTitle("Select destination directory"),
       ),
       body: TreeView(
         controller: controller,
@@ -41,9 +43,9 @@ class NodeTreeView extends StatelessWidget {
     var scope = TreeNodeScope.of(context);
     var data = scope.node.data;
     if (data is Directory) {
-      var icon = Icons.expand_more;
+      var icon = expandMoreIcon(context);
       if (scope.isExpanded) {
-        icon = Icons.expand_less;
+        icon = expandLessIcon(context);
       }
 
       return GestureDetector(
@@ -52,7 +54,7 @@ class NodeTreeView extends StatelessWidget {
               scope.collapse(context);
             } else {
               try {
-                var newDirs = await fsService
+                var newDirs = await ApiService.api.fsService
                     .listFolderFile(data.path ?? '/');
                 var items = newDirs.files
                     .where((element) => element.isDir ?? false)

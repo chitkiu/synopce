@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../common/data/api_service.dart';
+import '../../../common/data/api_service/api_service.dart';
 import '../../../common/data/note_station_service/note_station_service.dart';
 import '../ui/models/notes_item_ui_model.dart';
 import 'mappers/notes_ui_model_mapper.dart';

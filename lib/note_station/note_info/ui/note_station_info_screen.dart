@@ -4,9 +4,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
-import '../../../common/data/api_service.dart';
+import '../../../common/data/api_service/api_service.dart';
+import '../../../common/ui/app_bar_title.dart';
 import '../../../common/ui/colors.dart';
 import '../../../common/ui/icons_constants.dart';
+import '../../../common/ui/text_style.dart';
 import '../../../settings/data/settings_storage.dart';
 
 class NoteStationNoteScreen extends StatelessWidget {
@@ -19,38 +21,54 @@ class NoteStationNoteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
         appBar: PlatformAppBar(
-          title: Text(name),
+          title: AppBarTitle(name),
         ),
         body: SafeArea(
           child: FutureBuilder(
-              future: nsService.getSpecificNoteInfo(id),
+              future: ApiService.api.nsService.getSpecificNoteInfo(id),
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.error == null) {
                   var noteInfo = snapshot.data;
 
                   String content = noteInfo?.content ?? '';
 
-                  if (SettingsStorage.instance.isUIFixForNotesEnabled.value) {
-                    content = content.replaceAll(
-                        RegExp(r'(style="font-size: \d;")'), '');
-                    content =
-                        content.replaceAll(RegExp(r'(font-size: \dpx;)'), '');
-                  }
-
                   return Zoom(
                     initScale: 1,
-                    backgroundColor: getBaseColor(),
-                    canvasColor: getBaseColor(),
+                    backgroundColor: AppColors.background,
+                    canvasColor: AppColors.surface,
+                    colorScrollBars: AppColors.onSurface,
                     child: Html(
                       data: content,
+                      style: {
+                        'li' : Style(
+                          color: AppBaseTextStyle.mainStyle.color,
+                          fontSize: _getFontSize(),
+                        ),
+                        "span" : Style(
+                          color: AppBaseTextStyle.mainStyle.color,
+                          fontSize: _getFontSize(),
+                        ),
+                        "div" : Style(
+                          color: AppBaseTextStyle.mainStyle.color,
+                          fontSize: _getFontSize(),
+                        ),
+                      },
                     ),
                   );
                 }
 
                 return Center(
-                  child: loadingIcon(context),
+                  child: progressIcon(context, size: 15),
                 );
               }),
         ));
+  }
+
+  FontSize? _getFontSize() {
+    if (SettingsStorage.instance.isUIFixForNotesEnabled.value) {
+      return FontSize.medium;
+    } else {
+      return null;
+    }
   }
 }

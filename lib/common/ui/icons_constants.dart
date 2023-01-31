@@ -24,6 +24,38 @@ Widget progressIcon(BuildContext context, {double? size, Color? color}) {
   }
 }
 
+Widget questionIcon(BuildContext context, {Color? color}) {
+  return _baseIcon(
+      context,
+      isMaterial(context) ? Icons.question_mark : CupertinoIcons.question,
+      color: color
+  );
+}
+
+Widget visibilityIcon(BuildContext context, {Color? color}) {
+  return _baseIcon(
+      context,
+      isMaterial(context) ? Icons.visibility : CupertinoIcons.eye_fill,
+      color: color
+  );
+}
+
+Widget visibilityOffIcon(BuildContext context, {Color? color}) {
+  return _baseIcon(
+      context,
+      isMaterial(context) ? Icons.visibility_off : CupertinoIcons.eye_slash_fill,
+      color: color
+  );
+}
+
+IconData expandMoreIcon(BuildContext context) {
+  return isMaterial(context) ? Icons.expand_more : CupertinoIcons.chevron_down;
+}
+
+IconData expandLessIcon(BuildContext context) {
+  return isMaterial(context) ? Icons.expand_less : CupertinoIcons.chevron_up;
+}
+
 Widget doneIcon(BuildContext context, {Color? color}) {
   return _baseIcon(
       context,
@@ -52,29 +84,12 @@ Widget _baseIcon(BuildContext context, IconData icon, {Color? color}) {
   if (isMaterial(context)) {
     return Icon(
       icon,
-      color: color ?? Theme.of(context).primaryColor,
+      color: color ?? Theme.of(context).primaryIconTheme.color,
     );
   } else {
     return Icon(
       icon,
-      color: color ?? CupertinoTheme.of(context).primaryColor,
-    );
-  }
-}
-
-Widget loadingIcon(BuildContext context, {Color? color, double size = 15}) {
-  if (isMaterial(context)) {
-    return SizedBox(
-      height: size,
-      width: size,
-      child: CircularProgressIndicator(
-        color: color,
-      ),
-    );
-  } else {
-    return CupertinoActivityIndicator(
-      radius: size,
-      color: color,
+      color: color ?? CupertinoTheme.of(context).textTheme.textStyle.color,
     );
   }
 }
