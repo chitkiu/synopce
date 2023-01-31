@@ -9,6 +9,7 @@ import '../../../common/data/api_service/api_service.dart';
 import '../../../common/data/models/api_error_exception.dart';
 import '../../../common/extensions/snackbar_extension.dart';
 import '../../../common/ui/app_bar_title.dart';
+import '../../../common/ui/colors.dart';
 import '../../../common/ui/icons_constants.dart';
 import '../../../common/ui/text_style.dart';
 import 'select_destination_screen.dart';
@@ -48,7 +49,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
           onPressed: () {
             _sendRequest(context);
           },
-          child: doneIcon(context),
+          child: doneIcon(context, color: AppColors.onPrimary),
         ));
       },
       body: Align(
