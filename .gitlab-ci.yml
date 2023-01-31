@@ -11,7 +11,7 @@ stages:
     BUILD_TYPE: none
   script:
     - echo Build ${BUILD_TYPE} app
-    - flutter build appbundle --${BUILD_TYPE} --verbose
+    - flutter build appbundle --${BUILD_TYPE}
   artifacts:
     paths:
       - build/app/outputs/bundle/$BUILD_TYPE/app-${BUILD_TYPE}.aab
