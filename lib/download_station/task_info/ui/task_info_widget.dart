@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/data/api_service.dart';
+import '../../../common/data/api_service/api_service.dart';
 import '../../../common/extensions/snackbar_extension.dart';
 import '../../../common/ui/colors.dart';
 import '../../../common/ui/text_style.dart';
@@ -87,13 +87,13 @@ class TaskInfoWidget extends StatelessWidget {
   void _onButtonClicked(ActionTaskInfoModel model) async {
     switch (model.type) {
       case ActionTaskInfoType.RESUME:
-        await dsService.resume([model.id]);
+        await ApiService.api.dsService.resume([model.id]);
         break;
       case ActionTaskInfoType.PAUSE:
-        await dsService.pause([model.id]);
+        await ApiService.api.dsService.pause([model.id]);
         break;
       case ActionTaskInfoType.DELETE:
-        await dsService.delete([model.id], false);
+        await ApiService.api.dsService.delete([model.id], false);
         break;
     }
   }

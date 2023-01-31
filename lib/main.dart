@@ -11,8 +11,10 @@ import 'auth/data/auth_service/auth_service.dart';
 import 'auth/data/auth_service/backend_auth_service.dart';
 import 'auth/domain/auth_screen_binding.dart';
 import 'auth/ui/auth_screen.dart';
-import 'common/data/api_service.dart';
+import 'common/data/api_service/api_service.dart';
+import 'common/data/api_service/backend_api_service.dart';
 import 'common/data/dependencies_service.dart';
+import 'common/extensions/getx_extensions.dart';
 import 'common/ui/colors.dart';
 import 'main_screen/ui/main_screen.dart';
 
@@ -24,29 +26,32 @@ void main() async {
     });
   }
   initDependency();
-  await SentryFlutter.init(
-    (options) {
-      options.dsn =
-          'https://98e240e589ba4e0e89eb514778100d12@o4504583066091520.ingest.sentry.io/4504583076708352';
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(const MyApp()),
-  );
+  if (!kDebugMode) {
+    await SentryFlutter.init(
+          (options) {
+        options.dsn =
+        'https://98e240e589ba4e0e89eb514778100d12@o4504583066091520.ingest.sentry.io/4504583076708352';
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(const MyApp()),
+    );
+  } else {
+    runApp(const MyApp());
+  }
 }
 
-///Do not remove cast to abstract class for compatibility with demo mode
-//TODO Add demo mode
 void initDependency() {
   initAuthService();
-  Get.lazyPut(() => ApiService());
   Get.lazyPut(() => DependenciesService());
 }
 
+///Do not remove cast to abstract class for compatibility with demo mode
 void initAuthService() {
-  Get.lazyPut(() {
+  Get.lazyPut<AuthService>(() {
     return BackendAuthService((apiContext) {
-      Get.find<ApiService>().init(apiContext);
-    }) as AuthService;
+      Get.deleteIfExist<ApiService>(force: true);
+      Get.lazyPut<ApiService>(() => BackendApiService(apiContext));
+    });
   });
 }
 

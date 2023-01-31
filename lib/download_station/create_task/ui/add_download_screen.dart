@@ -5,7 +5,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 import 'package:synoapi/synoapi.dart';
 
-import '../../../common/data/api_service.dart';
+import '../../../common/data/api_service/api_service.dart';
 import '../../../common/data/models/api_error_exception.dart';
 import '../../../common/extensions/snackbar_extension.dart';
 import '../../../common/ui/app_bar_title.dart';
@@ -130,7 +130,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                 ),
                 onTap: () async {
                   try {
-                    var result = await fsService.listSharedFolder();
+                    var result = await ApiService.api.fsService.listSharedFolder();
                     List<Directory> data = result.shares;
                     var model =
                         await Get.to(() => SelectDestinationWidget(data));
@@ -164,7 +164,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
     }
 
     try {
-      await dsService.create(
+      await ApiService.api.dsService.create(
           destination: _destination ?? "",
           filePath: _file?.path,
           uris: (_url.isNotEmpty ? [_url] : null));

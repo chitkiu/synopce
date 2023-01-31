@@ -13,9 +13,11 @@ class BackendAuthService extends AuthService {
 
   final Function(APIContext) _onSuccessAuth;
 
-  CookieJar get _cookieJar => PersistCookieJar(storage: SafeStorage(flutterSecureStorage));
+  late final CookieJar _cookieJar;
 
-  BackendAuthService(this._onSuccessAuth);
+  BackendAuthService(this._onSuccessAuth) {
+    _cookieJar = PersistCookieJar(storage: SafeStorage(flutterSecureStorage));
+  }
 
   @override
   Future<bool> logIn(AuthDataModel authModel) {

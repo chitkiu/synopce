@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 
 import '../../app_route_type.dart';
-import '../../common/data/api_service.dart';
+import '../../common/data/api_service/api_service.dart';
+import '../../common/data/api_service/stub_api_service.dart';
 import '../../common/extensions/execute_with_loading_dialog.dart';
+import '../../common/extensions/getx_extensions.dart';
 import '../../common/extensions/snackbar_extension.dart';
 import '../data/auth_service/auth_service.dart';
 import '../data/auth_service/stub_auth_service.dart';
@@ -113,10 +115,11 @@ class AuthScreenController extends GetxController {
   }
 
   void startDemoMode() async {
-    await Get.delete<AuthService>(force: true);
-    Get.put(StubAuthService(() {
-      Get.find<ApiService>().stubInit();
-    }) as AuthService);
+    await Get.deleteIfExist<AuthService>(force: true);
+    Get.put<AuthService>(StubAuthService(() {
+      Get.deleteIfExist<StubApiService>(force: true);
+      Get.lazyPut<ApiService>(() => StubApiService());
+    }));
 
     await _auth(
         LocalAuthDataModel(

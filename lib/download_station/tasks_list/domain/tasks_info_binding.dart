@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../../common/domain/deletable_bindings.dart';
+import '../../../common/extensions/getx_extensions.dart';
 import '../data/tasks_info_repository.dart';
 import '../data/tasks_info_storage.dart';
 import 'tasks_info_controller.dart';
@@ -15,9 +16,9 @@ class TasksInfoBinding extends DeletableBindings {
 
   @override
   void delete() {
-    deleteIfExist<TasksListController>();
-    deleteIfExist<TasksInfoRepository>();
-    deleteIfExist<TasksInfoStorage>();
+    Get.deleteIfExist<TasksListController>();
+    Get.deleteIfExist<TasksInfoRepository>();
+    Get.deleteIfExist<TasksInfoStorage>();
   }
 
 }
