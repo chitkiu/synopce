@@ -68,8 +68,8 @@ release_build_android:
     BUILD_TYPE: release
   before_script:
     - sh ./scripts/setup_app_version.sh
-    - sh ./scripts/with_flutter.sh
     - sh ./scripts/setup_android_sign.sh
+    - sh ./scripts/with_flutter.sh
   only:
     - tags
 
