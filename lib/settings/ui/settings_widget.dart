@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../app_route_type.dart';
 import '../../auth/data/auth_service/auth_service.dart';
+import '../../main.dart';
 import '../data/settings_storage.dart';
 
 class SettingsWidget extends StatelessWidget {
@@ -34,6 +35,8 @@ class SettingsWidget extends StatelessWidget {
             //TODO Rewrite using controller
             var result = await Get.find<AuthService>().logOut();
             if (result) {
+              await Get.delete<AuthService>(force: true);
+              initAuthService();
               Get.offAllNamed(AppRouteType.auth.route);
             }
           },

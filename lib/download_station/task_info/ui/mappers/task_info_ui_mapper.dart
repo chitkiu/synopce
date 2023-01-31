@@ -10,12 +10,25 @@ class TaskInfoUIMapper {
     resultList
         .add(GroupedTaskInfoModel(title: "Main", items: _getMainItems(model)));
 
-    resultList.add(GroupedTaskInfoModel(
-        title: "Transfer",
-        items: _getTransferItems(model.additional?.transfer)));
+    var transferData = _getTransferItems(model.additional?.transfer);
+    if (transferData.isNotEmpty) {
+      resultList.add(
+          GroupedTaskInfoModel(
+              title: "Transfer",
+              items: transferData
+          )
+      );
+    }
 
-    resultList.add(GroupedTaskInfoModel(
-        title: "Detailed", items: _getDetailedItems(model.additional?.detail)));
+    var detailsData = _getDetailedItems(model.additional?.detail);
+    if (detailsData.isNotEmpty) {
+      resultList.add(
+          GroupedTaskInfoModel(
+              title: "Detailed",
+              items: detailsData,
+          )
+      );
+    }
 
     if (model.status == TaskStatus.downloading || model.status == TaskStatus.waiting) {
       resultList.add(ActionTaskInfoModel(

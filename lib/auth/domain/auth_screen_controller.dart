@@ -113,7 +113,7 @@ class AuthScreenController extends GetxController {
   }
 
   void startDemoMode() async {
-    Get.delete<AuthService>();
+    await Get.delete<AuthService>(force: true);
     Get.put(StubAuthService(() {
       Get.find<ApiService>().stubInit();
     }) as AuthService);

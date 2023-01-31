@@ -37,13 +37,17 @@ void main() async {
 ///Do not remove cast to abstract class for compatibility with demo mode
 //TODO Add demo mode
 void initDependency() {
+  initAuthService();
+  Get.lazyPut(() => ApiService());
+  Get.lazyPut(() => DependenciesService());
+}
+
+void initAuthService() {
   Get.lazyPut(() {
     return BackendAuthService((apiContext) {
       Get.find<ApiService>().init(apiContext);
     }) as AuthService;
   });
-  Get.lazyPut(() => ApiService());
-  Get.lazyPut(() => DependenciesService());
 }
 
 class MyApp extends StatelessWidget {
