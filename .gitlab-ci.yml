@@ -1,5 +1,5 @@
 stages:
-  #- test
+  - test
   - debug_build
   - release_build
   - deploy
@@ -29,14 +29,14 @@ stages:
     paths:
       - installers/dmg_creation/${BUILD_TYPE}_synopce.dmg
 
-#flutter_test:
-#  extends:
-#    - .with-flutter
-#  image: cirrusci/flutter:stable
-#  stage: test
-#  tags: [ docker ]
-#  script:
-#    - flutter test
+flutter_test:
+  extends:
+    - .with-flutter
+  image: cirrusci/flutter:stable
+  stage: test
+  tags: [ docker ]
+  script:
+    - flutter test
 
 debug_build_android:
   extends:
