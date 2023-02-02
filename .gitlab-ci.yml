@@ -30,11 +30,11 @@ stages:
       - installers/dmg_creation/${BUILD_TYPE}_synopce.dmg
 
 flutter_test:
-  extends:
-    - .with-flutter
   image: cirrusci/flutter:stable
   stage: test
   tags: [ docker ]
+  before_script:
+    - sh ./scripts/with_flutter.sh
   script:
     - flutter test
 
