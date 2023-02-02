@@ -4,6 +4,10 @@ stages:
   - release_build
   - deploy
 
+cache:
+  paths:
+    - $CI_PROJECT_DIR/.pub-cache/
+
 .build-android:
   image: cirrusci/flutter:stable
   tags: [ docker ]
