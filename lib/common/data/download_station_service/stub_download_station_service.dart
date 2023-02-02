@@ -4,42 +4,45 @@ import 'download_station_service.dart';
 
 class StubDownloadStationService extends DownloadStationService {
 
-  List<Task> _tasks = [
-    Task(
-      '1',
-      'bt',
-      'username',
-      'Test title',
-      1024,
-      TaskStatus.finished,
-      null,
-      null,
-    ),
-    Task(
-      '2',
-      'bt',
-      'username',
-      'Test title 2',
-      1024,
-      TaskStatus.paused,
-      null,
-      null,
-    ),
-    Task(
-      '3',
-      'bt',
-      'username',
-      'Test title 3',
-      1024,
-      TaskStatus.downloading,
-      null,
-      null,
-    ),
-  ];
+  late final List<Task> _tasks;
+
+
+  StubDownloadStationService() {
+    _tasks = [
+      _genTask(
+        id: '1',
+        title: 'Test title',
+        status: TaskStatus.finished,
+        destination: "Download",
+        createTime: DateTime.now().subtract(const Duration(hours: 1)),
+      ),
+      _genTask(
+        id: '2',
+        title: 'Test title 2',
+        status: TaskStatus.paused,
+        destination: "Media",
+        createTime: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+      _genTask(
+        id: '3',
+        title: 'Test title 3',
+        status: TaskStatus.downloading,
+        destination: "Media/Serials",
+        createTime: DateTime.now().subtract(const Duration(minutes: 10)),
+      ),
+    ];
+  }
 
   @override
   Future<void> create({int? version, List<String>? uris, String? filePath, String? username, String? passwd, String? unzipPasswd, String? destination, bool createList = false}) async {
-    //TODO
+    _tasks.add(
+        _genTask(
+          id: (_tasks.length + 1).toString(),
+          title: filePath ?? uris?.last ?? '',
+          status: TaskStatus.hash_checking,
+          destination: destination,
+        )
+    );
   }
 
   @override
@@ -60,9 +63,9 @@ class StubDownloadStationService extends DownloadStationService {
   Future<ListTaskInfo> list({int? version, int offset = 0, int limit = -1, List<String> additional = const ['detail', 'transfer', 'file', 'tracker', 'peer']}) {
     return Future.value(
         ListTaskInfo(
-          0,
-          0,
-          _tasks,
+          offset: 0,
+          total: 0,
+          tasks: _tasks,
         )
     );
   }
@@ -94,6 +97,30 @@ class StubDownloadStationService extends DownloadStationService {
                 []
             )
         )
+    );
+  }
+
+  Task _genTask({
+    required String id,
+    required String title,
+    required TaskStatus status,
+    String? destination,
+    DateTime? createTime,
+  }) {
+    return Task(
+      id: id,
+      type: 'bt',
+      username: 'username',
+      title: title,
+      size: 1024,
+      status: status,
+      statusExtra: null,
+      additional: Additional(
+        detail: TaskDetail(
+          createTime: createTime ?? DateTime.now(),
+          destination: destination,
+        ),
+      ),
     );
   }
 
