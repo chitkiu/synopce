@@ -1,3 +1,0 @@
-Open-source cross-platform app for access to your Synology® Download Station, Note Station app from your mobile or desktop.
-App source - https://github.com/chitkiu/dsm_app
-Synology is a trademark of Synology Inc.

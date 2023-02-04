@@ -101,6 +101,26 @@ deploy:
     - appcenter login --token $APPCENTER_API_TOKEN
   script:
     - appcenter distribute release -f build/app/outputs/bundle/release/app-release.aab -g Collaborators --app Synopce/Synopce-android
-    - appcenter distribute release -f installers/dmg_creation/release_synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os
+    - versions=(${CI_COMMIT_TAG//+/ })
+    - appcenter distribute release -f installers/dmg_creation/release_synopce.dmg -g Collaborators --app Synopce/Synopce-mac-os --build-version ${versions[0]} --build-number ${versions[1]}
+  only:
+    - tags
+
+deploy_to_playstore:
+  image: ruby:latest
+  tags: [ docker ]
+  stage: deploy
+  dependencies:
+    - release_build_android
+    - release_build_macos
+  before_script:
+    - cd android
+    - gem install bundler
+    - bundle install
+    - bundle exec fastlane supply init
+  script:
+    - versions=(${CI_COMMIT_TAG//+/ })
+    - echo $CI_COMMIT_TAG_MESSAGE > fastlane/metadata/android/en-US/changelogs/${versions[1]}.txt
+    - bundle exec fastlane deploy_to_playstore
   only:
     - tags
