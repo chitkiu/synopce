@@ -12,7 +12,7 @@ class BackendDownloadStationService extends DownloadStationService {
         _api2 = DownloadStation2API(apiContext);
 
   @override
-  Future<DownloadStationTaskDelete> delete(List<String> ids, bool forceComplete, {int? version}) {
+  Future<List<DownloadStationTaskActionResponse>> delete(List<String> ids, bool forceComplete, {int? version}) {
     return wrapRequest(_api.task.delete(ids, forceComplete, version: version));
   }
 
@@ -22,12 +22,12 @@ class BackendDownloadStationService extends DownloadStationService {
   }
 
   @override
-  Future<DownloadStationTaskPause> pause(List<String> ids, {int? version}) {
+  Future<List<DownloadStationTaskActionResponse>> pause(List<String> ids, {int? version}) {
     return wrapRequest(_api.task.pause(ids, version: version));
   }
 
   @override
-  Future<DownloadStationTaskResume> resume(List<String> ids, {int? version}) {
+  Future<List<DownloadStationTaskActionResponse>> resume(List<String> ids, {int? version}) {
     return wrapRequest(_api.task.resume(ids, version: version));
   }
 

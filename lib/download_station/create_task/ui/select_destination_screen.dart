@@ -8,7 +8,7 @@ import '../../../common/ui/app_bar_title.dart';
 import '../../../common/ui/icons_constants.dart';
 
 class SelectDestinationWidget extends StatelessWidget {
-  final List<Directory> models;
+  final List<FileStationDirectory> models;
 
   const SelectDestinationWidget(this.models, {Key? key}) : super(key: key);
 
@@ -16,8 +16,8 @@ class SelectDestinationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var root = TreeNode(id: "Root");
     root.addChildren(
-        models.where((element) => element.isDir ?? false).map((e) => TreeNode(
-              id: e.path ?? "",
+        models.where((element) => element.isDir).map((e) => TreeNode(
+              id: e.path,
               data: e,
             )));
     var controller = TreeViewController(rootNode: root);
@@ -42,7 +42,7 @@ class NodeTreeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var scope = TreeNodeScope.of(context);
     var data = scope.node.data;
-    if (data is Directory) {
+    if (data is FileStationDirectory) {
       var icon = expandMoreIcon(context);
       if (scope.isExpanded) {
         icon = expandLessIcon(context);
@@ -54,15 +54,14 @@ class NodeTreeView extends StatelessWidget {
               scope.collapse(context);
             } else {
               try {
-                var newDirs = await ApiService.api.fsService
-                    .listFolderFile(data.path ?? '/');
+                var newDirs =
+                    await ApiService.api.fsService.listFolderFile(data.path);
                 var items = newDirs.files
-                    .where((element) => element.isDir ?? false)
-                    .map((e) =>
-                    TreeNode(
-                      id: e.path ?? "",
-                      data: e,
-                    ))
+                    .where((element) => element.isDir)
+                    .map((e) => TreeNode(
+                          id: e.path,
+                          data: e,
+                        ))
                     .toList();
                 scope.node.addChildren(items);
                 scope.expand(context);
@@ -81,7 +80,7 @@ class NodeTreeView extends StatelessWidget {
                 padding: const EdgeInsets.all(2), child: Icon(icon, size: 20)),
             Expanded(
                 child: Text(
-              data.name ?? "",
+              data.name,
               overflow: TextOverflow.ellipsis,
             )),
             TextButton(

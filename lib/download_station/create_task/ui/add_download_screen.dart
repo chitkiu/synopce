@@ -132,7 +132,7 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                 onTap: () async {
                   try {
                     var result = await ApiService.api.fsService.listSharedFolder();
-                    List<Directory> data = result.shares;
+                    List<FileStationDirectory> data = result.shares;
                     var model =
                         await Get.to(() => SelectDestinationWidget(data));
                     setState(() {

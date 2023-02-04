@@ -11,7 +11,7 @@ import 'mappers/task_info_ui_mapper.dart';
 import 'models/task_info_ui_model.dart';
 
 class TaskInfoWidget extends StatelessWidget {
-  final Task _model;
+  final DownloadStationTask _model;
   final TaskInfoUIMapper _mapper = TaskInfoUIMapper();
 
   TaskInfoWidget(this._model, {Key? key}) : super(key: key);
