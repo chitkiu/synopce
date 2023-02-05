@@ -37,12 +37,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   flutter_secure_storage_macos: 75c8cadfdba05ca007c0fa4ea0c16e5cf85e521b
-  FlutterMacOS: ae6af50a8ea7d6103d888583d46bd8328a7e9811
+  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   package_info_plus: 02d7a575e80f194102bef286361c6c326e4c29ce
   Sentry: 4c9babff9034785067c896fd580b1f7de44da020
   sentry_flutter: b10ae7a5ddcbc7f04648eeb2672b5747230172f1
   wakelock_macos: bc3f2a9bd8d2e6c89fee1e1822e7ddac3bd004a9
 
-PODFILE CHECKSUM: 8c3284201c9d8cb068208d9455e0a5f6a86e79fc
+PODFILE CHECKSUM: e2b3762c8cf8c6cfb0aa1d54258eff192805a054
 
 COCOAPODS: 1.11.3

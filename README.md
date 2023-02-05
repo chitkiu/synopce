@@ -17,4 +17,4 @@ You need add to Gitlab CI variables:
 
 * `APPCENTER_API_TOKEN` - api token for project in App Center
 
-Also you need to add api key from Play Store Console to `keys/fastlane_release_api_key.json`
+* `PLAY_STORE_KEY` - api key from Play Store Console (for more read [Fastlane setup](https://docs.fastlane.tools/getting-started/android/setup/))
