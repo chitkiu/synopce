@@ -28,7 +28,7 @@ cache:
     - echo Build ${BUILD_TYPE} app
     - flutter build macos --${BUILD_TYPE}
     - cd installers/dmg_creation
-    - rm ./synopce.dmg
+    - rm ./synopce.dmg || true
     - appdmg ${BUILD_TYPE}_config.json ./synopce.dmg
   artifacts:
     paths:
