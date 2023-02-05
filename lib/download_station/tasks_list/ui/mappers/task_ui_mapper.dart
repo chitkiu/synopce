@@ -8,21 +8,18 @@ import '../models/task_ui_model.dart';
 class TaskUIMapper {
   const TaskUIMapper();
 
-  TaskUIModel map(Task task) {
+  TaskUIModel map(DownloadStationTask task) {
     return TaskUIModel(
-      id: task.id ?? '',
+      id: task.id,
       title: task.title ?? '',
       subtitle: _buildInfoString(task),
     );
   }
 
-  TextSpan _buildInfoString(Task model) {
-    var resultString = <InlineSpan>[];
-    if (model.status != null) {
-      resultString.add(
-        TextSpan(text: model.status?.toString()),
-      );
-    }
+  TextSpan _buildInfoString(DownloadStationTask model) {
+    var resultString = <InlineSpan>[
+      TextSpan(text: model.status.toString())
+    ];
 
     var downloaded = model.additional?.transfer?.sizeDownloaded;
     if (downloaded != null && model.size != null) {

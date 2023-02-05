@@ -15,13 +15,11 @@ class _Dir {
     return '_Dir{path: $path, name: $name}';
   }
 
-  Directory toDirectory() {
-    return Directory(
-      0,
-      0,
-      true,
-      name,
-      path,
+  FileStationDirectory toDirectory() {
+    return FileStationDirectory(
+      name: name,
+      path: path,
+      isDir: true,
     );
   }
 }
@@ -54,9 +52,9 @@ class StubFileStationService extends FileStationService {
     _Dir? selectedDir =
         _allDirsForSearch.firstWhereOrNull((element) => element.path == path);
     return FileStationFolderFileList(
-        0,
-        0,
-        selectedDir?.items.map((e) => e.toDirectory()).toList() ?? []
+        offset: 0,
+        total: 0,
+        files: selectedDir?.items.map((e) => e.toDirectory()).toList() ?? []
     );
   }
 
@@ -64,9 +62,9 @@ class StubFileStationService extends FileStationService {
   Future<FileStationSharedFolderList> listSharedFolder(
       {int? version, int offset = 0}) async {
     return FileStationSharedFolderList(
-        0,
-        0,
-        _dirs.map((e) => e.toDirectory()).toList()
+        total: 0,
+        offset: 0,
+        shares: _dirs.map((e) => e.toDirectory()).toList()
     );
   }
 

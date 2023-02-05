@@ -14,7 +14,7 @@ class TasksListController extends GetxController {
   Timer? _timer;
   Rx<bool> isLoading = true.obs;
   Rx<String?> errorText = Rxn(null);
-  Rx<Map<String, Task>?> get tasksModel => TasksInfoStorage.storage.tasks;
+  Rx<Map<String, DownloadStationTask>?> get tasksModel => TasksInfoStorage.storage.tasks;
   Rx<String?> selectedTaskModel = Rxn(null);
 
   TasksListController();

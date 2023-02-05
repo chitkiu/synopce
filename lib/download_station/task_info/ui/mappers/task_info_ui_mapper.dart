@@ -4,7 +4,7 @@ import '../../../../common/extensions/format_byte.dart';
 import '../models/task_info_ui_model.dart';
 
 class TaskInfoUIMapper {
-  List<TaskInfoUIModel> map(Task model) {
+  List<TaskInfoUIModel> map(DownloadStationTask model) {
     var resultList = <TaskInfoUIModel>[];
 
     resultList
@@ -34,26 +34,26 @@ class TaskInfoUIMapper {
       resultList.add(ActionTaskInfoModel(
         title: "Pause",
         type: ActionTaskInfoType.PAUSE,
-        id: model.id ?? "",
+        id: model.id,
       ));
     } else if (model.status == TaskStatus.paused) {
       resultList.add(ActionTaskInfoModel(
         title: "Resume",
         type: ActionTaskInfoType.RESUME,
-        id: model.id ?? "",
+        id: model.id,
       ));
     }
 
     resultList.add(ActionTaskInfoModel(
       title: "Delete",
       type: ActionTaskInfoType.DELETE,
-      id: model.id ?? "",
+      id: model.id,
     ));
 
     return resultList;
   }
 
-  List<TaskInfoDataModel> _getMainItems(Task model) {
+  List<TaskInfoDataModel> _getMainItems(DownloadStationTask model) {
     var resultList = <TaskInfoDataModel>[];
 
     resultList.add(TaskInfoDataModel(
@@ -66,7 +66,7 @@ class TaskInfoUIMapper {
     ));
     resultList.add(TaskInfoDataModel(
       title: "Type",
-      text: model.type ?? "",
+      text: model.type.name,
     ));
     resultList.add(TaskInfoDataModel(
       title: "Total size",

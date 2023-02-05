@@ -21,7 +21,7 @@ class TaskInfoScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(
           () {
-            Task? task = TasksInfoStorage.storage.tasks.value?[_modelId];
+            DownloadStationTask? task = TasksInfoStorage.storage.tasks.value?[_modelId];
             if (task == null) {
               Future.delayed(Duration.zero, () {
                 Navigator.pop(context);

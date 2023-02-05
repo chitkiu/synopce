@@ -4,7 +4,7 @@ import 'download_station_service.dart';
 
 class StubDownloadStationService extends DownloadStationService {
 
-  late final List<Task> _tasks;
+  late final List<DownloadStationTask> _tasks;
 
 
   StubDownloadStationService() {
@@ -46,16 +46,17 @@ class StubDownloadStationService extends DownloadStationService {
   }
 
   @override
-  Future<DownloadStationTaskDelete> delete(List<String> ids, bool forceComplete, {int? version}) {
+  Future<List<DownloadStationTaskActionResponse>> delete(List<String> ids, bool forceComplete, {int? version}) {
     for (var value in ids) {
       _tasks.removeWhere((element) => element.id == value);
     }
     return Future.value(
-        DownloadStationTaskDelete(
-          DownloadStationMultiTaskActionResponse(
-            []
-          )
-        )
+        ids.map((e) {
+          return DownloadStationTaskActionResponse(
+              e,
+              null
+          );
+        }).toList()
     );
   }
 
@@ -71,45 +72,47 @@ class StubDownloadStationService extends DownloadStationService {
   }
 
   @override
-  Future<DownloadStationTaskPause> pause(List<String> ids, {int? version}) {
+  Future<List<DownloadStationTaskActionResponse>> pause(List<String> ids, {int? version}) {
     for (var value in ids) {
       var item = _tasks.firstWhere((element) => element.id == value);
       item.status = TaskStatus.paused;
     }
     return Future.value(
-        DownloadStationTaskPause(
-            DownloadStationMultiTaskActionResponse(
-              []
-            )
-        )
+        ids.map((e) {
+          return DownloadStationTaskActionResponse(
+              e,
+              null
+          );
+        }).toList()
     );
   }
 
   @override
-  Future<DownloadStationTaskResume> resume(List<String> ids, {int? version}) {
+  Future<List<DownloadStationTaskActionResponse>> resume(List<String> ids, {int? version}) {
     for (var value in ids) {
       var item = _tasks.firstWhere((element) => element.id == value);
       item.status = TaskStatus.finished;
     }
     return Future.value(
-        DownloadStationTaskResume(
-            DownloadStationMultiTaskActionResponse(
-                []
-            )
-        )
+        ids.map((e) {
+          return DownloadStationTaskActionResponse(
+            e,
+            null
+          );
+        }).toList()
     );
   }
 
-  Task _genTask({
+  DownloadStationTask _genTask({
     required String id,
     required String title,
     required TaskStatus status,
     String? destination,
     DateTime? createTime,
   }) {
-    return Task(
+    return DownloadStationTask(
       id: id,
-      type: 'bt',
+      type: TaskType.bt,
       username: 'username',
       title: title,
       size: 1024,
