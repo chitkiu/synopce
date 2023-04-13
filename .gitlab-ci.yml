@@ -9,7 +9,7 @@ cache:
     - $CI_PROJECT_DIR/.pub-cache/
 
 .build-android:
-  image: cirrusci/flutter:stable
+  image: ghcr.io/cirruslabs/flutter:stable
   tags: [ docker ]
   variables:
     BUILD_TYPE: none
