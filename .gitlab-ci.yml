@@ -91,7 +91,7 @@ release_build_macos:
     - tags
 
 deploy:
-  image: node:16-alpine
+  image: node:16-bullseye
   tags: [ docker ]
   stage: deploy
   dependencies:
@@ -119,9 +119,6 @@ deploy_to_playstore:
     - release_build_macos
   before_script:
     - mkdir -p keys || true
-    - echo $PLAY_STORE_KEY
-    - cat $PLAY_STORE_KEY
-    - cat $PLAY_STORE_KEY | base64
     - cat $PLAY_STORE_KEY | base64 -d > keys/fastlane_release_api_key.json
     - cd android
     - gem install bundler
