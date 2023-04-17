@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:synopce/common/data/models/api_error_exception.dart';
 
 import '../../../common/data/api_service/api_service.dart';
 import '../../../common/data/note_station_service/note_station_service.dart';
@@ -22,7 +24,11 @@ class NoteStationListController extends GetxController {
 
   Future<void> refreshItems() async {
     isLoading.value = true;
-    notesList.value = _mapper.mapToUIModel(await _nsService.getNoteList());
+    try {
+      notesList.value = _mapper.mapToUIModel(await _nsService.getNoteList());
+    } on ApiErrorException catch (e) {
+      Sentry.captureException(e);
+    }
     isLoading.value = false;
   }
 

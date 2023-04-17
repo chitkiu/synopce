@@ -1,8 +1,10 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:synoapi/synoapi.dart';
 
 import '../../../common/data/api_service/api_service.dart';
@@ -95,12 +97,21 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
                 onTap: () async {
                   if (!_canSelectFile) return;
                   _canSelectFile = false;
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles();
-                  if (result != null) {
-                    setState(() {
-                      _file = result.files.single;
-                    });
+                  final permissionStatus = await Permission.storage.status;
+                  if (permissionStatus.isGranted || permissionStatus.isLimited) {
+                    await _pickFile();
+                  } else if (permissionStatus.isDenied) {
+                    final permissionResponse = await Permission.storage.request();
+
+                    if (permissionResponse.isGranted || permissionResponse.isLimited) {
+                      await _pickFile();
+                    } else if (permissionResponse.isDenied) {
+                      await _showGivePermissionDialog(context);
+                    } else if (permissionResponse.isPermanentlyDenied || permissionResponse.isRestricted) {
+                      await _showBlockPermissionDialog(context);
+                    }
+                  } else if (permissionStatus.isPermanentlyDenied || permissionStatus.isRestricted) {
+                    await _showBlockPermissionDialog(context);
                   }
                   _canSelectFile = true;
                 },
@@ -174,4 +185,82 @@ class _AddDownloadTaskWidgetState extends State<AddDownloadTaskWidget> {
       errorSnackbar(e.errorType.toString());
     }
   }
+
+  Future<void> _pickFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        setState(() {
+          _file = result.files.single;
+        });
+      }
+    } on PlatformException catch (e) {
+      Get.log.printError(info: e.toString());
+    }
+  }
+
+  Future<void> _showGivePermissionDialog(BuildContext context) => showPlatformDialog(
+      context: context,
+      material: MaterialDialogData(
+        builder: (context) {
+          return AlertDialog(
+            content: Text("Please, give permission for access to storage"),
+            title: Text("Need permission"),
+            actions: [
+              TextButton(
+                child: Text("Ok"),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          );
+        },
+      ),
+      cupertino: CupertinoDialogData(
+        builder: (context) {
+          return CupertinoAlertDialog(
+            content: Text("Please, give permission for access to storage"),
+            title: Text("Need permission"),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("Ok"),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          );
+        },
+      )
+  );
+
+  //TODO Improve dialog
+  Future<void> _showBlockPermissionDialog(BuildContext context) => showPlatformDialog(
+      context: context,
+      material: MaterialDialogData(
+        builder: (context) {
+          return AlertDialog(
+            content: Text("Please, give permission for access to storage in settings!"),
+            title: Text("Need permission"),
+            actions: [
+              TextButton(
+                child: Text("Ok"),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          );
+        },
+      ),
+      cupertino: CupertinoDialogData(
+        builder: (context) {
+          return CupertinoAlertDialog(
+            content: Text("Please, give permission for access to storage in settings!"),
+            title: Text("Need permission"),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("Ok"),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          );
+        },
+      )
+  );
 }

@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.demontazz.synopce">
+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <application
         android:label="synopce"
         android:name="${applicationName}"

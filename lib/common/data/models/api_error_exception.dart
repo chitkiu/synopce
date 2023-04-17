@@ -3,4 +3,8 @@ class ApiErrorException implements Exception {
 
   const ApiErrorException([this.errorType = const {}]);
 
+  @override
+  String toString() {
+    return 'ApiErrorException{errorType: $errorType}';
+  }
 }
