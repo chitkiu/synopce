@@ -16,6 +16,7 @@ import 'common/data/api_service/backend_api_service.dart';
 import 'common/data/dependencies_service.dart';
 import 'common/extensions/getx_extensions.dart';
 import 'common/ui/colors.dart';
+import 'download_station/tasks_list/data/tasks_info_storage.dart';
 import 'main_screen/ui/main_screen.dart';
 
 void main() async {
@@ -43,6 +44,7 @@ void main() async {
 void initDependency() {
   initAuthService();
   Get.lazyPut(() => DependenciesService());
+  Get.lazyPut(() => TasksInfoStorage());
 }
 
 ///Do not remove cast to abstract class for compatibility with demo mode
