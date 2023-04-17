@@ -44,7 +44,7 @@ void main() async {
 void initDependency() {
   initAuthService();
   Get.lazyPut(() => DependenciesService());
-  Get.lazyPut(() => TasksInfoStorage());
+  Get.lazyPut(() => TasksInfoStorage(), fenix: true);
 }
 
 ///Do not remove cast to abstract class for compatibility with demo mode

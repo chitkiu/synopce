@@ -2,7 +2,7 @@
     package="me.demontazz.synopce">
    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <application
-        android:label="synopce"
+        android:label="Synopce"
         android:name="${applicationName}"
         android:roundIcon="@mipmap/round_launcher"
         android:icon="@mipmap/ic_launcher">
