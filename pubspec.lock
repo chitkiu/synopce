@@ -197,10 +197,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: dcde5ad1a0cebcf3715ea3f24d0db1888bf77027a26c77d7779e8ef63b8ade62
+      sha256: b85eb92b175767fdaa0c543bf3b0d1f610fe966412ea72845fe5ba7801e763ff
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.9"
+    version: "5.2.10"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -674,7 +674,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "09723e6e312e3603d3100cbbd78352668122e655"
+      resolved-ref: "8cc7fdd7691be3819263384d14386eda9cb28c5a"
       url: "https://github.com/chitkiu/synoapi.git"
     source: git
     version: "0.2.1"
